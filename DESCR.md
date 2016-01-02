@@ -44,7 +44,7 @@ library `logging`. This script can use all logging comfiguration power available
 In this version of package following compoments are included: 
 
 - Readers: XML. 
-- Filters: Few bacis/sample filetrs.
+- Filters: Few basic/sample filters.
 - Writers: XML, CSV, XPath (helper module).
 
 Package repository and home page: [Datconv Project](https://github.com/gwierzchowski/datconv).

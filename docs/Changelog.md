@@ -12,17 +12,17 @@
 - Added Datconv class - i.e. data conversion can be run as stand alone script:  
   `datconv [options]`  
   or from python code:
-  ```python
-  import datconv  
-  dc = datconv.Datconv()  
-  conf = {...}  
-  dc.Run(conf)  
-  ```
+```python
+import datconv  
+dc = datconv.Datconv()  
+conf = {...}  
+dc.Run(conf)  
+```
   This also implies that all subpackages were moved to one, root `datconv` package.
 - Separated common and IGT specific modules into two separate
   packages. Datconv is now distributed as 2 packages created
   according python standard (`datconv` and `datconv-igt`).
-- Added standard setup.py installation script. This means that package
+- Added standard `setup.py` installation script. This means that package
   files are being installed in Python 3rd party package standard location. 
 - Licensed `datconv` under Python Software Foundation like license.
 
