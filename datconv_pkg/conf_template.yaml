@@ -1,0 +1,73 @@
+# Major configuration file for pandoc.py script.
+# It must follow YAML syntax and have at least 2 obligatory top level keys: Reader, Writer.
+# See below for more details.
+# Note that speficied modules must be loadable from pandoc.py script, i.e.
+#   packages must be placed directly in folder from which pandoc.py script is run (its current folder)
+#   or pandoc.py must be wrapped in script that define PYTHONPATH environmental variable which point to packages root folder
+#   or packages root folder must be added to Python configuration as folder with packages
+#   every package to be loadable must have (even empty) file named __init__.py
+
+
+# Obligatory key that specify Reader module
+Reader: 
+    # Obligatory key that specify Python module which implements Reader
+    # Module must define class DCReader, which must follow interface specification described in readers/_skeleton.py
+    Module: readers.dcxml
+    # Optional or not (depends on configured reader) key that specify DCReader class constructor parameters
+    CArg:
+        # Here follows DCReader class constructor parameters
+        # Concrete keys depands on choosen Reader.
+        # See particular readers' documentation.
+        # Note that if default values are good than they mey be omitted.
+        # However it is not allowed to have any extra keys not specified in reader documentation
+        # If you want to preserve some keys for future use - outcomemnt them
+        encoding:  ascii
+        # ...
+
+    # Usually obligatory key that specify parameters for DCReader.Process method
+    PArg:
+        # Here follows DCReader.Process parameters
+        # Concrete keys depands on choosen Reader.
+        # See particular readers documentation.
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.xml
+        outpath: out/AddnDrawNbrs_c5019_s38.xml
+        # ...
+
+# Obligatory key that specify Writer module
+Writer:
+    # Obligatory key that specify Python module which implements Writer
+    # Module must define class DCWriter, which must follow interface specification described in writers/_skeleton.py
+    Module: writers.dcxml
+    # Optional or not (depends on configured writer) key that specify DCWriter class constructor parameters
+    CArg: 
+        # Here follows DCWriter class constructor parameters
+        # Concrete keys depands on choosen Writer.
+        # See particular writers' documentation.
+        encoding: utf-8
+
+# Optional key that specify Filter module
+# If it is missing or null no filter is used
+# default: null
+Filter:
+    # If Filter is defined, this key is obligatory and specify Python module which implements Filter
+    # Module must define class DCFilter, which must follow interface specification described in filters/_skeleton.py
+    Module: filters.stat
+    # Optional or not (depends on configured filter) key that specify DCFilter class constructor parameters
+    CArg: 
+        # Here follows DCFilter class constructor parameters
+        # Concrete keys depands on choosen Filter.
+        # See particular filters' documentation.
+        retval: 0
+        # ...
+
+# Optional key that specify Logger class configuration
+# If it is missing or null following configuration is used:
+#   all log messages are being sent to standard error stream
+#   messages of severity below WARNING are discarded
+# default: null
+Logger:
+    # This key allows to redirect logger configuration to other file.
+    Conf: Logger.yaml
+    
+    # As an alternative, all keys contained in Logger.yaml file may be explicitly placed here (as subkeys of Logger key)
+    

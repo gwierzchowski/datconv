@@ -1,0 +1,38 @@
+Reader: 
+    Module: readers.dcxml
+    CArg:
+        # List of tag names that will be treated as brace tags (see class description in source or pydoc).
+        # default: []
+        bratags:  [PadnDrawNbrs]
+
+        # List of tag names that will be treated as header tags (see class description in source or pydoc).
+        # Note: tags listed here will be placed in header passed to Writer; header tags not listed here will be silently skipped.
+        # default: []
+        headtags: [SiteData, rec0Control]
+
+        # List of tag names that will be treated as record tags (see class description in source or pydoc).
+        # There must be at least one tag to pass any data to Writer.
+        # default: []
+        rectags:  [Gampdf_winNbrs]
+
+        # Log info message after this number of records
+        # If this value is zero no progress logging is done.
+        # default: 0
+        log_prog_step: 10000
+
+    PArg:
+        # Path to input file
+        # Obligatory parameter
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.xml
+        
+        # Path to output file passed to Writer
+        # Obligatory parameter
+        outpath: out/AddnDrawNbrs_c5019_s38.xml
+        
+        # Start passing records to Filter and Writer from this record
+        # default: 1
+        rfrom:    1
+        
+        # Stop process on this record; process till last record if zero.
+        # default: 0
+        rto:      20

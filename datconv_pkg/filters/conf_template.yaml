@@ -1,0 +1,43 @@
+Filter: 
+    Module: filters.rectyp
+    CArg:
+        # If False, record types given in rectyp are excluded, otherwise only rectyp records are included.
+        # default: true
+        inclusive: true
+        
+        # List of record types (root tags of records).
+        # default: []
+        rectyp: []
+        
+Filter: 
+    Module: filters.delfield
+    CArg:
+        # List of fields to remove.
+        # Fields must be in form of XPaths understandable by lxml.etree._Element.find method (relative paths)
+        # default: []
+        field: []
+        
+Filter: 
+    Module: filters.stat
+    CArg: 
+        # Value that filter returns (0 to skip records, 1 to write records)
+        # default: 1
+        retval: 0
+        
+        # If true, record type (root tag) is included into statistics
+        # i.e. it is printed how many records are of particular types.
+        # default: true
+        rectyp: true
+        
+        # List of 2 elements' lists:
+        # first element is absolute XPath expression to make statistics against 
+        # (lxml.etree._element.xpath method compatible)
+        # second element is a digit:
+        # 0 - if we test against element existance (i.e. not None and not [])
+        # 1 - if we are grouping against element value
+        # 2 - if given XPath expression returns boolean value.
+        fields:
+            - [/TT_COMMAND/PRODUCT, 1]
+            - [/TT_WAGER/PRODUCT, 1]
+            - [/TT_WAGER/PRODUCT=7, 2]
+            - [/TT_COMMAND/WIN_CDC, 0]
