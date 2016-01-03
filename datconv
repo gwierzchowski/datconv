@@ -59,9 +59,6 @@ arg1 - any number of arguments (that do not begin with --).
        Those arguments will replace $1, $2, ... markers in yaml_file according to their position in command line:
        i.e. $1 will be replaced by first argument that do not begin with --, etc.
 This datconv.py script returns to shell 0 on sucess or 1 on error.
-
-The code in this folder and all its subfolders is property of Grzegorz Wierzchowski.
-Author does not allow redistributing it without permission.
 """
 
 # Standard Python Libs

@@ -1,6 +1,15 @@
-0.2.0 (2015.12.29):
------------------------------
+Development plans for near future:
+----------------------------------
+Points are specified in priority (and probably implementation) order:
 
+- Port to Python 3.
+- Write basic getting started guide.
+- Better support for running datconv as paralell proceses
+  e.g. convering big files in paralell (using rfrom/rto settings).
+- Readers: CSV; Writers: Database, PostgreSQL binary input files.
+
+0.2.0 (2015.12.29):
+----------------------------------
 ### Fixes
 - Ensure that XML Output is correct (i.e. have one root element).
 
@@ -27,6 +36,6 @@ dc.Run(conf)
 - Licensed `datconv` under Python Software Foundation like license.
 
 0.1 (2015.10 - 2015.12.04):
-------------------------------
+----------------------------------
 - Initial not-public release. Delivered only to IGT coworkers.
 
