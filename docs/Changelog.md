@@ -12,6 +12,7 @@ Points are specified in priority (and probably implementation) order:
 ----------------------------------
 ### Fixes
 - Installation script no longer require PyYAML to be installed.
+- Corrected import statements in _skeleton.py files.
 
 0.2.0 (2015.12.29):
 ----------------------------------

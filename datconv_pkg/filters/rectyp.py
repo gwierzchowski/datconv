@@ -6,7 +6,7 @@
 from lxml import etree
 
 # Datconv packages
-from . import WRITE
+from . import SKIP, WRITE
 
 
 Log = None
@@ -27,5 +27,5 @@ class DCFilter:
 
     def filterRecord(self, record):
         if record.tag in self._reclist:
-            return WRITE if self._inclusive else 0
-        return 0 if self._inclusive else WRITE
+            return WRITE if self._inclusive else SKIP
+        return SKIP if self._inclusive else WRITE

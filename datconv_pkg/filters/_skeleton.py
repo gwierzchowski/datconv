@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Checked with python 2.7
-"""This module contain Pandoc Filter skeleton class suitable as starting point for new filters."""
+"""This module contain Datconv Filter skeleton class suitable as starting point for new filters."""
 
 # Standard Python Libs
 import logging
@@ -9,7 +9,7 @@ import logging
 from lxml import etree
 
 # Datconv generic modules
-from filters import WRITE, REPEAT, BREAK
+from datconv.filters import SKIP, WRITE, REPEAT, BREAK
 
 ####################################################################
 Log = None
@@ -64,7 +64,7 @@ class DCFilter:
                  This option should be used with caution to avoid infinite loop (i.e. Filter should mainain its own replication maximal count).
         BREAK  - to cause program to break process on this record (i.e. Reader will not read next record).
                  In case when REPEAT | BREAK is returned, the REPEAT bit takes precedence.
-        or return 0 - what will cause that record will be skiped (will not be passed to Writer).
+        or return SKIP (0) - what will cause that record will be skiped (will not be passed to Writer).
         """
         return WRITE
 

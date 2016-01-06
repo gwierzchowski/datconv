@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Checked with python 2.7
-"""This module contain Pandoc Reader skeleton class suitable as starting point for new readers."""
+"""This module contain Datconv Reader skeleton class suitable as starting point for new readers."""
 
 # Standard Python Libs
 import logging
@@ -9,7 +9,7 @@ import logging
 from lxml import etree
 
 # Datconv generic modules
-from filters import WRITE, REPEAT, BREAK
+from datconv.filters import WRITE, REPEAT, BREAK
 
 ####################################################################
 Log = None
