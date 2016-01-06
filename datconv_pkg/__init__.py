@@ -16,7 +16,8 @@ from importlib import import_module
 import logging, logging.config
 
 # Libs installed using pip
-import yaml
+if __package__ != 'datconv_pkg':
+    import yaml
 
 
 ############################################################################

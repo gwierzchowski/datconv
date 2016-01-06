@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# This is only for Python 2.7
+from __future__ import print_function
+
 import os, sys
 import distutils.core, distutils.file_util
 
@@ -20,7 +23,6 @@ else:
 
 with open('DESCR.md') as f:
     long_description = f.read()
-    #long_description = ''.join(f.readlines()).strip()
 
 dist = distutils.core.setup(name = 'datconv',
     version = datconv_version,
@@ -53,6 +55,21 @@ dist = distutils.core.setup(name = 'datconv',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
     )
-      
-#isobj = dist.get_command_obj('install_scripts')
-#print isobj.get_outputs()
+
+if sys.argv[1] in ['install']:
+    print ('---------------------------------------------------------')
+    try:
+        import yaml, lxml
+    except ImportError:
+        print ('To run this software install packages PyYAML, lxml')
+    isobj = dist.get_command_obj('install_data')
+    readmedoc = None
+    for doc in isobj.get_outputs():
+        if 'README.md' in doc:
+            readmedoc = doc
+            break
+    if readmedoc:
+        print ('See %s file' % readmedoc)
+    else:
+        print ('See files deployed to documentation folder')
+    print ('---------------------------------------------------------')

@@ -1,4 +1,4 @@
-Development plans for near future:
+Development plans for future:
 ----------------------------------
 Points are specified in priority (and probably implementation) order:
 
@@ -7,6 +7,11 @@ Points are specified in priority (and probably implementation) order:
 - Better support for running datconv as paralell proceses
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
+
+0.2.1 (2016.01.06):
+----------------------------------
+### Fixes
+- Installation script no longer require PyYAML to be installed.
 
 0.2.0 (2015.12.29):
 ----------------------------------

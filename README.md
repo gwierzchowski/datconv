@@ -1,5 +1,5 @@
-Universal Data Converter
-========================
+Datconv - Universal Data Converter
+==================================
 
 Works only with Python 2.7.
 
@@ -10,7 +10,7 @@ INSTALLATION (System wide - for all users):
 
 ### Prerequisites
 This program requires following 3-rd party packages: PyYAML, lxml. 
-They must be installed before installing this program.  
+They must be installed in order to run datconv program.  
 **PyYAML** can be installed from Python Package Index:  
 Linux: `sudo pip install PyYAML`  
 Windows: `pip install PyYAML`  

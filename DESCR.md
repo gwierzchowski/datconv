@@ -6,7 +6,7 @@ installation of external modules: lxml, PyYAML. For more information see
 README.md file distributed in source ball.
 
 Both input and output files can be text or binary files. However it is
-assumed that input files and output files have following structure: 
+assumed that both input and output files have following structure: 
 ```
 ---
 Header 
@@ -50,3 +50,4 @@ In this version of package following compoments are included:
 Package repository and home page: [Datconv Project](https://github.com/gwierzchowski/datconv).
 
 If you'd prefer to work in JavaScript environment please look at [Pandat Project](https://github.com/pandat-team/pandat/) which has similar design and purpose.
+
