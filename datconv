@@ -63,7 +63,6 @@ This datconv.py script returns to shell 0 on sucess or 1 on error.
 
 # Standard Python Libs
 import sys, traceback
-import logging
 
 # Libs installed using pip
 import yaml

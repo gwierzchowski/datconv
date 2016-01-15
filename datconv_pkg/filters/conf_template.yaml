@@ -1,5 +1,5 @@
 Filter: 
-    Module: filters.rectyp
+    Module: datconv.filters.rectyp
     CArg:
         # If False, record types given in rectyp are excluded, otherwise only rectyp records are included.
         # default: true
@@ -10,7 +10,7 @@ Filter:
         rectyp: []
         
 Filter: 
-    Module: filters.delfield
+    Module: datconv.filters.delfield
     CArg:
         # List of fields to remove.
         # Fields must be in form of XPaths understandable by lxml.etree._Element.find method (relative paths)
@@ -18,7 +18,7 @@ Filter:
         field: []
         
 Filter: 
-    Module: filters.stat
+    Module: datconv.filters.stat
     CArg: 
         # Value that filter returns (0 to skip records, 1 to write records)
         # default: 1
@@ -36,6 +36,7 @@ Filter:
         # 0 - if we test against element existance (i.e. not None and not [])
         # 1 - if we are grouping against element value
         # 2 - if given XPath expression returns boolean value.
+        # default: []
         fields:
             - [/TT_COMMAND/PRODUCT, 1]
             - [/TT_WAGER/PRODUCT, 1]

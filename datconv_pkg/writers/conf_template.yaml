@@ -1,5 +1,5 @@
 Writer: 
-    Module: writers.dcxml
+    Module: datconv.writers.dcxml
     CArg: 
         # If True, XML is formated in readable way (one tag in one line),
         # otherwise full record is placed in one line (more compact, suitable for computers).
@@ -22,7 +22,7 @@ Writer:
         cnt_attr: tranCount
 
 Writer: 
-    Module: writers.dcxpaths
+    Module: datconv.writers.dcxpaths
     CArg:
         # If true, Wirter generate xpaths relatative to record tag, and will not generate
         # separate fields for replicated data (repeated tags; arrays) and not generate fields for tag's attributes.
@@ -46,7 +46,7 @@ Writer:
         ignore_attr: false
         
 Writer: 
-    Module: writers.dccsv
+    Module: datconv.writers.dccsv
     CArg:
         # This parameter specifies columns to be placed in outpot CSV file.
         # It may be one of 3 possible types or null:

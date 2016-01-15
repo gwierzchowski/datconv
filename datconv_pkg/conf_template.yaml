@@ -12,7 +12,7 @@
 Reader: 
     # Obligatory key that specify Python module which implements Reader
     # Module must define class DCReader, which must follow interface specification described in readers/_skeleton.py
-    Module: readers.dcxml
+    Module: datconv.readers.dcxml
     # Optional or not (depends on configured reader) key that specify DCReader class constructor parameters
     CArg:
         # Here follows DCReader class constructor parameters
@@ -37,7 +37,7 @@ Reader:
 Writer:
     # Obligatory key that specify Python module which implements Writer
     # Module must define class DCWriter, which must follow interface specification described in writers/_skeleton.py
-    Module: writers.dcxml
+    Module: datconv.writers.dcxml
     # Optional or not (depends on configured writer) key that specify DCWriter class constructor parameters
     CArg: 
         # Here follows DCWriter class constructor parameters
@@ -51,7 +51,7 @@ Writer:
 Filter:
     # If Filter is defined, this key is obligatory and specify Python module which implements Filter
     # Module must define class DCFilter, which must follow interface specification described in filters/_skeleton.py
-    Module: filters.stat
+    Module: datconv.filters.stat
     # Optional or not (depends on configured filter) key that specify DCFilter class constructor parameters
     CArg: 
         # Here follows DCFilter class constructor parameters

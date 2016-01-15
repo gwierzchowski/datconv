@@ -8,6 +8,11 @@ Points are specified in priority (and probably implementation) order:
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
 
+0.2.2 (2016.01.15):
+----------------------------------
+### Fixes
+- Fix conf_template.yaml files
+
 0.2.1 (2016.01.06):
 ----------------------------------
 ### Fixes

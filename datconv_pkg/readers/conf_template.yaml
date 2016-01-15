@@ -1,5 +1,5 @@
 Reader: 
-    Module: readers.dcxml
+    Module: datconv.readers.dcxml
     CArg:
         # List of tag names that will be treated as brace tags (see class description in source or pydoc).
         # default: []

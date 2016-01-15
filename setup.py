@@ -57,6 +57,7 @@ dist = distutils.core.setup(name = 'datconv',
     )
 
 if sys.argv[1] in ['install']:
+    # Unfotunately while installing using pip those print statements does not work on Windows
     print ('---------------------------------------------------------')
     try:
         import yaml, lxml
