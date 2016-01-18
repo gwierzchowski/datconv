@@ -8,6 +8,11 @@ Points are specified in priority (and probably implementation) order:
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
 
+0.2.3 (2016.01.20):
+----------------------------------
+### Improvements
+- Added command line option: --version
+
 0.2.2 (2016.01.15):
 ----------------------------------
 ### Fixes

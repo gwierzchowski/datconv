@@ -5,7 +5,7 @@ datconv is a script intended to perform configurable comversion of file with dat
 
 Script should be run using Python 2.7 interpretter.
 It also required installation of external modules: lxml, PyYAML.
-For more information see README.rst file distributed in source ball.
+For more information see README.md file distributed in source ball.
 
 Both input and output files can be text or binary files.
 However it is assumed that input files and output files have following structure:
@@ -35,14 +35,14 @@ Logger - all messages intended to be presented to user are being send (except fe
          This script can use all comfiguration power of logging thru 'logging' package.
 
 Except datconv script itself this package contain following modules/packages:
-datconv.py - module that allows user to call datconv from other Python program (as Datconv class)
-readers - package that contain Reader classes for different commonly used data file formats.
-filters - package that contain some generic Filter clsaaes possible to use with different readers.
-writers - package that contain Writrer classes for different commonly used data file formats.
-For more detailed description of Reader, Filter, Writer interfaces see code and pydoc descriptions in _skeleton.py modules in readers, filters and writers standard packages.
+datconv - package that allows user to call data conversion from other Python program (using Datconv class)
+datconv.readers - package that contain Reader classes for different widely used data file formats.
+datconv.filters - package that contain some generic Filter clsaaes possible to use with different readers.
+datconv.writers - package that contain Writrer classes for different widely used data file formats.
+For more detailed description of Reader, Filter, Writer interfaces see code and pydoc descriptions in _skeleton.py modules in readers, filters and writers sub-packages.
 For more detailed description of concrete modules and classes provided with this package see their pydoc descriptions (refer Python documentation for information how to see it in Web Browser (e.g. pydoc -g works on Linux)).
 
-This datconv.py script has following call syntax:
+The datconv script has following call syntax:
 datconv yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 where:
 yaml_file - is obligatory path to file in YAML formet in which above described compoments are set up.
@@ -58,11 +58,16 @@ yaml_file - is obligatory path to file in YAML formet in which above described c
 arg1 - any number of arguments (that do not begin with --).
        Those arguments will replace $1, $2, ... markers in yaml_file according to their position in command line:
        i.e. $1 will be replaced by first argument that do not begin with --, etc.
-This datconv.py script returns to shell 0 on sucess or 1 on error.
+or
+datconv --version
+which prints version number to standard output and exit.
+
+The datconv script returns to shell 0 on sucess or 1 on error.
 """
 
 # Standard Python Libs
 import sys, traceback
+from os.path import basename
 
 # Libs installed using pip
 import yaml
@@ -71,19 +76,37 @@ import yaml
 from datconv import Datconv, Logger
 
 
+########################################################################
+from datconv.version import *
+__author__  = datconv_author
+__status__  = datconv_status
+__version__ = datconv_version
+__date__    = datconv_date
+
+
 ############################################################################
 if __name__ == "__main__":
     try:
         ####################################################################
         ## Command line arguments
-        script_name = sys.argv[0]
+        script_name = basename(sys.argv[0])
         if len(sys.argv) < 2:
             sys.stderr.writelines(
 """ERROR: Wrong command arguments - too few parameters:
-Usage: %s yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
-""" % script_name)
+Usage1: %s yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
+Usage2: %s --version
+""" % (script_name, script_name))
             sys.exit(1)
             
+        if sys.argv[1] == '--version':
+            sys.stdout.write('datconv version: %s\n' % datconv_version)
+            try:
+                from datconv.gwextract.version import datconv_igt_version
+                sys.stdout.write('datconv-igt version: %s\n' % datconv_igt_version)
+            except ImportError:
+                pass
+            sys.exit(0)
+
         arg_keys = list()
         arg_num = 1
         conf_name = sys.argv[1]
@@ -130,10 +153,3 @@ Where key is collon-separated compoud key, eg. Writer:CArg:pretty
             traceback.print_exc()
         sys.exit(1)
 
-
-########################################################################
-from datconv.version import *
-__author__  = datconv_author
-__status__  = datconv_status
-__version__ = datconv_version
-__date__    = datconv_date
