@@ -10,13 +10,16 @@ Points are specified in priority (and probably implementation) order:
 
 0.2.3 (2016.01.20):
 ----------------------------------
+### Fixes
+- Fixed exception when user press Ctrl-C before script finish
+
 ### Improvements
 - Added command line option: --version
 
 0.2.2 (2016.01.15):
 ----------------------------------
 ### Fixes
-- Fix conf_template.yaml files
+- Fixed conf_template.yaml files
 
 0.2.1 (2016.01.06):
 ----------------------------------

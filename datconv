@@ -142,8 +142,10 @@ Where key is collon-separated compoud key, eg. Writer:CArg:pretty
     except SystemExit:
         pass
     except KeyboardInterrupt:
-        Logger.info('Process broken on user request (Ctrl-C pressed)')
-        pass
+        if Logger:
+            Logger.info('Process broken on user request (Ctrl-C pressed)')
+        else:
+            sys.stdout.write('Process broken on user request (Ctrl-C pressed)\n')
     except:
         sys.stderr.write('Exception was thrown during %s execusion\n' % script_name)
         if Logger:
