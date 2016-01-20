@@ -8,6 +8,16 @@ Points are specified in priority (and probably implementation) order:
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
 
+Notes about versiong schema:
+- First, major number will be changed when changes breaks backward compatibility, 
+  i.e. users may have to slightly change their own modules or configuration in order to work with new version. 
+  However if this number is zero, API is considerated unstable and may change with any feature release.
+  This is labeled as Major Release, and in this case midle and minor numbers are reset to zero.
+- Second, midle number will be changed when new features or options will be introduced but without API break.
+  This is labeled as Feature Release, and in this case minor number is reset to zero.
+- Third, minor number will be changed when fixes or very small, non-risky features are introduced.
+  This is labeled as Fix Release.
+
 0.2.3 (2016.01.20):
 ----------------------------------
 ### Fixes
