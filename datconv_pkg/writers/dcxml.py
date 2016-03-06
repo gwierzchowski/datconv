@@ -44,6 +44,7 @@ class DCWriter:
     def setOutput(self, out):
         self._out = out
         self._cnt = 0
+        self._bratags = []
         
     def writeHeader(self, header):
         self._out.write('<?xml version="1.0" encoding="%s"?>\n' % self._enc)

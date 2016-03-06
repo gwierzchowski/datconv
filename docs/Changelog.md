@@ -8,9 +8,9 @@ Points are specified in priority (and probably implementation) order:
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
 
-Notes about versiong schema:
+Notes about versioning schema:
 - First, major number will be changed when changes breaks backward compatibility, 
-  i.e. users may have to slightly change their own modules or configuration in order to work with new version. 
+  i.e. users may have to slightly change their own modules or configuration in order to work with new release. 
   However if this number is zero, API is considerated unstable and may change with any feature release.
   This is labeled as Major Release, and in this case midle and minor numbers are reset to zero.
 - Second, midle number will be changed when new features or options will be introduced but without API break.
@@ -18,18 +18,24 @@ Notes about versiong schema:
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
 
+0.2.4 (2016.03.06):
+----------------------------------
+### Fixes
+- Fixed bug that caused writers/dcxml.py to write multiply XML closing tags in case 
+  when the same writer class instance was used to process multiply files.
+
 0.2.3 (2016.01.20):
 ----------------------------------
 ### Fixes
-- Fixed exception when user press Ctrl-C before script finish
+- Fixed exception when user press Ctrl-C before script finish.
 
 ### Improvements
-- Added command line option: --version
+- Added command line option: --version.
 
 0.2.2 (2016.01.15):
 ----------------------------------
 ### Fixes
-- Fixed conf_template.yaml files
+- Fixed conf_template.yaml files.
 
 0.2.1 (2016.01.06):
 ----------------------------------
