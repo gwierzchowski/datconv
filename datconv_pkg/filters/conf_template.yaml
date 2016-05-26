@@ -28,6 +28,10 @@ Filter:
         # i.e. it is printed how many records are of particular types.
         # default: true
         rectyp: true
+
+        # If true, not found records (with count 0) are included into summary (except when groupping is used)
+        # default: false
+        printzero: false
         
         # List of 2 elements' lists:
         # first element is absolute XPath expression to make statistics against 
@@ -42,3 +46,44 @@ Filter:
             - [/TT_WAGER/PRODUCT, 1]
             - [/TT_WAGER/PRODUCT=7, 2]
             - [/TT_COMMAND/WIN_CDC, 0]
+
+Filter: 
+    Module: datconv.filters.statex
+    CArg: 
+        # Value that filter returns (0 to skip records, 1 to write records)
+        # default: 1
+        retval: 1
+        
+        # List of 5 or 6 elements' lists:
+        # 1st element is statistic name used only in output summary 
+        # 2nd element is record name for which evaluate statistic, if null - eveluate for every record 
+        # 3rd element is XPath expression or boolean; if it avaluate to non empty list, text, non zero numeric or true, statistic is updated;
+        #             if it is true statistic is updated unconditionally; if false - never updated
+        # 4th element is XPath expression used for grouping or null for global (all data) grouping
+        # 5th element is either 'c' (count) or 's' (sum) small letter
+        # 6th element is XPath expression that returns numeric or value castable to numeric;
+        #             it determines what to sum if 5th element is 's', or has no meaning (may be absent) otherwise
+        # All XPath expressions must be absolute and lxml.etree._element.xpath method compatible.
+        # Note: only subset of full XPath specification is currently supported in lxml - check your version of this package
+        # default: []
+        fields:
+            - [BAL.WAGCNT, DEFRECBAL, true, number(//PROD_NUM), s, //WAGCNT]
+            - [TMF.WAGCNT, TT_WAGER, //_UPDATE_MONEY=1, number(//PRODUCT), c]
+            - [BAL.WAGAMT, DEFRECBAL, true, number(//PROD_NUM), s, //WAGAMT]
+            - [TMF.WAGAMT, TT_WAGER, //_UPDATE_MONEY=1, number(//PRODUCT), s, number(//_AMOUNT)]
+
+        # Full path to file to write final statistics
+        # default: null
+        statfile: /tmp/statfile.xml
+        
+        # datconv writer module to write final statistics
+        # All datconv compatible writer modules can be used here.
+        # The keys below are the same keys that you normaly have under Writer root key in YAML file.
+        # This key must be set togather with above statfile key.
+        # If this key is null final statistics are being sent to configured logger as info messages.
+        # default: null
+        statwriter:
+            Module: datconv.writers.dcxml
+            CArg: 
+                pretty: false
+            

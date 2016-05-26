@@ -64,6 +64,11 @@ Filter:
 # If it is missing or null following configuration is used:
 #   all log messages are being sent to standard error stream
 #   messages of severity below WARNING are discarded
+# If this key value is a string it means that Logger class is
+#   inherited from calling code by invoking logging.getLogger('XXX').getChild('datconv')
+#   where XXX is the key value (name of parent logger).
+# If this key value is dictionary (i.e. key contains bubkeys)
+#   it directly specify loger configuration or redirects to other file (as described below).
 # default: null
 Logger:
     # This key allows to redirect logger configuration to other file.

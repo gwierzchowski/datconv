@@ -1,8 +1,6 @@
 Datconv - Universal Data Converter
 ==================================
 
-Works only with Python 2.7.
-
 For package description see DESCR.md file
 
 INSTALLATION (System wide - for all users):
@@ -44,11 +42,11 @@ which will create `dist` subfolder and create source-ball in it. Then apply meth
 ### Files deployed by installation script
 - Main command line utility:  
   Linux: `<BINDATA>/datconv`, where `<BINDATA>` is by default `/usr/local/bin`  
-  Windows: `<BINDATA>\Scripts\datconv-run.py`, where `<BINDATA>` is by default `C:\Python27` 
+  Windows: `<BINDATA>\Scripts\datconv-run.py`, where `<BINDATA>` is by default `C:\Program Files\PythonXX` where XX is Python version  
 - `datconv` package and its sub-packages 
 - Documentation:  
   Linux: `<PREFIX>/share/doc/datconv/*`, where `<PREFIX>` is by default `/usr/local`  
-  Windows: `<PREFIX>\doc\datconv\*`, where `<PREFIX>` is by default `C:\Python27`
+  Windows: `<PREFIX>\doc\datconv\*`, where `<PREFIX>` is by default `C:\Program Files\PythonXX`
 
 RE-INSTALLATION/UPGRADE:
 ------------------------
@@ -63,6 +61,8 @@ USAGE:
 ------
 
 Please refer to  deployed documentation and Pydoc accesible information contained in this package.  
+Consider also installing `datconv_tests` package which contain test scripts for this package. 
+It can also be used as source of samples of how this package may be used.
 
 ### Additional configuration: 
 There are some pydoc descriptions in several script files
@@ -75,9 +75,9 @@ Linux: edit `/usr/bin/pydoc` file:
 - create symlink:  
   `sudo ln -s /usr/local/bin/datconv /usr/local/bin/datconv-run.py`.
   
-Windows: edit `C:\Python27\Tools\Scripts\pydocgui.pyw` file:  
+Windows: edit `C:\Program Files\PythonXX\Tools\Scripts\pydocgui.pyw` file:  
 - at begin add: `import sys`  
-- before pydoc.gui() call, add `sys.path.append('C:\\Python27\\Scripts')`
+- before pydoc.gui() call, add `sys.path.append('C:\\Program Files\\PythonXX\\Scripts')`
 
 ### Obtaining Pydoc information: 
 Perform above 'hacks', and run conmand:  
@@ -87,5 +87,5 @@ and then press 'Open Browser' or manually navigate to given URL.
 Note: this URL does not work with Windows IE browser. 
 Then go to below sections (near bottom of page):  
 Linux: `/usr/local/lib/python2.7/dist-packages/`, `/usr/local/bin`  
-Windows: `C:\Python27\Lib\site-packages`, `C:\Python27\Scripts`  
+Windows: `C:\Program Files\PythonXX\Lib\site-packages`, `C:\Program Files\PythonXX\Scripts`  
 and go into `datconv(package)` or `datconv-run` link.

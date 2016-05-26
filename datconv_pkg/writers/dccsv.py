@@ -7,6 +7,7 @@ Please see DCWriter constructor description for more details.
 from __future__ import print_function
 
 # Standard Python Libs
+import sys
 import csv
 import logging
 
@@ -115,7 +116,10 @@ class DCWriter:
                             val = res
                         elif not isinstance(res, list): # exclude empty list
                             val = str(res)
-                line.append(val)
+                if val and sys.version_info.major == 2:
+                    line.append(val.encode('utf8'))
+                else:
+                    line.append(val)
 
             if self._auto_cno > 0 and len(line) < self._auto_cno:
                 line = line + [None]*(self._auto_cno - len(line))

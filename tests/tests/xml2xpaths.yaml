@@ -1,0 +1,21 @@
+Reader: 
+    Module: datconv.readers.dcxml
+    CArg:
+        bratags:  [mondial]
+        headtags: []
+        rectags:  [country]
+        #rectags:  [continent,country,organization,mountain,desert,island,river,sea,lake]
+        log_prog_step: 10000
+
+    PArg:
+        inpath:  "data_in/mondial-3.0.xml"
+        outpath: "$1/mondial-3.0-country30-40.xpath"
+        rfrom:    30
+        rto:      40
+
+Writer:
+    Module: datconv.writers.dcxpaths
+    #CArg: 
+
+Logger:
+    Conf: "Logger.yaml"

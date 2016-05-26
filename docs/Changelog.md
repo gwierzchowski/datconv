@@ -2,11 +2,12 @@ Development plans for future:
 ----------------------------------
 Points are specified in priority (and probably implementation) order:
 
-- Port to Python 3.
-- Write basic getting started guide.
+- Write basic getting started guide (qustionable - see provided test scripts as documentation)
 - Better support for running datconv as paralell proceses
   e.g. convering big files in paralell (using rfrom/rto settings).
 - Readers: CSV; Writers: Database, PostgreSQL binary input files.
+- XPath Writer: Improve generated column names (possibly use _ instead of . and make col names unique).
+  This is in preparation for SQL Writers (col names as database fields).
 
 Notes about versioning schema:
 - First, major number will be changed when changes breaks backward compatibility, 
@@ -17,6 +18,17 @@ Notes about versioning schema:
   This is labeled as Feature Release, and in this case minor number is reset to zero.
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
+
+0.3.0 (2016.05.24):
+----------------------------------
+### Fixes
+- Fixed value returned to shell by datconv script 
+
+### Improvements
+- Port to Python 3.
+- Add option to inherit logger (to use when datconv is called from Python script that already has its own logger).
+- Created basic test scripts - available as separate `datconv_tests` package.
+- New filter: `datconv.filters.statex`.
 
 0.2.4 (2016.03.06):
 ----------------------------------

@@ -1,0 +1,23 @@
+Reader: 
+    Module: datconv.readers.dcxml
+    CArg:
+        bratags:  [mondial]
+        headtags: []
+        rectags:  [country]
+        #rectags:  [continent,country,organization,mountain,desert,island,river,sea,lake]
+        log_prog_step: 10000
+
+    PArg:
+        inpath:  "data_in/mondial-3.0.xml"
+        outpath: "$1/mondial-3.0-country30-40.csv"
+        rfrom:    30
+        rto:      40
+
+Writer:
+    Module: datconv.writers.dccsv
+    CArg: 
+        # Note: with columns in auto-mode there is difference in output between Python2 and Python3
+        columns: data_in/mondial-3.0-country30-40.xpath
+
+Logger:
+    Conf: "Logger.yaml"

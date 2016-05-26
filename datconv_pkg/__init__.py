@@ -32,45 +32,51 @@ class Datconv:
     def Run(self, conf):
         """Method that runs conversion peocess.
         conf - is a dict() object with keys as apecified by datconv main YAML configuration file.
+        Returns: 2 in case of invalid configuration; 0 if run sucessfully; may throw exception
         """
         ####################################################################
         ## Set-up Logger
         global Logger
+        logger_name = 'datconv'
         logger_conf = conf.get('Logger')
-        if logger_conf:
+        if isinstance(logger_conf, dict):
             if logger_conf.get('Conf'):
                 logger_conf = yaml.load(open(logger_conf.get('Conf')).read())
             logging.config.dictConfig(logger_conf)
+            Logger = logging.getLogger(logger_name)
+        if isinstance(logger_conf, str):
+            Logger = logging.getLogger(logger_conf).getChild(logger_name)
         else:
             logging.basicConfig(stream = sys.stderr, level = logging.WARNING)
-        logger_name = 'datconv'
-        Logger = logging.getLogger(logger_name)
+            Logger = logging.getLogger(logger_name)
 
         ####################################################################
         ## Read configuration
         reader_conf = conf.get('Reader')
         if reader_conf is None:
-            Logger.critical('Obligatory "Reader" key not defined in %s' % conf_name)
-            sys.exit(1)
+            Logger.critical('Obligatory "Reader" key not defined in configuration')
+            return 2
         reader_path = reader_conf.get('Module')
         if reader_path is None:
-            Logger.critical('Obligatory "Reader":{"Module"} key not defined in %s' % conf_name)
-            sys.exit(1)
+            Logger.critical('Obligatory "Reader":{"Module"} key not defined in configuration')
+            return 2
         reader_mod = import_module(reader_path)
-        reader_mod.Log = logging.getLogger(logger_name + '.reader')
+        # reader_mod.Log = logging.getLogger(logger_name + '.reader')
+        reader_mod.Log = Logger.getChild('reader')
         reader_class = getattr(reader_mod, 'DCReader')
         Logger.debug('Reader: %s(%s)', reader_class, reader_conf.get('CArg'))
 
         writer_conf = conf.get('Writer')
         if writer_conf is None:
-            Logger.critical('Obligatory "Writer" key not defined in %s' % conf_name)
-            sys.exit(1)
+            Logger.critical('Obligatory "Writer" key not defined in configuration')
+            return 2
         writer_path = writer_conf.get('Module')
         if writer_path is None:
-            Logger.critical('Obligatory "Writer":{"Module"} key not defined in %s' % conf_name)
-            sys.exit(1)
+            Logger.critical('Obligatory "Writer":{"Module"} key not defined in configuration')
+            return 2
         writer_mod = import_module(writer_path)
-        writer_mod.Log = logging.getLogger(logger_name + '.writer')
+        # writer_mod.Log = logging.getLogger(logger_name + '.writer')
+        writer_mod.Log = Logger.getChild('writer')
         writer_class = getattr(writer_mod, 'DCWriter')
         Logger.debug('Writer: %s(%s)', writer_class, writer_conf.get('CArg'))
 
@@ -79,7 +85,8 @@ class Datconv:
             filter_path = filter_conf.get('Module')
             if filter_path is not None:
                 filter_mod = import_module(filter_path)
-                filter_mod.Log = logging.getLogger(logger_name + '.filter')
+                # filter_mod.Log = logging.getLogger(logger_name + '.filter')
+                filter_mod.Log = Logger.getChild('filter')
                 filter_class = getattr(filter_mod, 'DCFilter')
                 Logger.debug('Filter: %s(%s)', filter_class, filter_conf.get('CArg'))
             else:
@@ -104,10 +111,11 @@ class Datconv:
         Logger.info('Process: %s', reader_parg)
         reader.Process(**reader_parg)
         Logger.info('Finished SUCESSFULLY') #TODO: Not necessary true, introduce kind of err, warn counters
+        return 0
 
 
 ########################################################################
-from version import *
+from .version import *
 __author__  = datconv_author
 __status__  = datconv_status
 __version__ = datconv_version

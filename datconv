@@ -62,7 +62,11 @@ or
 datconv --version
 which prints version number to standard output and exit.
 
-The datconv script returns to shell 0 on sucess or 1 on error.
+The datconv script returns to shell:
+    0 on sucess 
+    1 on general error (exception)
+    2 on invalid command parameters
+    3 on user break (Ctrl-C)
 """
 
 # Standard Python Libs
@@ -96,7 +100,7 @@ if __name__ == "__main__":
 Usage1: %s yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 Usage2: %s --version
 """ % (script_name, script_name))
-            sys.exit(1)
+            sys.exit(2)
             
         if sys.argv[1] == '--version':
             sys.stdout.write('datconv version: %s\n' % datconv_version)
@@ -110,16 +114,20 @@ Usage2: %s --version
         arg_keys = list()
         arg_num = 1
         conf_name = sys.argv[1]
-        conf_text = open(conf_name).read()
+        try:
+            conf_text = open(conf_name).read()
+        except IOError:
+            traceback.print_exc()
+            sys.exit(2)
         for i in range(2,len(sys.argv)):
             if sys.argv[i].startswith('--'):
                 kv = sys.argv[i][2:].split(':')
                 if len(kv) < 2:
                     sys.stderr.writelines(
-"""ERROR: Wrong command arguments - argument: %s should have the form: --key:val
-Where key is collon-separated compoud key, eg. Writer:CArg:pretty
+"""ERROR: Wrong command arguments; argument: %s should have the form: --key:val
+Where key is collon-separated compoud key: e.g. Writer:CArg:pretty
 """ % sys.argv[i])
-                    sys.exit(1)
+                    sys.exit(2)
                 arg_keys.append(kv)
             else:
                 conf_text = conf_text.replace('$' + str(arg_num), sys.argv[i])
@@ -137,16 +145,15 @@ Where key is collon-separated compoud key, eg. Writer:CArg:pretty
         ####################################################################
         ## Run process
         pd = Datconv()
-        pd.Run(conf)
+        sys.exit(pd.Run(conf))
     
-    except SystemExit:
-        pass
     except KeyboardInterrupt:
         if Logger:
             Logger.info('Process broken on user request (Ctrl-C pressed)')
         else:
             sys.stdout.write('Process broken on user request (Ctrl-C pressed)\n')
-    except:
+        sys.exit(3)
+    except Exception:
         sys.stderr.write('Exception was thrown during %s execusion\n' % script_name)
         if Logger:
             sys.stderr.write('Look at configured Logger for more details\n')

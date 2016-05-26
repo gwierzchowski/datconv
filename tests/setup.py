@@ -5,50 +5,61 @@ from __future__ import print_function
 
 import os, sys
 import distutils.core, distutils.file_util
+from glob import glob
 
-sys.path.insert(0, '.')
-from datconv_pkg.version import *
+#sys.path.insert(0, '.')
+#from datconv_pkg.version import *
 
 
 if os.name == 'posix':
-    doclocation = 'share/doc/datconv'
+    doclocation = 'share/doc/datconv_test'
 else:
-    doclocation = 'doc/datconv'
+    doclocation = 'doc/datconv_test'
 
-if os.name == 'nt':
-    distutils.file_util.copy_file('datconv', 'datconv-run.py')
-    scripts = ['datconv-run.py']
+if os.name == 'posix':
+    testlocation = 'share/datconv_test'
 else:
-    scripts = ['datconv']
+    testlocation = 'datconv_test'
+testfiles = glob('tests/*')
+testfiles.remove('tests/data_in')
 
-with open('DESCR.md') as f:
-    long_description = f.read()
+if os.name == 'posix':
+    datalocation = 'share/datconv_test/data_in'
+else:
+    datalocation = 'datconv_test/data_in'
 
-dist = distutils.core.setup(name = 'datconv',
-    version = datconv_version,
-    description = 'Universal data converter - pandoc for data',
-    long_description = long_description,
+with open('README.md') as f:
+    long_descr = ''
+    in_desc = False
+    for line in f:
+        if in_desc:
+            if line.strip() == '':
+                break
+            long_descr = long_descr + line
+        if line.startswith('## DESCRIPTION:'):
+            in_desc = True
+
+dist = distutils.core.setup(name = 'datconv_test',
+    version = '0.1.0',
+    description = 'Testing scripts for datconv package',
+    long_description = long_descr,
     author = 'Grzegorz Wierzchowski',
     author_email = 'gwierzchowski@wp.pl',
     url = 'https://github.com/gwierzchowski/datconv',
-    packages = ['datconv','datconv.filters','datconv.readers','datconv.writers'],
-    package_dir = {'datconv': 'datconv_pkg'},
-    package_data = {'datconv': ['conf_template.yaml', 'Logger.yaml'],
-                    'datconv.filters': ['conf_template.yaml'],
-                    'datconv.readers': ['conf_template.yaml'],
-                    'datconv.writers': ['conf_template.yaml']},
-    scripts = scripts,
-    data_files = [(doclocation, ['README.md', 'LICENSE.txt', 'DESCR.md', 'docs/Changelog.md', 'docs/Upgrade.md'])],
-    requires = ['PyYAML', 'lxml'],
+    packages = ['datconv_test'],
+    scripts = ['datconv_tests2', 'datconv_tests3'],
+    data_files = [(doclocation, ['README.md', 'LICENSE.txt', 'Changelog.md']),
+                  (testlocation, testfiles),
+                  (datalocation, glob('tests/data_in/*'))],
+    requires = ['datconv'],
     license = 'PSF',
-    platforms = 'any',
     classifiers = [
-        'Development Status :: ' + datconv_status,
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: Python Software Foundation License',
-        'Operating System :: OS Independent',
+        'Operating System :: POSIX',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -62,9 +73,9 @@ if sys.argv[1] in ['install']:
     # Unfotunately while installing using pip those print statements does not work on Windows
     print ('---------------------------------------------------------')
     try:
-        import yaml, lxml
+        import datconv
     except ImportError:
-        print ('To run this software install packages PyYAML, lxml')
+        print ('To run this software install package datconv')
     isobj = dist.get_command_obj('install_data')
     readmedoc = None
     for doc in isobj.get_outputs():

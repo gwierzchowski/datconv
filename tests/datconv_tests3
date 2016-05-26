@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# This script is supposed to run tests against Python2
+# - check below definitions and aliases before running it
+
+export t_outdir=/tmp/data3_out
+export t_datconv=$(which datconv)
+
+alias t_python="/usr/bin/python3"
+
+########
+echo Testing 
+t_python $t_datconv --version
+echo
+echo Using 
+t_python --version
+# echo Using $(t_python --version)
+echo
+
+mkdir -p $t_outdir
+cd /usr/local/share/datconv_test
+
+. ./retval
+. ./xml2xml
+. ./xml2xpaths
+. ./xml2csv
+
+# rmdir $t_outdir

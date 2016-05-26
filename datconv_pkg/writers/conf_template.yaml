@@ -8,10 +8,11 @@ Writer:
         
         # Determines emcoding used in output XML file.
         # Note that if encoding is set to ascii some characters may be converted to XML/HTML compatibe special codes
-        # Most raliable way is to set utf-8 here
+        # Most raliable way is to set unicode here (default option)
         # See documantation of codecs standard Python library for possible encodings.
-        # default: ascii
-        encoding: utf-8
+        # Note: This option is ignored in Python3, where always unicode coding is used what produce UTF-8 XML file.
+        # default: utf8 (in Python2), unicode (in Python3 and above)
+        encoding: unicode
         
         # Tag name to store records countin output footer, if not set records count will not be printed
         # default: null

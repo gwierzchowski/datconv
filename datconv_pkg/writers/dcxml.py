@@ -12,14 +12,13 @@ import sys
 # Libs installed using pip
 from lxml import etree
 
-
 Log = None
 """Log varaible is automatically set by main pandoc script using logging.getLogger method.
 Use it for logging messages in need.
 """
 
 class DCWriter:
-    def __init__(self, pretty = True, encoding = 'ascii', cnt_tag = None, cnt_attr = None):
+    def __init__(self, pretty = True, encoding = 'unicode', cnt_tag = None, cnt_attr = None):
         """Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
         pretty - this parameter is passed to lxml.etree.tostring function.
                  If True, XML is formated in readable way (one tag in one line),
@@ -27,6 +26,7 @@ class DCWriter:
         encoding - this parameter is passed to lxml.etree.tostring function.
                    It determines emcoding used in output XML file.
                    See documantation of codecs standard Python library for possible encodings.
+                   Note: This parameter is ignored in Python3, where always unicode coding is used.
         cnt_tag  - tag name to store records count, if not set record count will not be printed in output footer
         cnt_attr - attribute of cnt_tag tag to store records count, if not set record count will be printed as tag text
         For more detailed descriptions see conf_template.yaml file in this module folder.
@@ -35,6 +35,11 @@ class DCWriter:
 
         self._pretty = pretty
         self._enc = encoding
+        if sys.version_info.major > 2 and encoding != 'unicode':
+            self._enc = 'unicode'
+            Log.warning("Unsupported parameter: encoding used; setting ignored")
+        if sys.version_info.major == 2 and encoding == 'unicode':
+            self._enc = 'utf8'
         self._cnt_tag = cnt_tag
         self._cnt_attr = cnt_attr
         self._out = sys.stdout
@@ -47,7 +52,10 @@ class DCWriter:
         self._bratags = []
         
     def writeHeader(self, header):
-        self._out.write('<?xml version="1.0" encoding="%s"?>\n' % self._enc)
+        if self._enc == 'unicode':
+            self._out.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+        else:
+            self._out.write('<?xml version="1.0" encoding="%s"?>\n' % self._enc)
         for h in header:
             if isinstance(h, dict):
                 if '_tag_' in h and '_bra_' in h and h['_bra_']:

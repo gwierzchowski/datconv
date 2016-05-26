@@ -1,7 +1,7 @@
 **datconv** is a script intended to perform configurable comversion of file
 with data in one format to file with data in another format.
 
-Script should be run using Python 2.7 interpretter. It also requires
+Script should be run using Python 2.7 or Python 3.x interpretter. It also requires
 installation of external modules: lxml, PyYAML. For more information see
 README.md file distributed in source ball.
 

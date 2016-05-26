@@ -1,0 +1,19 @@
+Reader: 
+    Module: datconv.readers.dcxml
+    CArg:
+        bratags:  [mondial]
+        headtags: []
+        rectags:  [continent,country,organization,mountain,desert,island,river,sea,lake]
+        log_prog_step: 10000
+
+    PArg:
+        inpath:  "data_in/xxx.xml" # this file does not exists on purpose
+        outpath: "$1/mondial-3.0.xml"
+
+Writer:
+    Module: datconv.writers.dcxml
+    CArg: 
+        pretty: true
+
+Logger:
+    Conf: "Logger.yaml"

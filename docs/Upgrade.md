@@ -1,3 +1,10 @@
+Upgrade from Datconv version 0.2.x to Datconv 0.3.x:
+--------------------------------------------------
+
+### Changes in parameters default values
+Changed default value for parameter `encoding` of `datconv.writers.dcxml`. It was `ascii` and is now `unicode`.
+Note that this parameter is ignored while run against Python3.
+
 Upgrade from Pandata version 0.1 to Datconv 0.2.x:
 --------------------------------------------------
 
@@ -51,7 +58,7 @@ sould give:
 and:  
 `C:\>ftype Python.File`  
 sould give:  
-`Python.File="c:\python26\python.exe" "%1" %*`  
+`Python.File="c:\python27\python.exe" "%1" %*`  
 
 Important is `%\*` at end - what allows to pass additional arguments to
 program.

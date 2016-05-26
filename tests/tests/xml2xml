@@ -1,0 +1,43 @@
+#!/bin/sh
+
+echo Test XML to XML conversion
+
+#### Prerequisites
+failed=0
+type xmllint >/dev/null
+[ $? -ne 0 ] && echo xmllint program must be installed\; skipping test && failed=1
+type dwdiff >/dev/null
+[ $? -ne 0 ] && echo dwdiff program must be installed\; skipping test && failed=1
+type diff >/dev/null
+[ $? -ne 0 ] && echo diff program must be installed\; skipping test && failed=1
+[ $failed -ne 0 ] && exit
+# On systems derived from Debian those programs should be available in repositories:
+# xmllint in package libxml2-utils
+# dwdiff in package dwdiff
+# diff in package diffutils (should be installed by default)
+
+Nrun=0
+Nfailed=0
+
+#### 1: Test that XML is converted on equivalent XML
+Nrun=$(($Nrun+1)); failed=0
+
+t_python $t_datconv xml2xml.yaml $t_outdir || failed=1
+[ $failed -eq 0 ] && xmllint --c14n data_in/mondial-3.0.xml >$t_outdir/c14_in_mondial-3.0.xml || failed=1
+[ $failed -eq 0 ] && xmllint --c14n $t_outdir/mondial-3.0.xml >$t_outdir/c14_out_mondial-3.0.xml || failed=1
+[ $failed -eq 0 ] && dwdiff -d "<>" -W " \n" -3 $t_outdir/c14_in_mondial-3.0.xml $t_outdir/c14_out_mondial-3.0.xml >$t_outdir/mondial-3.0.dwdiff 2>$t_outdir/dwdiff_err
+[ -s $t_outdir/dwdiff_err ] && failed=1 && cat $t_outdir/dwdiff_err
+[ $failed -eq 0 ] && diff -qwB data_in/mondial-3.0.dwdiff $t_outdir/mondial-3.0.dwdiff >$t_outdir/diff_out || failed=1
+[ -s $t_outdir/diff_out ] && failed=1 && cat $t_outdir/diff_out
+
+[ $failed -ne 0 ] && Nfailed=$(($Nfailed+1))
+[ $failed -ne 0 ] && echo Failed test $Nrun
+####
+
+## TODO: Add tests for Filters: add / delete / change record
+
+#### Cleanup and Summary
+rm -fR $t_outdir/*
+echo Run $Nrun tests\; failed $Nfailed
+echo
+

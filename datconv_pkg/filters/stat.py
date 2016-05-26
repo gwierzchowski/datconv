@@ -14,11 +14,12 @@ Use it for logging messages in need.
 """
 
 class DCFilter:
-    def __init__(self, retval = 1, rectyp = True, fields = []):
+    def __init__(self, retval = 1, rectyp = True, printzero = False, fields = []):
         """Parameters are usually passed from YAML file as subkeys of Filter:CArg key.
         retval - value that filter returns (0 to skip records, 1 to write records);
         rectyp - if True, record type (root tag) is included into statistics;
                  i.e. it is printed how many records are of particular types.
+        printzero - if True, not found records (with count 0) are included into summary (except when groupping is used)
         fields - list of 2 elements' lists:
                  first element is absolute XPath expression to make statistics against 
                  (lxml.etree._element.xpath method compatible)
@@ -34,6 +35,10 @@ class DCFilter:
         self._fields = fields
         self._stats = {}
         self._recno = 1
+        if printzero:
+            for fld in self._fields:
+                if fld[1] != 1:
+                    self._stats[fld[0]] = 'not found', 0
 
     def filterRecord(self, record):
         if self._rectyp:
@@ -72,7 +77,10 @@ class DCFilter:
                 val = self._stats.get(key)
                 if val:
                     f, c = val
-                    self._stats[key] = f, c + 1
+                    if c > 0:
+                        self._stats[key] = f, c + 1
+                    else:
+                        self._stats[key] = self._recno, 1
                 else:
                     self._stats[key] = self._recno, 1
          
@@ -82,5 +90,8 @@ class DCFilter:
     def __del__(self):
         for k in sorted(self._stats.keys()):
             v = self._stats[k]
-            Log.info("%s: first %d, count %d", k, v[0], v[1])
+            if isinstance(v[0], int):
+                Log.info("%s: first %d, count %d", k, v[0], v[1])
+            else:
+                Log.info("%s: first %s, count %d", k, str(v[0]), v[1])
             
