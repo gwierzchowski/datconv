@@ -37,7 +37,7 @@ class DCWriter:
         self._enc = encoding
         if sys.version_info.major > 2 and encoding != 'unicode':
             self._enc = 'unicode'
-            Log.warning("Unsupported parameter: encoding used; setting ignored")
+            Log.warning('Unsupported parameter: "encoding" used; setting ignored')
         if sys.version_info.major == 2 and encoding == 'unicode':
             self._enc = 'utf8'
         self._cnt_tag = cnt_tag

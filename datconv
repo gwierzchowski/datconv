@@ -147,18 +147,8 @@ Where key is collon-separated compoud key: e.g. Writer:CArg:pretty
         pd = Datconv()
         sys.exit(pd.Run(conf))
     
-    except KeyboardInterrupt:
-        if Logger:
-            Logger.info('Process broken on user request (Ctrl-C pressed)')
-        else:
-            sys.stdout.write('Process broken on user request (Ctrl-C pressed)\n')
-        sys.exit(3)
     except Exception:
         sys.stderr.write('Exception was thrown during %s execusion\n' % script_name)
-        if Logger:
-            sys.stderr.write('Look at configured Logger for more details\n')
-            Logger.exception('Exception was thrown during %s execusion' % script_name)
-        else:
-            traceback.print_exc()
+        traceback.print_exc()
         sys.exit(1)
 
