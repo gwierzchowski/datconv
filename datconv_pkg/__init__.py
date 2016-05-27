@@ -24,6 +24,13 @@ if __package__ != 'datconv_pkg':
 sys.path.append('.')
 Logger = None
 
+########################################################################
+from .version import *
+__author__  = datconv_author
+__status__  = datconv_status
+__version__ = datconv_version
+__date__    = datconv_date
+
 ############################################################################
 class Datconv:
     """Instead of calling datconv from command line, one can create this class instance
@@ -129,10 +136,8 @@ class Datconv:
                 traceback.print_exc()
             return 1
 
-
-########################################################################
-from .version import *
-__author__  = datconv_author
-__status__  = datconv_status
-__version__ = datconv_version
-__date__    = datconv_date
+    def Version(self):
+        """Method that returns datconv version.
+        """
+        return datconv_version
+    
