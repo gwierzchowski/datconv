@@ -19,19 +19,24 @@ Notes about versioning schema:
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
 
+0.3.2 (2016.06.01):
+----------------------------------
+### Improvements
+- Extended method Datconv().Version() for possibility to display version of external module.
+
 0.3.1 (2016.05.27):
 ----------------------------------
 ### Fixes
-- Fixed exceptions being logged only to console (stderr, not by configured logger)
-- Fixed duplicated log entries to console (bug introduded by 0.3.0 version)
+- Fixed exceptions being logged only to console (stderr, not by configured logger).
+- Fixed duplicated log entries to console (bug introduded by 0.3.0 version).
 
 ### Improvements
-- Added method Datconv().Version()
+- Added method Datconv().Version().
 
 0.3.0 (2016.05.24):
 ----------------------------------
 ### Fixes
-- Fixed value returned to shell by datconv script 
+- Fixed value returned to shell by datconv script.
 
 ### Improvements
 - Port to Python 3.

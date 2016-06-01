@@ -83,7 +83,6 @@ class Datconv:
                 Logger.critical('Obligatory "Writer":{"Module"} key not defined in configuration')
                 return 2
             writer_mod = import_module(writer_path)
-            # writer_mod.Log = logging.getLogger(logger_name + '.writer')
             writer_mod.Log = Logger.getChild('writer')
             writer_class = getattr(writer_mod, 'DCWriter')
             Logger.debug('Writer: %s(%s)', writer_class, writer_conf.get('CArg'))
@@ -93,7 +92,6 @@ class Datconv:
                 filter_path = filter_conf.get('Module')
                 if filter_path is not None:
                     filter_mod = import_module(filter_path)
-                    # filter_mod.Log = logging.getLogger(logger_name + '.filter')
                     filter_mod.Log = Logger.getChild('filter')
                     filter_class = getattr(filter_mod, 'DCFilter')
                     Logger.debug('Filter: %s(%s)', filter_class, filter_conf.get('CArg'))
@@ -136,8 +134,19 @@ class Datconv:
                 traceback.print_exc()
             return 1
 
-    def Version(self):
-        """Method that returns datconv version.
+    def Version(self, ext_module = None, ext_verobj = None):
+        """If ext_module is None method returns datconv version.
+           Otherwise it loads ext_module module and returns its ext_verobj object ('__version__' by default).
         """
-        return datconv_version
+        if ext_module is None:
+            return datconv_version
+        try:
+            if ext_verobj is None:
+                ext_verobj = '__version__'
+            ext_mod = import_module(ext_module)
+            ext_ver = getattr(ext_mod, ext_verobj)
+            return str(ext_ver)
+        except ImportError:
+            return 'Not installed'
+        
     
