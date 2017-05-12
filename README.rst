@@ -66,19 +66,21 @@ RE-INSTALLATION/UPGRADE
 | Other installation methods specified above remain valid when upgrading package.  
 
 .. note::
-   if you upgrade from previous pandata/datconv version check ``Upgrade.md`` file deployed in documentation folder.
+   if you upgrade from previous pandata/datconv version check ``Upgrade.rst`` file deployed in documentation folder.
 
 USAGE:
 ------
-Please refer to  deployed documentation and Pydoc accesible information contained in this package. 
+Please refer to on-line or deployed documentation and Pydoc accesible information contained in this package. 
 Consider also installing ``datconv_tests`` package which contain test scripts for this package. 
 It can also be used as source of samples of how this package may be used.
 
-Additional configuration 
+Official on-line documentation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. warning::
-   TODO: Update this section after Sphinx-based documantation will be ready.
+Official program documentation is avaialble 
+`here <http://datconv.readthedocs.io>`_.
 
+Additional configuration for Pydoc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 There are some pydoc descriptions in several script files
 that are installed into folders not in python module search path,
 therefore standard pydoc browser would not get those descriptions. It is
