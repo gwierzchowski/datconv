@@ -23,6 +23,12 @@ Notes about versioning schema
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
 
+0.3.4 (2017.05.12)
+----------------------------------
+Fixes
+^^^^^^^^^^^^
+- Small fixes after documentation was published `on-line <http://datconv.readthedocs.io>`_.
+
 0.3.3 (2017.05.06)
 ----------------------------------
 Improvements
