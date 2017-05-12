@@ -14,20 +14,21 @@ Use it for logging messages in need.
 """
 
 class DCFilter:
+    """Please see constructor description for more details."""
     def __init__(self, retval = 1, rectyp = True, printzero = False, fields = []):
-        """Parameters are usually passed from YAML file as subkeys of Filter:CArg key.
-        retval - value that filter returns (0 to skip records, 1 to write records);
-        rectyp - if True, record type (root tag) is included into statistics;
-                 i.e. it is printed how many records are of particular types.
-        printzero - if True, not found records (with count 0) are included into summary (except when groupping is used)
-        fields - list of 2 elements' lists:
-                 first element is absolute XPath expression to make statistics against 
-                 (lxml.etree._element.xpath method compatible)
-                 second element is a digit:
-                 0 - if we test against element existance (i.e. not None and not [])
-                 1 - if we are grouping against element value
-                 2 - if given XPath expression returns boolean value.
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        """Constructor parameters are usually passed from YAML file as subkeys of Filter:CArg key.
+        
+        :param retval: value that filter returns (0 to skip records, 1 to write records);
+        :param rectyp: if True, record type (root tag) is included into statistics; i.e. it is printed how many records are of particular types.
+        :param printzero: if True, not found records (with count 0) are included into summary (except when groupping is used)
+        :param fields: list of 2 elements' lists: |br|
+            - first element is absolute XPath expression to make statistics against  (lxml.etree._element.xpath method compatible) |br|
+            - second element is a digit: |br|
+            0 - if we test against element existance (i.e. not None and not []) |br|
+            1 - if we are grouping against element value |br|
+            2 - if given XPath expression returns boolean value.
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <filters_conf_template>` file in this module folder.
         """
         assert Log is not None
         self._retval = retval

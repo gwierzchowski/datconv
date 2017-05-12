@@ -15,11 +15,14 @@ Use it for logging messages in need.
 """
 
 class DCFilter:
+    """Please see constructor description for more details."""
     def __init__(self, inclusive = True, rectyp = []):
-        """Parameters are usually passed from YAML file as subkeys of Filter:CArg key.
-        inclusive - if False, record types given in rectyp are excluded, otherwise only rectyp records are included;
-        rectyp - list of record types (root tags of records).
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        """Constructor parameters are usually passed from YAML file as subkeys of Filter:CArg key.
+        
+        :param inclusive: if False, record types given in rectyp are excluded, otherwise only rectyp records are included;
+        :param rectyp: list of record types (root tags of records).
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <filters_conf_template>` file in this module folder.
         """
         assert Log is not None
         self._inclusive = inclusive

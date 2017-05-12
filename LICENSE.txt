@@ -1,7 +1,7 @@
 The datconv package is distributed under PSF ("Python Software Foundation")-style license.
  
-Grzegorz Wierzchowski LICENSE AGREEMENT FOR DATCONV:
-
+Grzegorz Wierzchowski LICENSE AGREEMENT FOR DATCONV
+---------------------------------------------------
     1. This LICENSE AGREEMENT is between the Grzegorz M. Wierzchowski (“GMW”), and the Individual or Organization (“Licensee”) 
        accessing and otherwise using Datconv software in source or binary form and its associated documentation.
     2. Subject to the terms and conditions of this License Agreement, GMW hereby grants Licensee a nonexclusive, royalty-free, 

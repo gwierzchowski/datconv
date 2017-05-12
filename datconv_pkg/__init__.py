@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 This module provides Datconv class which encapsulate all datconv features
-and can be created and called from other Python script as e.g.:
+and can be created and called from other Python script as e.g.::
 
-import datconv
-...
+    import datconv 
     pd = Datconv()
     conf = ...
     pd.Run(conf)
@@ -37,9 +36,10 @@ class Datconv:
     inside other Python script and call its Run() method.
     """
     def Run(self, conf):
-        """Method that runs conversion peocess.
-        conf - is a dict() object with keys as apecified by datconv main YAML configuration file.
-        Returns: 2 in case of invalid configuration; 0 if run sucessfully; may throw exception
+        """Method that runs conversion process.
+        
+        :param conf: is a ``dict()`` object with keys as apecified by datconv main YAML configuration file.
+        :returns: 2 in case of invalid configuration; 0 if run sucessfully; may throw exception
         """
         try:
             ####################################################################
@@ -136,7 +136,7 @@ class Datconv:
 
     def Version(self, ext_module = None, ext_verobj = None):
         """If ext_module is None method returns datconv version.
-           Otherwise it loads ext_module module and returns its ext_verobj object ('__version__' by default).
+           Otherwise it loads ext_module module and returns its ext_verobj object (``__version__`` by default).
         """
         if ext_module is None:
             return datconv_version

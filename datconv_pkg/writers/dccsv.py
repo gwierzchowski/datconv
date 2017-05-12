@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This module implements Pandoc Writer which saves data in form of CSV file.
-Please see DCWriter constructor description for more details.
-"""
+"""This module implements Datconv Writer which saves data in form of CSV file."""
 
 # In Python 2.7 only
 from __future__ import print_function
@@ -24,20 +22,20 @@ Use it for logging messages in need.
 """
 
 class DCWriter:
+    """Please see constructor description for more details."""
     def __init__(self, columns = None, simple_xpath = False, add_header = False, col_names = True, csv_opt = None):
         """Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
-        columns - this parameter may be one of 3 possible types or None.
-                  If it is a string, it should be the path to file that contain specification of columns in output file.
-                  If it is a list, it directly specifies columns in output file.
-                  If it is None or distionary, columns in output CSV file are being generated automatically 
-                  based on contentents of input file. Number of columns in different records in CSV file 
-                  (when this option is used) may very as new columns are being added when discovered.
-        simple_xpath - determines weather simple xpaths are used in column specification.
-                       See pdxpath Writer for more descripption.
-        add_header - if True, generic header (as initialized by Reader) is added as first line of output file.
-        col_names - if True, line with column names (fields) is added before data or after data (in case of auto option).
-        csv_opt - dictionary with csv writer options. See documantation of csv standard Python library.
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        
+        :param columns: this parameter may be one of 3 possible types or None. |br| 
+            If it is a string, it should be the path to file that contain specification of columns in output file. |br|
+            If it is a list, it directly specifies columns in output file. |br|
+            If it is None or distionary, columns in output CSV file are being generated automatically based on contentents of input file. When this option is used number of columns in different records in CSV file may very because new columns are being added when discovered.
+        :param simple_xpath: determines weather simple xpaths are used in column specification. See pdxpath Writer for more descripption.
+        :param add_header: if True, generic header (as initialized by Reader) is added as first line of output file.
+        :param col_names: if True, line with column names (fields) is added before data or after data (in case of auto option).
+        :param csv_opt: dictionary with csv writer options. See documantation of csv standard Python library.
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <writers_conf_template>` file in this module folder.
         """
         assert Log is not None
         dcxpaths.Log = Log

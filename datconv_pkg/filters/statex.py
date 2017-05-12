@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """General Filter that allows to calculate and print required statistics about processed data - extended version.
 Filter prints counts or sums of records that fulfill given expression with option to group by certain data.
-Filter prints statistics at program exit as logger INFO messages."""
+Filter prints statistics at program exit as logger INFO messages or to the file."""
 
 # Standard Python Libs
 from importlib import import_module
@@ -17,13 +17,16 @@ Use it for logging messages in need.
 """
 
 class DCFilter:
+    """Please see constructor description for more details."""
     def __init__(self, retval = 1, fields = [], statfile = None, statwriter = None):
-        """Parameters are usually passed from YAML file as subkeys of Filter:CArg key.
-        retval - value that filter returns (0 to skip records, 1 to write records);
-        fields - list of 5 or 6 elements' lists that define calculated statistics.
-        statfile - file to write final statistics
-        statwriter - datconv writer module to write final statistics
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        """Constructor parameters are usually passed from YAML file as subkeys of Filter:CArg key.
+        
+        :param retval: value that filter returns (0 to skip records, 1 to write records);
+        :param fields: list of 5 or 6 elements' lists that define calculated statistics.
+        :param statfile: file to write final statistics
+        :param statwriter: datconv writer module to write final statistics
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <filters_conf_template>` file in this module folder.
         """
         assert Log is not None
         self._retval = retval

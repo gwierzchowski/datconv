@@ -1,4 +1,4 @@
-"""This package contains datconv compatible Reasder classes for common formats of files used in public."""
+"""This package contains datconv compatible Reader classes for common formats of files used in public."""
 
 from datconv.version import *
 __author__  = datconv_author

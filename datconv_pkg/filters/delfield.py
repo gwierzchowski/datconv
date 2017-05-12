@@ -15,11 +15,13 @@ Use it for logging messages in need.
 """
 
 class DCFilter:
+    """Please see constructor description for more details."""
     def __init__(self, field = []):
-        """Parameters are usually passed from YAML file as subkeys of Filter:CArg key.
-        field - list of fields to remove.
-                Fields must be in form of XPaths understandable by lxml.etree._Element.find method (relative paths)
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        """Constructor parameters are usually passed from YAML file as subkeys of Filter:CArg key.
+        
+        :param field: list of fields to remove. Fields must be in form of XPaths understandable by lxml.etree._Element.find method (relative paths)
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <filters_conf_template>` file in this module folder.
         """
         assert Log is not None
         self._fields = field

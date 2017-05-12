@@ -18,15 +18,15 @@ Use it for logging messages in need.
 """
 
 class DCReader:
-    """This class must be called exactly DCReader.
+    """This class must be named exactly DCReader.
     It is responsible for:
-      - reading input data (i.e. every reader class assumes certain input file format)
-      - driving entire data conversion process (i.e. main processing loop in implemented in this class)
-      - determine internal representation of header, records and footer (this strongly depands on reader and kind of input format).
+    
+    - reading input data (i.e. every reader class assumes certain input file format)
+    - driving entire data conversion process (i.e. main processing loop in implemented in this class)
+    - determine internal representation of header, records and footer (this strongly depands on reader and kind of input format).
     """
     def __init__(self):
-        """Method called when object is being created.
-        Additional parameters may be added to this method, but they all have to be named parameters.
+        """Additional constructor parameters may be added to constructor, but they all have to be named parameters.
         Parameters are usually passed from YAML file as subkeys of Reader:CArg key.
         """
         assert Log is not None
@@ -36,7 +36,8 @@ class DCReader:
     def setWriter(self, writer):
         """Obligatory method that must be defined in Reader class.
         It is called by main datconv.py script after it read configuration file and create Writer class.
-        writer - is instance of Writer class.
+        
+        :param writer: is instance of Writer class.
         """
         self._wri = writer
 
@@ -44,7 +45,8 @@ class DCReader:
         """Obligatory method that must be defined in Reader class.
         It may be called by main datconv.py script after it read configuration file and create Filter class.
         If Filter is not configured this method is not called.
-        filter - is instance of Filter class.
+        
+        :param filter: is instance of Filter class.
         """
         self._flt = filter
 

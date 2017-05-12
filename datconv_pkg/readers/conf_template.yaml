@@ -33,6 +33,6 @@ Reader:
         # default: 1
         rfrom:    1
         
-        # Stop process on this record; process till last record if zero.
+        # Stop process on this record; if zero, process up to last record.
         # default: 0
         rto:      20

@@ -1,21 +1,21 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 datconv is a script intended to perform configurable comversion of file with data in one format to file with data in another format.
 
-Script should be run using Python 2.7 interpretter.
+Script should be run using Python 2.7 or Python 3.x interpretter.
 It also required installation of external modules: lxml, PyYAML.
 For more information see README.md file distributed in source ball.
 
 Both input and output files can be text or binary files.
-However it is assumed that input files and output files have following structure:
+However it is assumed that those files have following structure:
 --- Some Header ---
 Record 1
 Record 2
 ....
 Record N
 --- Some Footer ---
-There may be different types of records (i.e. every record has string characteristic called record type).
+There may be different types of records (i.e. every record has attribute called record type).
 Each record may contain different number and kind of data (have different internal structure) even among records of the same type.
 
 Program has modular architecture with following swichable compoments:
@@ -45,7 +45,7 @@ For more detailed description of concrete modules and classes provided with this
 The datconv script has following call syntax:
 datconv yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 where:
-yaml_file - is obligatory path to file in YAML formet in which above described compoments are set up.
+yaml_file - is obligatory path to file in YAML format in which above described compoments are set up.
             See file conf_template.yaml in this folder for more detailed desctiption of this file.
 --key1:val - any number of arguments thta add new settings or overwrite settings from yaml_file.
              It works this way: let say that in yaml_file we have:

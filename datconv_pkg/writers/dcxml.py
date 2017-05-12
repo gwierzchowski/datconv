@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This module implements Pandoc Writer which saves data in form of XML file.
-Please see DCWriter constructor description for more details.
-"""
+"""This module implements Datconv Writer which saves data in form of XML file."""
 
 # In Python 2.7 only
 from __future__ import print_function
@@ -18,18 +16,16 @@ Use it for logging messages in need.
 """
 
 class DCWriter:
+    """Please see constructor description for more details."""
     def __init__(self, pretty = True, encoding = 'unicode', cnt_tag = None, cnt_attr = None):
-        """Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
-        pretty - this parameter is passed to lxml.etree.tostring function.
-                 If True, XML is formated in readable way (one tag in one line),
-                 otherwise full record is placed in one line (more compact,suitable for computers).
-        encoding - this parameter is passed to lxml.etree.tostring function.
-                   It determines emcoding used in output XML file.
-                   See documantation of codecs standard Python library for possible encodings.
-                   Note: This parameter is ignored in Python3, where always unicode coding is used.
-        cnt_tag  - tag name to store records count, if not set record count will not be printed in output footer
-        cnt_attr - attribute of cnt_tag tag to store records count, if not set record count will be printed as tag text
-        For more detailed descriptions see conf_template.yaml file in this module folder.
+        """Constructor parameters are usually passed from YAML file as subkeys of Writer:CArg key.
+        
+        :param pretty: this parameter is passed to lxml.etree.tostring function. If True, XML is formated in readable way (one tag in one line), otherwise full record is placed in one line (more compact,suitable for computers).
+        :param encoding: this parameter is passed to lxml.etree.tostring function. It determines emcoding used in output XML file. See documantation of codecs standard Python library for possible encodings. This parameter is ignored in Python3, where always unicode coding is used.
+        :param cnt_tag: tag name to store records count, if not set record count will not be printed in output footer
+        :param cnt_attr: attribute of cnt_tag tag to store records count, if not set record count will be printed as tag text
+        
+        For more detailed descriptions see :ref:`conf_template.yaml <writers_conf_template>` file in this module folder.
         """
         assert Log is not None
 

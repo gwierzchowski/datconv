@@ -1,9 +1,9 @@
-# Major configuration file for pandoc.py script.
+# Major configuration file for datconv script.
 # It must follow YAML syntax and have at least 2 obligatory top level keys: Reader, Writer.
 # See below for more details.
-# Note that speficied modules must be loadable from pandoc.py script, i.e.
-#   packages must be placed directly in folder from which pandoc.py script is run (its current folder)
-#   or pandoc.py must be wrapped in script that define PYTHONPATH environmental variable which point to packages root folder
+# Note that speficied modules must be loadable from datconv script, i.e.
+#   packages must be placed directly in folder from which datconv script is run (its current folder)
+#   or datconv must be wrapped in script that define PYTHONPATH environmental variable which point to packages root folder
 #   or packages root folder must be added to Python configuration as folder with packages
 #   every package to be loadable must have (even empty) file named __init__.py
 
@@ -21,7 +21,7 @@ Reader:
         # Note that if default values are good than they mey be omitted.
         # However it is not allowed to have any extra keys not specified in reader documentation
         # If you want to preserve some keys for future use - outcomemnt them
-        encoding:  ascii
+        encoding:  utf-8
         # ...
 
     # Usually obligatory key that specify parameters for DCReader.Process method

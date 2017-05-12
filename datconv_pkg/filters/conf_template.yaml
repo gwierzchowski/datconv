@@ -77,9 +77,9 @@ Filter:
         statfile: /tmp/statfile.xml
         
         # datconv writer module to write final statistics
-        # All datconv compatible writer modules can be used here.
+        # All datconv compatible Writer modules can be used here.
         # The keys below are the same keys that you normaly have under Writer root key in YAML file.
-        # This key must be set togather with above statfile key.
+        # This key must be set together with above statfile key.
         # If this key is null final statistics are being sent to configured logger as info messages.
         # default: null
         statwriter:

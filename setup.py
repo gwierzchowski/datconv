@@ -21,7 +21,7 @@ if os.name == 'nt':
 else:
     scripts = ['datconv']
 
-with open('DESCR.md') as f:
+with open('DESCR.rst') as f:
     long_description = f.read()
 
 dist = distutils.core.setup(name = 'datconv',
@@ -38,7 +38,7 @@ dist = distutils.core.setup(name = 'datconv',
                     'datconv.readers': ['conf_template.yaml'],
                     'datconv.writers': ['conf_template.yaml']},
     scripts = scripts,
-    data_files = [(doclocation, ['README.md', 'LICENSE.txt', 'DESCR.md', 'docs/Changelog.md', 'docs/Upgrade.md'])],
+    data_files = [(doclocation, ['README.md', 'LICENSE.txt', 'DESCR.rst', 'docs/Changelog.md', 'docs/Upgrade.md'])],
     requires = ['PyYAML', 'lxml'],
     license = 'PSF',
     platforms = 'any',
@@ -55,6 +55,7 @@ dist = distutils.core.setup(name = 'datconv',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
     )
