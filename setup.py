@@ -70,7 +70,7 @@ if sys.argv[1] in ['install']:
     isobj = dist.get_command_obj('install_data')
     readmedoc = None
     for doc in isobj.get_outputs():
-        if 'README.md' in doc:
+        if 'README.rst' in doc:
             readmedoc = doc
             break
     if readmedoc:

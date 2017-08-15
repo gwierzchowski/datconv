@@ -13,7 +13,7 @@ from datconv.filters import WRITE, REPEAT, BREAK
 
 ####################################################################
 Log = None
-"""Log varaible is automatically set by main pandoc script using logging.getLogger method.
+"""Log varaible is automatically set by main datconv script using logging.getLogger method.
 Use it for logging messages in need.
 """
 
@@ -78,7 +78,13 @@ class DCReader:
         self._wri.writeHeader(header)
 
         # Then main processing loop should follow, it may looks like:
+        recno = 0
         while True:
+            recno = recno + 1
+            if recno < rfrom:
+                continue
+            if rto > 0 and recno > rto:
+                break
             # Returned rec should be class of lxml.etree.ElementTree
             rec = self._readRecord() # sample method that reads record from input
             if rec is None: # end of stream
@@ -95,6 +101,7 @@ class DCReader:
                         filter_break = True
                     break
                 if filter_break:
+                    Log.info('Filter caused Process to stop on record %d' % recno)
                     break
             else:
                 self._wri.writeRecord(rec)
@@ -105,6 +112,7 @@ class DCReader:
         self._wri.writeFooter(footer)
         
         # Then it should probably close input and output streams and make some other cleanup
+        Log.info('Output saved to %s' % outpath)
         
     # Fake declaration to make this sample skeleton compile.
     # This method name and existance is completly facultative.

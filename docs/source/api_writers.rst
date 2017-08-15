@@ -12,10 +12,14 @@ The writers' skeleton reference
 .. automodule:: datconv.writers._skeleton
    :members:
 
+.. _writers_dccsv:
+
 The datconv.writers.dccsv module reference
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.writers.dccsv
    :members:
+
+.. _writers_dcxml:
 
 The datconv.writers.dcxml module reference
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -25,6 +29,11 @@ The datconv.writers.dcxml module reference
 The datconv.writers.dcxpaths module reference
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.writers.dcxpaths
+   :members:
+
+The datconv.writers.dcjson module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.writers.dcjson
    :members:
 
 .. _writers_conf_template:

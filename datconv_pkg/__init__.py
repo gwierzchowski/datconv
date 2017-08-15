@@ -5,7 +5,7 @@ and can be created and called from other Python script as e.g.::
 
     import datconv 
     pd = Datconv()
-    conf = ...
+    conf = {...}
     pd.Run(conf)
 """
 

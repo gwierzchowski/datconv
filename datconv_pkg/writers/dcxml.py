@@ -11,19 +11,21 @@ import sys
 from lxml import etree
 
 Log = None
-"""Log varaible is automatically set by main pandoc script using logging.getLogger method.
+"""Log varaible is automatically set by main datconv script using logging.getLogger method.
 Use it for logging messages in need.
 """
 
 class DCWriter:
     """Please see constructor description for more details."""
-    def __init__(self, pretty = True, encoding = 'unicode', cnt_tag = None, cnt_attr = None):
+    def __init__(self, pretty = True, encoding = 'unicode', cnt_tag = None, cnt_attr = None, add_header = True, add_footer = True):
         """Constructor parameters are usually passed from YAML file as subkeys of Writer:CArg key.
         
         :param pretty: this parameter is passed to lxml.etree.tostring function. If True, XML is formated in readable way (one tag in one line), otherwise full record is placed in one line (more compact,suitable for computers).
         :param encoding: this parameter is passed to lxml.etree.tostring function. It determines emcoding used in output XML file. See documantation of codecs standard Python library for possible encodings. This parameter is ignored in Python3, where always unicode coding is used.
         :param cnt_tag: tag name to store records count, if not set record count will not be printed in output footer
         :param cnt_attr: attribute of cnt_tag tag to store records count, if not set record count will be printed as tag text
+        :param add_header: if True, generic header (as initialized by Reader) is added as first tag of output file.
+        :param add_footer: if True, generic footer (as initialized by Reader) is added as last tag of output file.
         
         For more detailed descriptions see :ref:`conf_template.yaml <writers_conf_template>` file in this module folder.
         """
@@ -41,6 +43,8 @@ class DCWriter:
         self._out = sys.stdout
         self._cnt = 0
         self._bratags = []
+        self._add_header = add_header
+        self._add_footer = add_footer
 
     def setOutput(self, out):
         self._out = out
@@ -56,30 +60,36 @@ class DCWriter:
             if isinstance(h, dict):
                 if '_tag_' in h and '_bra_' in h and h['_bra_']:
                     self._bratags.append(h['_tag_'])
-                    self._out.write('<' + h['_tag_'] + ' ')
+                    self._out.write('<' + h['_tag_'])
                     for (aname, avalue) in h.items():
                         if aname != '_tag_'and aname != '_bra_':
-                            self._out.write(str(aname) + '="' + str(avalue) + '" ')
+                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
                     self._out.write('>\n')
                     del header[header.index(h)]
                     break
         if len(self._bratags) == 0:
             self._bratags.append('Datconv')
             self._out.write('<Datconv>\n')
-        for h in header:
-            if isinstance(h, dict):
-                if '_tag_' in h:
-                    self._out.write('<' + h['_tag_'] + ' ')
-                    for (aname, avalue) in h.items():
-                        if aname != '_tag_'and aname != '_bra_':
-                            self._out.write(str(aname) + '="' + str(avalue) + '" ')
-                    if '_bra_' in h and h['_bra_']:
-                        self._out.write('>\n')
-                        self._bratags.append(h['_tag_'])
+        if self._add_header:
+            for h in header:
+                if isinstance(h, dict):
+                    if '_tag_' in h:
+                        self._out.write('<' + h['_tag_'])
+                        for (aname, avalue) in h.items():
+                            if aname != '_tag_'and aname != '_bra_':
+                                self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
+                        if '_bra_' in h and h['_bra_']:
+                            self._out.write('>\n')
+                            self._bratags.append(h['_tag_'])
+                        else:
+                            self._out.write('/>\n')
                     else:
+                        self._out.write('<Header')
+                        for (aname, avalue) in h.items():
+                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
                         self._out.write('/>\n')
-            else:
-                self._out.write('<Header>%s</Header>\n' % str(h))
+                else:
+                    self._out.write('<Header>%s</Header>\n' % str(h))
 
     def writeFooter(self, footer):
         if self._cnt_tag:
@@ -87,16 +97,22 @@ class DCWriter:
                 self._out.write('<%s %s="%d"/>\n' % (self._cnt_tag, self._cnt_attr, self._cnt))
             else:
                 self._out.write('<%s>%d</%s>\n' % (self._cnt_tag, self._cnt, self._cnt_tag))
-        for f in footer:
-            if isinstance(f, dict):
-                if '_tag_' in f:
-                    self._out.write('<' + f['_tag_'] + ' ')
-                    for (aname, avalue) in f.items():
-                        if aname != '_tag_':
-                            self._out.write(str(aname) + '="' + str(avalue) + '" ')
-                    self._out.write('/>\n')
-            else:
-                self._out.write('<Footer>%s</Footer>\n' % str(f))
+        if self._add_footer:
+            for f in footer:
+                if isinstance(f, dict):
+                    if '_tag_' in f:
+                        self._out.write('<' + f['_tag_'])
+                        for (aname, avalue) in f.items():
+                            if aname != '_tag_':
+                                self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
+                        self._out.write('/>\n')
+                    else:
+                        self._out.write('<Footer')
+                        for (aname, avalue) in f.items():
+                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
+                        self._out.write('/>\n')
+                else:
+                    self._out.write('<Footer>%s</Footer>\n' % str(f))
         for i in range(len(self._bratags) - 1, -1, -1):
             self._out.write('</' + self._bratags[i] + '>\n')
 

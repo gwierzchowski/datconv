@@ -4,7 +4,7 @@
 with data in one format to file with data in another format.
 
 Program should be run using Python 2.7 or Python 3.x interpretter. It also requires
-installation of external modules: ``lxml``, ``PyYAML``. For more information see
+installation of external packages: ``lxml``, ``PyYAML``. For more information see
 :doc:`README.rst <README>` file distributed in source ball.
 
 Both input and output files can be text or binary files. However it is
@@ -23,7 +23,7 @@ assumed that those files have following structure:
 
 There may be different types of records (i.e. every record has attribute
 called record type). Each record may contain different number and kind of 
-data (have different internal structure) even among records of the same type.
+data (has different internal structure) even among records of the same type.
 
 Program has modular architecture with following swichable compoments:
 
@@ -56,17 +56,16 @@ Program has modular architecture with following swichable compoments:
 *Logger*
     All messages intended to be presented to user are being send 
     (except few very initial error messages) to Logger classes from Python standard
-    package ``logging``. This script can use all logging comfiguration power available in this package.
+    package ``logging``. Datconv can use all logging comfiguration power available in this package.
 
 In this version of package following compoments are included: 
 
-* Readers: XML. 
+* Readers: XML, CSV, JSON. 
 * Filters: Few basic/sample filters.
-* Writers: XML, CSV, XPath (helper module).
+* Writers: XML, CSV, XPath (helper module), JSON.
 
-Currently program functionality is limited by lack of available readers and writters. 
-However it may be usefull in case you have some files in custom program/company specific data format  that you want to look up or convert. Then it is enough to write the reader component compatible with
-Datconv API and let do the rest by Datconv. 
+So Datconv program can be used to convert files between XML, CVS and JSON formats. 
+However it may be also usefull in case you have some files in custom program/company specific data format that you want to look up or convert. Then it is enough to write the reader component for your cutom data format compatible with Datconv API and let do the rest by Datconv. 
 Actually this is how I'm using this program in my work.
 
 Package repository and home page: `Datconv Project <https://github.com/gwierzchowski/datconv>`_.

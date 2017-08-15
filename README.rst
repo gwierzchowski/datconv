@@ -14,10 +14,11 @@ Prerequisites
 ^^^^^^^^^^^^^
 This program requires following 3-rd party packages: ``PyYAML``, ``lxml``. 
 They must be installed in order to run Datconv.
+In addition JSON readers require ``ijson`` packege to be installed.
 
-| **PyYAML** can be installed from Python Package Index:
-| Linux: ``sudo pip install PyYAML``
-| Windows: ``pip install PyYAML``
+| **PyYAML** and **ijson** can be installed from Python Package Index:
+| Linux: ``sudo pip install PyYAML ijson``
+| Windows: ``pip install PyYAML ijson``
 
 | **lxml** is little bit more involved as it is extension package and installation from pip may fail. This package should be installed from system specific installer.  
 | Linux (Debian based): `sudo apt-get install python-lxml` or `sudo apt-get install python3-lxml`  
@@ -100,7 +101,8 @@ Windows: edit ``C:\Program Files\PythonXX\Tools\Scripts\pydocgui.pyw`` file:
 Obtaining Pydoc information
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 | Perform above 'hacks', and run conmand: 
-| Linux: ``pydoc -g``  
+| Linux (Python2): ``pydoc -g``  
+| Linux (Python3): ``pydoc3 -b``  
 | Windows: Start Menu/Python/Module Docs  
 | and then press 'Open Browser' or manually navigate to given URL.
 

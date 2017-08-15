@@ -47,10 +47,10 @@ datconv yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 where:
 yaml_file - is obligatory path to file in YAML format in which above described compoments are set up.
             See file conf_template.yaml in this folder for more detailed desctiption of this file.
---key1:val - any number of arguments thta add new settings or overwrite settings from yaml_file.
+--key1:val - any number of arguments that add new settings or overwrite settings from yaml_file.
              It works this way: let say that in yaml_file we have:
              Writer:
-                Module: writers.pdxml
+                Module: writers.dcxml
                 CArg: 
                     pretty:   true
              by invoking option --Writer:CArg:pretty:false we overwrite 'pretty' option of Writer.
@@ -94,12 +94,13 @@ if __name__ == "__main__":
         ####################################################################
         ## Command line arguments
         script_name = basename(sys.argv[0])
-        if len(sys.argv) < 2:
+        if len(sys.argv) < 2 or sys.argv[1] == '--help':
             sys.stderr.writelines(
 """ERROR: Wrong command arguments - too few parameters:
-Usage1: %s yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
-Usage2: %s --version
-""" % (script_name, script_name))
+Usage1: {0} yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
+Usage2: {0} --version
+Usage3: {0} --help
+""".format(script_name))
             sys.exit(2)
             
         if sys.argv[1] == '--version':

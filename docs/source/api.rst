@@ -9,10 +9,10 @@ The :command:`datconv` script has following call syntax::
     where:
     yaml_file - is obligatory path to file in YAML format in which Reader, Filter and Writer compoments are set up.
                 See below listing for more detailed desctiption of this file.
-    --key1:val - any number of arguments thta add new settings or overwrite settings from yaml_file.
+    --key1:val - any number of arguments that add new settings or overwrite settings from yaml_file.
                 It works this way: let say that in yaml_file we have:
                 Writer:
-                    Module: writers.pdxml
+                    Module: writers.dcxml
                     CArg: 
                         pretty:   true
                 by invoking option --Writer:CArg:pretty:false we overwrite 'pretty' option of Writer.

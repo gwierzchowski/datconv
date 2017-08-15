@@ -6,7 +6,7 @@ import xml.sax as sax
 import logging
 
 # Libs installed using pip
-from lxml import etree
+from lxml import etree  # http://lxml.de/tutorial.html
 
 # Datconv generic modules
 from datconv.filters import WRITE, REPEAT, BREAK
@@ -31,12 +31,13 @@ class ContentGenerator(sax.handler.ContentHandler):
     It implements most of the functionality of this XML Reader.
     See documentation of its base class for description of methods meaning.
     """
-    def __init__(self, bratags, headtags, rectags, writer, filter = None, lp_step = 0, rfrom = 1, rto = 0):
+    def __init__(self, bratags, headtags, rectags, foottags, writer, filter = None, lp_step = 0, rfrom = 1, rto = 0):
         """See description of DCReader constructor and Process() method for meaning of most parameters."""
         sax.handler.ContentHandler.__init__(self)
         self._btags = bratags
         self._htags = headtags
         self._rtags = rectags
+        self._ftags = foottags
         self._wri  = writer
         self._flt  = filter
         self._lp_step  = lp_step
@@ -45,6 +46,7 @@ class ContentGenerator(sax.handler.ContentHandler):
         self._bs   = None
         self._curtag = None
         self._header = []
+        self._footer = []
         self._header_read = False
 
     # ContentHandler methods
@@ -61,7 +63,7 @@ class ContentGenerator(sax.handler.ContentHandler):
             self._header_read = True
 
         # OBLIGATORY
-        self._wri.writeFooter(self._header)
+        self._wri.writeFooter(self._footer)
 
     def startElement(self, name, attrs):
         if not self._header_read and name in self._btags:
@@ -78,7 +80,14 @@ class ContentGenerator(sax.handler.ContentHandler):
             for (aname, avalue) in attrs.items():
                 h[aname] = avalue
             self._header.append(h)
-        elif self._bs is None and name in self._rtags:
+        elif self._bs is None and name in self._ftags:
+            f = dict()
+            f['_tag_'] = name
+            for (aname, avalue) in attrs.items():
+                f[aname] = avalue
+            self._footer.append(f)
+        elif (self._bs is None and name in self._rtags) or \
+             (self._bs is None and len(self._rtags) == 0):
             if not self._header_read:
                 self._wri.writeHeader(self._header)
                 self._header_read = True
@@ -94,7 +103,7 @@ class ContentGenerator(sax.handler.ContentHandler):
                 self._curtag.set(aname, avalue)
         elif self._bs is not None:
             if name in self._rtags:
-                Log.error('Nested record tag: <%s> in %d record; file will not be intterpretted correctly' % (name, self._recno))
+                Log.error('Nested record tag: <%s> in %d record; file will not be interpretted correctly' % (name, self._recno))
             ntag = etree.SubElement(self._curtag, name)
             self._curtag = ntag
             for (aname, avalue) in attrs.items():
@@ -102,7 +111,8 @@ class ContentGenerator(sax.handler.ContentHandler):
 
     def endElement(self, name):
         if self._bs is not None:
-            if name in self._rtags:
+            #if name in self._rtags:
+            if name == self._bs.tag:
                 if self._recno == self._lp_rec:
                     Log.info('Processed %d records' % self._recno)
                     #self._log.info('Processed %d records' % self._recno)
@@ -147,25 +157,31 @@ class DCReader:
     See documentation of standard Python xml.sax library for more information how it works.
     This Reader assumens that srtucture of input XML file is following:
 
-    * there is/are some optional (zero, one or more) BRACE tag(s);
+    * there is/are some (one or more) BRACE tag(s);
       entire document content is included in this/those brace tag(s);
-    * then there is/are some HEAD tag(s);
-      head tags begin and end entirely before record tags begin;
+      well-formed XML document should have at least one such tag;
+    * then there is/are some optional HEAD tag(s);
+      head tags begin and end completly before record tags begin;
     * then there are RECORD tags;
       everything what is inside record tags is treated as record data and is being passed to Filter and Writer;
       record tags can not be nested - every record tag must end before another record tag begin;
-      there may be many kinds (names) or record tags - in such case we say that we have namy record types.
+      there may be several kinds (names) or record tags - in such case we say that we have multiply record types.
+      If list of record tags is empty then every tag which is one level under brace tag and which is not head nor foot tag is treated as record tag.
+    * then there is/are some optional FOOTER tag(s);
+      footer tags begin and end completly after record tags;
       
     Constructor parameters explicitly list which tags are of what kind.\n
-    TODO: The text inside brace and header tags is discarded (only attributes are passed to Writer).\n
-    TODO: The header tags between and after record tags are discarded (only ones before first record tag are passed to Writer.
+    TODO: The text inside brace, header and footer tags is discarded (only attributes are passed to Writer).\n
+    TODO: The header tags between record tags are discarded (only ones before first record tag are passed to Writer.\n
+    TODO: This class does not support CDATA inside XML.
     """
-    def __init__(self, bratags = [], headtags = [], rectags = [], log_prog_step = 0):
+    def __init__(self, bratags = [], headtags = [], rectags = [], foottags = [], log_prog_step = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:CArg`` key.
         
         :param bratags: list of tag names that will be treated as brace tags (see above).
         :param headtags: list of tag names that will be treated as header tags (see above).
         :param rectags: list of tag names that will be treated as record tags (see above).
+        :param foottags: list of tag names that will be treated as footer tags (see above).
         :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0.
         
         For more detailed descriptions see :ref:`readers_conf_template`.
@@ -176,6 +192,7 @@ class DCReader:
         self._btags = bratags
         self._htags = headtags
         self._rtags = rectags
+        self._ftags = foottags
         self._lp_step = log_prog_step
 
     # OBLIGATORY
@@ -207,6 +224,7 @@ class DCReader:
                 bratags = self._btags, \
                 headtags = self._htags, \
                 rectags = self._rtags, \
+                foottags = self._ftags, \
                 writer = self._wri, \
                 filter = self._flt, \
                 lp_step = self._lp_step, \

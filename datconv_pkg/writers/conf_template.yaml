@@ -21,6 +21,12 @@ Writer:
         # attribute of cnt_tag tag to store records count, if not set records count will be printed as tag text
         # default: null
         cnt_attr: tranCount
+        
+        # if True, generic header (as initialized by Reader) is added as first tag of output file
+        add_header: true
+        
+        # if True, generic footer (as initialized by Reader) is added as last tag of output file
+        add_footer: true
 
 Writer: 
     Module: datconv.writers.dcxpaths
@@ -97,3 +103,52 @@ Writer:
         csv_opt:
             lineterminator: "\n"
             
+Writer:
+    Module: datconv.writers.dcjson
+    CArg:
+        # If True, generic header (as initialized by Reader) is added as first object of output file.
+        # default: true
+        add_header: true
+        
+        # If True, generic footer (as initialized by Reader) is added as last object of output file.
+        # default: true
+        add_footer: true
+        
+        # If True, adds newline character after each record.
+        # default: true
+        add_newline: true
+        
+        # if True, tries to convert velues to int, bool or float (do not quote in json file) - little slower; 
+        # oterwise all values are placed as strings in json
+        # default: false
+        convert_values: true
+        
+        # Text that is converted to JSON null value (apply if convert_values is True)
+        # default: 'None'
+        null_text: ''
+        
+        # If True, order of keys in json output match order in source
+        # default: false
+        preserve_order: false
+        
+        # Name of key to store XML text
+        # default: 'text'
+        text_key: '_text_'
+        
+        # If True, XML text key will be eliminated if there are no other tag components
+        # default: true
+        text_eliminate: true
+        
+        # If True, XML properties are being saved in JSON file
+        # default: true
+        with_prop: true
+        
+        # If True, XML root tag for records (aka record type) will not be saved in JSON file 
+        # (simplifies output layout in case there is one record type)
+        # default: false
+        ign_rectyp: true
+        
+        # Dictionary with json.dump() options. See documentation of json standard Python library.
+        # default: null
+        json_opt: 
+            indent: 2

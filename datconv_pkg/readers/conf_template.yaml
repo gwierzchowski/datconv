@@ -11,9 +11,14 @@ Reader:
         headtags: [SiteData, rec0Control]
 
         # List of tag names that will be treated as record tags (see class description in source or pydoc).
-        # There must be at least one tag to pass any data to Writer.
+        # If list of record tags is empty then every tag which is one level under brace tag and which is not head nor foot tag is treated as record tag.
         # default: []
         rectags:  [Gampdf_winNbrs]
+
+        # List of tag names that will be treated as footer tags (see class description in source or pydoc).
+        # Note: tags listed here will be placed in footer passed to Writer; footer tags not listed here will be silently skipped.
+        # default: []
+        foottags: []
 
         # Log info message after this number of records
         # If this value is zero no progress logging is done.
@@ -28,6 +33,155 @@ Reader:
         # Path to output file passed to Writer
         # Obligatory parameter
         outpath: out/AddnDrawNbrs_c5019_s38.xml
+        
+        # Start passing records to Filter and Writer from this record
+        # default: 1
+        rfrom:    1
+        
+        # Stop process on this record; if zero, process up to last record.
+        # default: 0
+        rto:      20
+
+Reader: 
+    Module: datconv.readers.dcijson_events
+    CArg:
+        # Returns: 1-only unique prefixes; 2-unique (prefix,event) pairs; 3-all events (including data).
+        # default: 3
+        mode: 3
+
+        # Log info message after this number of records
+        # If this value is zero no progress logging is done.
+        # default: 0
+        log_prog_step: 10000
+
+        # Backend used by ijson package to parse json file, possible values:
+        # - yajl2_cffi: requires yajl2 C library and cffi Python packege to be installed in the system;
+        # - yajl2 - requires yajl2 C library to be installed in the system;
+        # - null - uses default, Python only backend.
+        # default: null
+        backend: yajl2_cffi
+        
+    PArg:
+        # Path to input file
+        # Obligatory parameter
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
+        
+        # Path to output file passed to Writer
+        # Obligatory parameter
+        outpath: out/AddnDrawNbrs_c5019_s38.json
+        
+        # Start passing records to Filter and Writer from this record
+        # default: 1
+        rfrom:    1
+        
+        # Stop process on this record; if zero, process up to last record.
+        # default: 0
+        rto:      20
+
+Reader: 
+    Module: datconv.readers.dcijson_keys
+    CArg:
+        # List of key names that will be passed to Writer as header.
+        # default: []
+        headkeys: [SiteData, rec0Control]
+
+        # List of key names that will be treated as records. If empty all highest level keys that are not heders or footers are passed to Writer as records.
+        # default: []
+        reckeys:  [Gampdf_winNbrs]
+
+        # List of  key names that will be passed to Writer as footer.
+        # default: []
+        footkeys: []
+
+        # Log info message after this number of records
+        # If this value is zero no progress logging is done.
+        # default: 0
+        log_prog_step: 10000
+        
+        # Backend used by ijson package to parse json file (see above):
+        # default: null
+        backend: yajl2_cffi
+
+    PArg:
+        # Path to input file
+        # Obligatory parameter
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
+        
+        # Path to output file passed to Writer
+        # Obligatory parameter
+        outpath: out/AddnDrawNbrs_c5019_s38.json
+        
+        # Start passing records to Filter and Writer from this record
+        # default: 1
+        rfrom:    1
+        
+        # Stop process on this record; if zero, process up to last record.
+        # default: 0
+        rto:      20
+
+Reader: 
+    Module: datconv.readers.dcijson
+    CArg:
+        # Name or tag to be placed as record marker.
+        # default: rec
+        rec_tag: rec
+
+        # Log info message after this number of records
+        # If this value is zero no progress logging is done.
+        # default: 0
+        log_prog_step: 10000
+        
+        # Backend used by ijson package to parse json file (see above):
+        # default: null
+        backend: yajl2_cffi
+
+    PArg:
+        # Path to input file
+        # Obligatory parameter
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
+        
+        # Path to output file passed to Writer
+        # Obligatory parameter
+        outpath: out/AddnDrawNbrs_c5019_s38.json
+        
+        # Start passing records to Filter and Writer from this record
+        # default: 1
+        rfrom:    1
+        
+        # Stop process on this record; if zero, process up to last record.
+        # default: 0
+        rto:      20
+
+Reader: 
+    Module:  datconv.readers.dccsv
+    CArg:
+        # this parameter may be one of 3 possible types:
+        #    if it is positive number, it specifies line number in input file that stores column names.
+        #    if it is a list, it directly specifies column names in input file.
+        #       Specified names must be possible to use as XML tag names.
+        #    if it is string it stands for column name prefix, i.e. columns will have names <prefix>1, <prefix>2, ...
+        # default: 'item'
+        columns: 1
+        
+        # if True, strips white spaces from values
+        # default: false
+        strip: true
+
+        # Python csv writer class constructor options. See documantation of csv standard Python library.
+        # Caution: Escape characters must be contained in double quotes ('\n' will not work).
+        # If null, Reader tries to recognize format using csv.Sniffer class.
+        # default: null
+        csv_opt:
+            lineterminator: "\n"
+
+    PArg:
+        # Path to input file
+        # Obligatory parameter
+        inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.csv
+        
+        # Path to output file passed to Writer
+        # Obligatory parameter
+        outpath: out/AddnDrawNbrs_c5019_s38.json
         
         # Start passing records to Filter and Writer from this record
         # default: 1

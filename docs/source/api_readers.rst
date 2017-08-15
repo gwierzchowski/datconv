@@ -17,6 +17,26 @@ The datconv.readers.dcxml module reference
 .. automodule:: datconv.readers.dcxml
    :members:
 
+The datconv.readers.dcijson_events module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.readers.dcijson_events
+   :members:
+
+The datconv.readers.dcijson_keys module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.readers.dcijson_keys
+   :members:
+
+The datconv.readers.dcijson module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.readers.dcijson
+   :members:
+
+The datconv.readers.dccsv module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.readers.dccsv
+   :members:
+
 .. _readers_conf_template:
 
 The datconv.readers Configuration keys
