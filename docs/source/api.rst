@@ -23,6 +23,9 @@ The :command:`datconv` script has following call syntax::
     or
     datconv --version
     which prints version number to standard output and exit.
+    or
+    datconv --help
+    which prints short usage information
 
     The datconv script returns to shell:
         0 on sucess 
@@ -30,7 +33,7 @@ The :command:`datconv` script has following call syntax::
         2 on invalid command parameters
         3 on user break (Ctrl-C)
 
-Main YAML configuration file layout:
+Sample main YAML configuration file layout:
 
 .. literalinclude:: ../../datconv_pkg/conf_template.yaml
    :language: yaml

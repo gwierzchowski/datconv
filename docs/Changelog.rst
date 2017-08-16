@@ -8,9 +8,11 @@ Points are specified in priority (and probably implementation) order:
 - Readers/Writers: Database, Python pickle.
 - XPath Writer: Improve generated column names (possibly use _ instead of . and make column names unique).
   This is in preparation for SQL Writers (col names as database fields).
-- Introduce connectors layers (reading/writing from/to streams - not only files).
+- Introduce connectors' layers (reading/writing from/to streams - not only files).
 - Better support for running Datconv as paralell proceses
-  e.g. convering big files in paralell (using rfrom/rto settings).
+  e.g. convering big files in paralell processes (using rfrom/rto settings).
+- Create Windows binary form of program (with cx_Freeze package) that does not require Python installation 
+  and upload to github.
 
 Notes about versioning schema
 ----------------------------------
@@ -23,16 +25,23 @@ Notes about versioning schema
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
 
+0.4.1 (2017.08.16)
+----------------------------------
+Fixes
+^^^^^^^^^^^^
+- Small fixes in documentation.
+
 0.4.0 (2017.08.15)
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
 - XML Reader: added parameter foottags.
-- XML Reader: parameter rectags can be empty (see documentation).
-- XML Writer: added parameters add_header, add_footer.
+- XML Reader: parameter ``rectags`` can be empty (see documentation).
+- XML Writer: added parameters ``add_header``, ``add_footer``.
 - Added JSON Writer.
 - Added JSON Readers.
 - Added CSV Reader.
+- Added command line option: ``--help``.
 
 0.3.4 (2017.05.12)
 ----------------------------------

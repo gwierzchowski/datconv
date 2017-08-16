@@ -26,7 +26,7 @@ with open('DESCR.rst') as f:
 
 dist = distutils.core.setup(name = 'datconv',
     version = datconv_version,
-    description = 'Universal data converter - pandoc for data',
+    description = 'Universal data converter - pandoc for data; XML, CSV, JSON are supported',
     long_description = long_description,
     author = 'Grzegorz Wierzchowski',
     author_email = 'gwierzchowski@wp.pl',

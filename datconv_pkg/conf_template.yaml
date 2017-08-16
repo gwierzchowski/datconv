@@ -1,12 +1,14 @@
 # Major configuration file for datconv script.
-# It must follow YAML syntax and have at least 2 obligatory top level keys: Reader, Writer.
-# See below for more details.
+# It must follow YAML syntax and has at least 2 obligatory top level keys: Reader, Writer.
+# 
 # Note that speficied modules must be loadable from datconv script, i.e.
 #   packages must be placed directly in folder from which datconv script is run (its current folder)
 #   or datconv must be wrapped in script that define PYTHONPATH environmental variable which point to packages root folder
 #   or packages root folder must be added to Python configuration as folder with packages
 #   every package to be loadable must have (even empty) file named __init__.py
-
+#
+# The keys listed below are samle keys, for full list of available options see conf_template.yaml files
+# contained in readers, writers and filters folders.
 
 # Obligatory key that specify Reader module
 Reader: 

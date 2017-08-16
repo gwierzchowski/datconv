@@ -60,13 +60,14 @@ Program has modular architecture with following swichable compoments:
 
 In this version of package following compoments are included: 
 
-* Readers: XML, CSV, JSON. 
+* Readers: XML (sax), CSV (sax), JSON (sax). 
 * Filters: Few basic/sample filters.
 * Writers: XML, CSV, XPath (helper module), JSON.
 
 So Datconv program can be used to convert files between XML, CVS and JSON formats. 
-However it may be also usefull in case you have some files in custom program/company specific data format that you want to look up or convert. Then it is enough to write the reader component for your cutom data format compatible with Datconv API and let do the rest by Datconv. 
-Actually this is how I'm using this program in my work.
+Sax means that used parsers are of event type - i.e. entire data are not being stored in memory (typically only just one record), what means that program is able to process large files without allocating a lot of memory.
+It may be also usefull in case you have some files in custom program/company specific data format that you want to look up or convert. Then it is enough to write the reader component for your cutom data format compatible with Datconv API and let Datconv do the rest. 
+Actually this is how I'm currently using this program in my work.
 
 Package repository and home page: `Datconv Project <https://github.com/gwierzchowski/datconv>`_.
 

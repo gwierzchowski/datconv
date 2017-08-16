@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This module provides Datconv class which encapsulate all datconv features
+This module provides Datconv class which encapsulate all datconv program features
 and can be created and called from other Python script as e.g.::
 
     import datconv 

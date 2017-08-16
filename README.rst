@@ -14,7 +14,7 @@ Prerequisites
 ^^^^^^^^^^^^^
 This program requires following 3-rd party packages: ``PyYAML``, ``lxml``. 
 They must be installed in order to run Datconv.
-In addition JSON readers require ``ijson`` packege to be installed.
+In addition JSON readers require ``ijson`` package to be installed.
 
 | **PyYAML** and **ijson** can be installed from Python Package Index:
 | Linux: ``sudo pip install PyYAML ijson``

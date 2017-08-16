@@ -1,6 +1,13 @@
-The Datconv Examples
-====================
-
+Datconv usage examples
+======================
+.. note::
+    Below examples are suited for Linux system. In Windows System:
+    
+    - use Windows file paths
+    - replace main program name ``datconv`` with ``datconv-run.py``
+    - if you use Notepad++ editor, use ``.yml`` configuration file extension rather than ``.yaml``,
+      this ensures that syntax hightlighting will be working out of box.
+      
 Minimal XML to JSON conversion example
 --------------------------------------
 
@@ -27,7 +34,7 @@ At first we have to write simple configuration file ``conv.yaml``:
     Writer:
         Module: datconv.writers.dcjson
 
-Next, run Datconv tool with this file::
+Next, run Datconv tool against this file::
 
     datconv ./conv.yaml
 
@@ -44,8 +51,8 @@ Following ``file.json`` file will be created:
     {"Hello": "World"}
     ]
 
-If you don't want this ``Data`` object to be in output file, additional parameter must be added to 
-writer arguments in configuration file:
+If you don't want ``Data`` object to be in output file, additional parameter must be added to 
+writer's arguments in configuration file:
 
 .. code-block:: yaml
     :emphasize-lines: 3-4
@@ -109,7 +116,7 @@ or with yet another option:
 JSON to XML conversion example
 ------------------------------
 
-Let say we have JSON query result from `Couchbase <https://www.couchbase.com>`_ that we want to convert to XML ``cb.json``:
+Let say we have JSON query result returned by ``cbq`` tool from `Couchbase <https://www.couchbase.com>`_ saved in file ``cb.json`` that we want to convert to XML:
 
 .. code-block:: json
 
@@ -227,9 +234,9 @@ Using filter
 -------------
 
 If we want to somehow change the data on the fly during conversion we can use the filter.
-There are few filters shipped with ``datconv`` packege, see: :doc:`api_filters`.
+There are few filters shipped with ``datconv`` package, see: :doc:`api_filters`.
 But usually you need to write your own custom filter. For instance imagine that in above described conversion 
-we want to skip records that do not have phone number set. We should write folliwing filter::
+we want to skip records that do not have phone number. We should write folliwing filter::
 
     # Standard Python Libs
     import logging
@@ -251,7 +258,7 @@ we want to skip records that do not have phone number set. We should write folli
                 return SKIP
 
 and save it as file ``with_phone.py`` in folder ``custom`` created where we run ``datconv`` program.
-In addtion create empty file ``__init__.py`` in this folder (to make it valid Python package) and add 
+In addtion we have to create empty file ``__init__.py`` in this folder (to make it valid Python package) and add 
 following key to conversion configuration file:
 
 .. code-block:: yaml

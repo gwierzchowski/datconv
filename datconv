@@ -61,6 +61,9 @@ arg1 - any number of arguments (that do not begin with --).
 or
 datconv --version
 which prints version number to standard output and exit.
+or
+datconv --help
+which prints short usage information
 
 The datconv script returns to shell:
     0 on sucess 
@@ -100,6 +103,7 @@ if __name__ == "__main__":
 Usage1: {0} yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 Usage2: {0} --version
 Usage3: {0} --help
+Documantation available in: http://datconv.readthedocs.io
 """.format(script_name))
             sys.exit(2)
             
