@@ -34,6 +34,15 @@ class DCFilter:
         assert Log is not None
         # ...
 
+    def setHeader(self, header):
+        """Facultative method that may be defined in Filter class.
+        Informs Filter about contents of header and give it a chance to change it.
+        If this method is present in Filter it is called by Reader before data conversion begins and before Writer calls ``writeHeader``.
+        
+        :param header: is instance of header as passed by Reader (always a list, but type of elements is up to Reader). This parameter is passed later to Writer.
+        """
+        pass
+
     def filterRecord(self, record):
         """Obligatory method that must be defined in Filter class.
         It is called to perform filter tasks described above.

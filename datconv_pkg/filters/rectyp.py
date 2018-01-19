@@ -10,7 +10,7 @@ from . import SKIP, WRITE
 
 
 Log = None
-"""Log varaible is automatically set by main pandoc script using logging.getLogger method.
+"""Log variable is automatically set by main datconv script using logging.getLogger method.
 Use it for logging messages in need.
 """
 

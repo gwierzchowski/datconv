@@ -96,8 +96,8 @@ class DCReader:
         self._wri = writer
 
     # OBLIGATORY
-    def setFilter(self, filter):
-        self._flt = filter
+    def setFilter(self, flt):
+        self._flt = flt
     
     def Process(self, inpath, outpath, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
@@ -145,7 +145,12 @@ class DCReader:
         
         try:
             # OBLIGATORY
-            self._wri.writeHeader([])
+            header = []
+            if self._flt is not None:
+                if hasattr(self._flt, 'setHeader'):
+                    self._flt.setHeader(header)
+            self._wri.writeHeader(header)
+            
             with open(inpath, 'rb') as fd: #binary mode required by C-based backends
                 _not_first_event = False
                 _parser = ijson.basic_parse(fd)

@@ -54,8 +54,8 @@ class DCReader:
     def setWriter(self, writer):
         self._wri = writer
 
-    def setFilter(self, filter):
-        self._flt = filter
+    def setFilter(self, flt):
+        self._flt = flt
 
     def Process(self, inpath, outpath, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
@@ -73,7 +73,13 @@ class DCReader:
         self._wri.setOutput(fout)
         
         # OBLIGATORY
-        self._wri.writeHeader([])
+        header = []
+        if self._flt is not None:
+            if hasattr(self._flt, 'setHeader'):
+                self._flt.setHeader(header)
+        
+        # OBLIGATORY
+        self._wri.writeHeader(header)
 
         with open(inpath, newline='') as csvfile:
             if self._csv:

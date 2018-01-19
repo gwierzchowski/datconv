@@ -22,6 +22,16 @@ The datconv.filters.rectyp module reference
 .. automodule:: datconv.filters.rectyp
    :members:
 
+The datconv.filters.pipe module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.filters.pipe
+   :members:
+
+The datconv.filters.gen_rec module reference
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.filters.gen_rec
+   :members:
+
 The datconv.filters.stat module reference
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.stat

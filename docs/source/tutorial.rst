@@ -276,6 +276,24 @@ Then when you run conversion, you will get expected result:
 
 Note that current folder is automatically added to Python search path by ``datconv`` script.
 
+Concatenating several filters 
+-----------------------------
+
+If we have a library of generic filters and woud like to use few of them in one data conversion run 
+it is possible with provided ``pipe`` filter. 
+E.g. following configuration will use above filter and standard filter that will remove ``name`` field from the output records:
+
+.. code-block:: yaml
+
+    Filter:
+        Module: datconv.filters.pipe
+        CArg: 
+            flist:
+                - Module: custom.with_phone
+                - Module: datconv.filters.delfield
+                  CArg:
+                      field: [name]
+
 More examples 
 -------------
 

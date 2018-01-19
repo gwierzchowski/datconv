@@ -8,7 +8,7 @@ Points are specified in priority (and probably implementation) order:
 - Readers/Writers: Database, Python pickle.
 - XPath Writer: Improve generated column names (possibly use _ instead of . and make column names unique).
   This is in preparation for SQL Writers (col names as database fields).
-- Introduce connectors' layers (reading/writing from/to streams - not only files).
+- Introduce connectors' layers (reading/writing from/to streams, databases etc. - not only files).
 - Better support for running Datconv as paralell proceses
   e.g. convering big files in paralell processes (using rfrom/rto settings).
 - Create Windows binary form of program (with cx_Freeze package) that does not require Python installation 
@@ -24,6 +24,13 @@ Notes about versioning schema
   This is labeled as Feature Release, and in this case minor number is reset to zero.
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
+
+0.5.0 (2018.01.06)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added new standard filters: pipe, gen_rec.
+- Added optional filter method ``setHeader()`` to inform filter about contents of data header.
 
 0.4.1 (2017.08.16)
 ----------------------------------

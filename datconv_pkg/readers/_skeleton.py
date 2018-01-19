@@ -41,14 +41,14 @@ class DCReader:
         """
         self._wri = writer
 
-    def setFilter(self, filter):
+    def setFilter(self, flt):
         """Obligatory method that must be defined in Reader class.
         It may be called by main datconv.py script after it read configuration file and create Filter class.
         If Filter is not configured this method is not called.
         
-        :param filter: is instance of Filter class.
+        :param flt: is instance of Filter class.
         """
-        self._flt = filter
+        self._flt = flt
 
     def Process(self, inpath, outpath, rfrom = 1, rto = 0):
         """Main method that drive all data conversion process.
@@ -72,6 +72,14 @@ class DCReader:
         # fout is opened output stream.
         self._wri.setOutput(fout)
         
+        # Then it should inform filter about contents of data header and make following call.
+        # Passed header must be a Python list object,
+        # but items of this list are facultative (i.e. it is up to the reader class what to place here).
+        # Passed header must be the same as later passed to Writer.
+        if self._flt is not None:
+            if hasattr(self._flt, 'setHeader'):
+                self._flt.setHeader(header)
+    
         # Then it should read input data header and make following call.
         # Passed header must be a Python list object,
         # but items of this list are facultative (i.e. it is up to the reader class what to place here).

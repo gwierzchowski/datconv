@@ -18,6 +18,33 @@ Filter:
         field: []
         
 Filter: 
+    Module: datconv.filters.pipe
+    CArg: 
+        # List of filters to be run in chain with their parameters (obligatory parameter)
+        flist:
+            - Module: datconv.filters.rectyp
+              CArg: 
+                  rectyp: []
+            - Module: datconv.filters.delfield
+              CArg: 
+                  field: []
+        
+        # If it is False, records for which some filter returned SKIP will not be passed to next filters
+        # default: true
+        pass_skiped: true
+        
+Filter: 
+    Module: datconv.filters.gen_rec
+    CArg:
+        # Determines how many clones are generated for every record.
+        # default: 1
+        n: 5
+        
+        # If set (to string) a tag of set name is added to every generated clone with the value 1.
+        # default: null
+        fake_flg: FAKE
+        
+Filter: 
     Module: datconv.filters.stat
     CArg: 
         # Value that filter returns (0 to skip records, 1 to write records)

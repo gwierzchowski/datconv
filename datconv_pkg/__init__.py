@@ -69,10 +69,9 @@ class Datconv:
                 Logger.critical('Obligatory "Reader":{"Module"} key not defined in configuration')
                 return 2
             reader_mod = import_module(reader_path)
-            # reader_mod.Log = logging.getLogger(logger_name + '.reader')
             reader_mod.Log = Logger.getChild('reader')
             reader_class = getattr(reader_mod, 'DCReader')
-            Logger.debug('Reader: %s(%s)', reader_class, reader_conf.get('CArg'))
+            Logger.debug('Reader: %s(%s)', reader_class, str(reader_conf.get('CArg')))
 
             writer_conf = conf.get('Writer')
             if writer_conf is None:
@@ -85,7 +84,7 @@ class Datconv:
             writer_mod = import_module(writer_path)
             writer_mod.Log = Logger.getChild('writer')
             writer_class = getattr(writer_mod, 'DCWriter')
-            Logger.debug('Writer: %s(%s)', writer_class, writer_conf.get('CArg'))
+            Logger.debug('Writer: %s(%s)', writer_class, str(writer_conf.get('CArg')))
 
             filter_conf = conf.get('Filter')
             if filter_conf is not None:
@@ -94,7 +93,7 @@ class Datconv:
                     filter_mod = import_module(filter_path)
                     filter_mod.Log = Logger.getChild('filter')
                     filter_class = getattr(filter_mod, 'DCFilter')
-                    Logger.debug('Filter: %s(%s)', filter_class, filter_conf.get('CArg'))
+                    Logger.debug('Filter: %s(%s)', filter_class, str(filter_conf.get('CArg')))
                 else:
                     filter_class = None
             else:
@@ -103,19 +102,19 @@ class Datconv:
             ####################################################################
             ## Convert file
             reader_carg = reader_conf.get('CArg')
-            reader = reader_class(**reader_carg) if reader_carg else reader_class()
+            reader_inst = reader_class(**reader_carg) if reader_carg else reader_class()
             writer_carg = writer_conf.get('CArg')
-            writer = writer_class(**writer_carg) if writer_carg else writer_class()
+            writer_inst = writer_class(**writer_carg) if writer_carg else writer_class()
             filter_carg = None if filter_conf is None else filter_conf.get('CArg')
-            filter = None if filter_class is None else (filter_class(**filter_carg) if filter_carg else filter_class())
+            filter_inst = None if filter_class is None else (filter_class(**filter_carg) if filter_carg else filter_class())
 
-            reader.setWriter(writer)
-            if filter is not None:
-                reader.setFilter(filter)
+            reader_inst.setWriter(writer_inst)
+            if filter_inst is not None:
+                reader_inst.setFilter(filter_inst)
 
             reader_parg = reader_conf.get('PArg')
             Logger.info('Process: %s', reader_parg)
-            reader.Process(**reader_parg)
+            reader_inst.Process(**reader_parg)
             Logger.info('Finished SUCESSFULLY') #TODO: Not necessary true, introduce kind of err, warn counters
             return 0
 

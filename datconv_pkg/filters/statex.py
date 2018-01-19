@@ -46,11 +46,11 @@ class DCFilter:
                 if fld[2] == False:
                     continue
                 elif fld[2] == True:
-                    eval = True
+                    evl = True
                 else:
                     res = record.xpath(fld[2])
-                    eval = bool(_eval_xpath_result_as_scalar(res))
-                if eval:
+                    evl = bool(_eval_xpath_result_as_scalar(res))
+                if evl:
                     if fld[3] is None:
                         key = '*'
                     else:

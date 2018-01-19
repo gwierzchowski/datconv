@@ -48,6 +48,10 @@ Reader:
         # Returns: 1-only unique prefixes; 2-unique (prefix,event) pairs; 3-all events (including data).
         # default: 3
         mode: 3
+        
+        # Name or tag to be placed as record marker.
+        # default: rec
+        rec_tag: rec
 
         # Log info message after this number of records
         # If this value is zero no progress logging is done.

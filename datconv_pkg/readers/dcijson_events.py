@@ -62,10 +62,11 @@ class DCReader:
     * `<http://softwaremaniacs.org/blog/2010/09/18/ijson/en/>`_
     * `<http://explique.me/Ijson/>`_
     """
-    def __init__(self, mode = 3, log_prog_step = 0, backend = None):
+    def __init__(self, mode = 3, rec_tag = 'rec', log_prog_step = 0, backend = None):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:CArg`` key.
         
         :param mode: returns: 1-only unique prefixes; 2-unique (prefix,event) pairs; 3-all events (including data).
+        :param rec_tag: name or tag to be placed as record marker.
         :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0.
         :param backend: backend used by ijson package to parse json file, possible values:\n
         ``yajl2_cffi`` - requires ``yajl2`` C library and ``cffi`` Python package to be installed in the system;\n
@@ -78,6 +79,7 @@ class DCReader:
 
         self._wri = self._flt = None
         self._mode = mode
+        self._rec_tag = rec_tag
         self._lp_step = log_prog_step
         self._backend = backend
 
@@ -86,8 +88,8 @@ class DCReader:
         self._wri = writer
 
     # OBLIGATORY
-    def setFilter(self, filter):
-        self._flt = filter
+    def setFilter(self, flt):
+        self._flt = flt
     
     def Process(self, inpath, outpath, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
@@ -123,7 +125,12 @@ class DCReader:
         self._wri.setOutput(fout)
         
         try:
-            self._wri.writeHeader([{'_tag_':'ijson_events', '_bra_':True}])
+            header = [{'_tag_':'ijson_events', '_bra_':True}]
+            if self._flt is not None:
+                if hasattr(self._flt, 'setHeader'):
+                    self._flt.setHeader(header)
+            self._wri.writeHeader(header)
+            
             with open(inpath, 'r') as fd:
                 parser = ijson.parse(fd)
                 for prefix, event, value in parser:
@@ -141,20 +148,20 @@ class DCReader:
                         if prefix in _unique:
                             continue
                         _unique.add(prefix)
-                        rec = etree.Element('rec')
+                        rec = etree.Element(self._rec_tag)
                         p_xml = etree.SubElement(rec, 'prefix')
                         p_xml.text = str(prefix)
                     elif self._mode == 2:
                         if (prefix, event) in _unique:
                             continue
                         _unique.add((prefix, event))
-                        rec = etree.Element('rec')
+                        rec = etree.Element(self._rec_tag)
                         p_xml = etree.SubElement(rec, 'prefix')
                         p_xml.text = str(prefix)
                         e_xml = etree.SubElement(rec, 'event')
                         e_xml.text = str(event)
                     elif self._mode == 3:
-                        rec = etree.Element('rec')
+                        rec = etree.Element(self._rec_tag)
                         p_xml = etree.SubElement(rec, 'prefix')
                         p_xml.text = str(prefix)
                         e_xml = etree.SubElement(rec, 'event')

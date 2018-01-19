@@ -97,8 +97,8 @@ class DCReader:
         self._wri = writer
 
     # OBLIGATORY
-    def setFilter(self, filter):
-        self._flt = filter
+    def setFilter(self, flt):
+        self._flt = flt
     
     def Process(self, inpath, outpath, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
@@ -187,6 +187,9 @@ class DCReader:
             pass
         finally:
             if not self._h_written:
+                if self._flt is not None:
+                    if hasattr(self._flt, 'setHeader'):
+                        self._flt.setHeader(self._header)
                 self._wri.writeHeader(self._header)
                 self._h_written = True
                 self._header = []
@@ -203,6 +206,9 @@ class DCReader:
                 self._mode = 1
             elif key in self._fkeys:
                 if not self._h_written:
+                    if self._flt is not None:
+                        if hasattr(self._flt, 'setHeader'):
+                            self._flt.setHeader(self._header)
                     self._wri.writeHeader(self._header)
                     self._h_written = True
                     self._header = []
@@ -211,6 +217,9 @@ class DCReader:
                 self._mode = 1
             elif key in self._rkeys or len(self._rkeys) == 0:
                 if not self._h_written:
+                    if self._flt is not None:
+                        if hasattr(self._flt, 'setHeader'):
+                            self._flt.setHeader(self._header)
                     self._wri.writeHeader(self._header)
                     self._h_written = True
                     self._header = []
@@ -234,12 +243,18 @@ class DCReader:
                 self._header.append({'_tag_': key, 'val': value})
             elif key in self._fkeys:
                 if not self._h_written:
+                    if self._flt is not None:
+                        if hasattr(self._flt, 'setHeader'):
+                            self._flt.setHeader(self._header)
                     self._wri.writeHeader(self._header)
                     self._h_written = True
                     self._header = []
                 self._header.append({'_tag_': key, 'val': value})
             elif key in self._rkeys or len(self._rkeys) == 0:
                 if not self._h_written:
+                    if self._flt is not None:
+                        if hasattr(self._flt, 'setHeader'):
+                            self._flt.setHeader(self._header)
                     self._wri.writeHeader(self._header)
                     self._h_written = True
                     self._header = []

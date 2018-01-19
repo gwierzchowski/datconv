@@ -31,15 +31,15 @@ class ContentGenerator(sax.handler.ContentHandler):
     It implements most of the functionality of this XML Reader.
     See documentation of its base class for description of methods meaning.
     """
-    def __init__(self, bratags, headtags, rectags, foottags, writer, filter = None, lp_step = 0, rfrom = 1, rto = 0):
+    def __init__(self, bratags, headtags, rectags, foottags, wri, flt = None, lp_step = 0, rfrom = 1, rto = 0):
         """See description of DCReader constructor and Process() method for meaning of most parameters."""
         sax.handler.ContentHandler.__init__(self)
         self._btags = bratags
         self._htags = headtags
         self._rtags = rectags
         self._ftags = foottags
-        self._wri  = writer
-        self._flt  = filter
+        self._wri  = wri
+        self._flt  = flt
         self._lp_step  = lp_step
         self._rfrom    = rfrom
         self._rto  = rto
@@ -59,6 +59,9 @@ class ContentGenerator(sax.handler.ContentHandler):
     def endDocument(self):
         if not self._header_read:
             # OBLIGATORY
+            if self._flt is not None:
+                if hasattr(self._flt, 'setHeader'):
+                    self._flt.setHeader(self._header)
             self._wri.writeHeader(self._header)
             self._header_read = True
 
@@ -89,6 +92,9 @@ class ContentGenerator(sax.handler.ContentHandler):
         elif (self._bs is None and name in self._rtags) or \
              (self._bs is None and len(self._rtags) == 0):
             if not self._header_read:
+                if self._flt is not None:
+                    if hasattr(self._flt, 'setHeader'):
+                        self._flt.setHeader(self._header)
                 self._wri.writeHeader(self._header)
                 self._header_read = True
             self._recno = self._recno + 1
@@ -225,8 +231,8 @@ class DCReader:
                 headtags = self._htags, \
                 rectags = self._rtags, \
                 foottags = self._ftags, \
-                writer = self._wri, \
-                filter = self._flt, \
+                wri = self._wri, \
+                flt = self._flt, \
                 lp_step = self._lp_step, \
                 rfrom = rfrom, \
                 rto = rto \
