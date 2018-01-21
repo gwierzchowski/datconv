@@ -186,7 +186,11 @@ class DCReader:
             pass
         finally:
             # OBLIGATORY
-            self._wri.writeFooter([])
+            footer = []
+            if self._flt is not None:
+                if hasattr(self._flt, 'setFooter'):
+                    self._flt.setFooter(footer)
+            self._wri.writeFooter(footer)
             fout.close()
             Log.info('Output saved to %s' % outpath)
     

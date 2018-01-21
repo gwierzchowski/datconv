@@ -77,4 +77,12 @@ class DCFilter:
         """
         return WRITE
 
+    def setFooter(self, footer):
+        """Facultative method that may be defined in Filter class.
+        Informs Filter about contents of footer and give it a chance to change it.
+        If this method is present in Filter it is called by Reader after data conversion and before Writer calls ``setFooter``.
+        
+        :param footer: is instance of footer as passed by Reader (always a list, but type of elements is up to Reader). This parameter is passed later to Writer.
+        """
+        pass
     

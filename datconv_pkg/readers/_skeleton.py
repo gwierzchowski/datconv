@@ -75,7 +75,7 @@ class DCReader:
         # Then it should inform filter about contents of data header and make following call.
         # Passed header must be a Python list object,
         # but items of this list are facultative (i.e. it is up to the reader class what to place here).
-        # Passed header must be the same as later passed to Writer.
+        # Header argument must be later passed to Writer (filter may change it)
         if self._flt is not None:
             if hasattr(self._flt, 'setHeader'):
                 self._flt.setHeader(header)
@@ -114,6 +114,14 @@ class DCReader:
             else:
                 self._wri.writeRecord(rec)
 
+        # Then it should inform filter about contents of data footer and make following call.
+        # Passed footer must be a Python list object,
+        # but items of this list are facultative (i.e. it is up to the reader class what to place here).
+        # Footer argument must be later passed to Writer (filter may change it)
+        if self._flt is not None:
+            if hasattr(self._flt, 'setFooter'):
+                self._flt.setFooter(footer)
+        
         # Then it should make following call.
         # Passed footer must be a Python list object (just like the header was)
         # but items of this list are facultative (i.e. it is up to the reader class what to place here).

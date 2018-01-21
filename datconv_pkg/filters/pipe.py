@@ -64,3 +64,8 @@ class DCFilter:
                 if not self._pass_skiped:
                     break
         return res
+
+    def setFooter(self, footer):
+        for flt in self._flist:
+            if hasattr(flt, 'setFooter'):
+                flt.setFooter(footer)

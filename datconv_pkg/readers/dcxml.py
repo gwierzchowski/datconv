@@ -66,6 +66,9 @@ class ContentGenerator(sax.handler.ContentHandler):
             self._header_read = True
 
         # OBLIGATORY
+        if self._flt is not None:
+            if hasattr(self._flt, 'setFooter'):
+                self._flt.setFooter(self._footer)
         self._wri.writeFooter(self._footer)
 
     def startElement(self, name, attrs):

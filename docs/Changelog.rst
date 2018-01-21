@@ -25,12 +25,23 @@ Notes about versioning schema
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is labeled as Fix Release.
 
+0.5.1 (2018.01.20)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added optional filter method ``setFooter()`` to inform filter about contents of data footer and give it a chance to change it.
+- Convert standard filters pipe, stat, statex to use ``setFooter()`` instead of ``__del__()``.
+
+Fixes
+^^^^^^^^^^^^
+- Fix program crash when dcjson writer was used with ``with_prop: true`` option.
+
 0.5.0 (2018.01.06)
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
 - Added new standard filters: pipe, gen_rec.
-- Added optional filter method ``setHeader()`` to inform filter about contents of data header.
+- Added optional filter method ``setHeader()`` to inform filter about contents of data header and give it a chance to change it.
 
 0.4.1 (2017.08.16)
 ----------------------------------

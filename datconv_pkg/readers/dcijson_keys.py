@@ -194,6 +194,9 @@ class DCReader:
                 self._h_written = True
                 self._header = []
             # OBLIGATORY
+            if self._flt is not None:
+                if hasattr(self._flt, 'setFooter'):
+                    self._flt.setFooter(self._header)
             self._wri.writeFooter(self._header)
             fout.close()
             Log.info('Output saved to %s' % outpath)

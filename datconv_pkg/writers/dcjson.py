@@ -203,11 +203,11 @@ class DCWriter:
         for tag in el:
             if tag.tag in ret:
                 if isinstance(ret[tag.tag], list):
-                    ret[tag.tag].append(self._element2obj2(tag))
+                    ret[tag.tag].append(self._element2objP(tag))
                 else:
-                    ret[tag.tag] = [ret[tag.tag], self._element2obj2(tag)]
+                    ret[tag.tag] = [ret[tag.tag], self._element2objP(tag)]
             else:
-                ret[tag.tag] = self._element2obj2(tag)
+                ret[tag.tag] = self._element2objP(tag)
         return ret
         
     #############################################################

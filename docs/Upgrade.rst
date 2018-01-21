@@ -3,6 +3,22 @@
 Upgrade instructions
 ====================
 
+From earlier versions to Datconv 0.5.1
+--------------------------------------------------
+New Filter optional functions ``setHeader()`` and ``setFooter()``:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- If you managed to write custom Reader, it must be updated in following way: 
+  call filter optional functions before calling Writer ``writeHeader()`` and ``writeFooter()`` functions as shown below::
+  
+    if self._flt is not None:
+        if hasattr(self._flt, 'setHeader'):
+            self._flt.setHeader(self._header)
+    self._wri.writeHeader(self._header)
+
+  and in similar way for Footer.
+- If you have a filter that does some work at the end of converion process (like writing some statistics) and you implemented it in
+  ``__del__()`` fumction, this finalization code can be now moved to ``setFooter()``.
+
 From Datconv version 0.2.x to Datconv 0.3.x
 --------------------------------------------------
 Changes in parameters default values

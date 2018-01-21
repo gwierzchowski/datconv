@@ -88,7 +88,7 @@ class DCFilter:
         self._recno = self._recno + 1
         return self._retval
 
-    def __del__(self):
+    def setFooter(self, footer):
         for k in sorted(self._stats.keys()):
             v = self._stats[k]
             if isinstance(v[0], int):

@@ -80,7 +80,7 @@ class DCFilter:
         self._recno = self._recno + 1
         return self._retval
     
-    def __del__(self):
+    def setFooter(self, footer):
         self._init_swriter()
         for fld in self._fields:
             stat = self._stats.get(fld[0])
