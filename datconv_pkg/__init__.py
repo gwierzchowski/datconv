@@ -18,10 +18,6 @@ import logging, logging.config
 if __package__ != 'datconv_pkg':
     import yaml
 
-# Datconv generic modules
-from datconv.outconn import dcstdout, dcfile
-#from datconv.outconn import dcstdout as dcstdout, dcfile as dcfile
-
 ############################################################################
 sys.path.append('.')
 Logger = None
@@ -44,6 +40,7 @@ class Datconv:
         :param conf: is a ``dict()`` object with keys as apecified by datconv main YAML configuration file. In this case datconv default configuration file is not used.
         :returns: 2 in case of invalid configuration; 0 if run sucessfully; may throw exception
         """
+        from datconv.outconn import dcstdout, dcfile
         try:
             ####################################################################
             ## Set-up Logger
