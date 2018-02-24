@@ -1,51 +1,51 @@
 .. include:: defs.rst
 
-The datconv.filters package reference
+datconv.filters package 
 -----------------------------------------
 .. automodule:: datconv.filters
    :members:
 
 .. _filters_skeleton:
 
-The filters' skeleton reference
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Filter interface 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters._skeleton
    :members:
 
-The datconv.filters.delfield module reference
+datconv.filters.delfield module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.delfield
    :members:
 
-The datconv.filters.rectyp module reference
+datconv.filters.rectyp module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.rectyp
    :members:
 
-The datconv.filters.pipe module reference
+datconv.filters.pipe module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.pipe
    :members:
 
-The datconv.filters.gen_rec module reference
+datconv.filters.gen_rec module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.gen_rec
    :members:
 
-The datconv.filters.stat module reference
+datconv.filters.stat module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.stat
    :members:
 
-The datconv.filters.statex module reference
+datconv.filters.statex module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.filters.statex
    :members:
 
 .. _filters_conf_template:
 
-The datconv.filters Configuration keys
-----------------------------------------------
+Configuration keys
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Listing of all possible configuration keys to be used with filters contained in this package.
 
 There are sample values given, if key is not specified in configuration file, than default value is assumed.

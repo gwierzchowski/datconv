@@ -10,6 +10,9 @@ from importlib import import_module
 # Libs installed using pip
 from lxml import etree
 
+# Datconv generic modules
+from datconv.outconn import dcstdout, dcfile
+#from datconv.outconn import dcstdout as dcstdout, dcfile as dcfile
 
 Log = None
 """Log varaible is automatically set by main pandoc script using logging.getLogger method.
@@ -105,11 +108,14 @@ class DCFilter:
             else:
                 Log.error("Invalid configuration: there is statwriter defined but no sub-key: Module")
             if self._sfile:
-                self._swri.setOutput(open(self._sfile, 'w'))
-                self._swri.writeHeader([])
+                if dcfile.Log is None:
+                    dcfile.Log = Log.getChild('statwriter')
+                self._swri.setOutput(dcfile.DCConnector(path = self._sfile))
             else:
-                self._swri = None
-                Log.error("Invalid configuration: there is statwriter defined but no key: statfile")
+                if dcstdout.Log is None:
+                    dcstdout.Log = Log.getChild('statwriter')
+                self._swri.setOutput(dcstdout.DCConnector())
+            self._swri.writeHeader([])
 
     def _write_stat(self, sname, key, val):
         if self._swri:

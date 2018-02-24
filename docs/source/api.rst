@@ -1,28 +1,37 @@
 The Datconv API reference
 =========================
 
-The datconv program reference
+.. _datconv_program:
+
+datconv program
 -----------------------------
 The :command:`datconv` script has following call syntax::
 
-    datconv yaml_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
+    datconv [=]conf_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
     where:
-    yaml_file - is obligatory path to file in YAML format in which Reader, Filter and Writer compoments are set up.
+    conf_file - path to file in YAML format in which Reader, Filter and Writer compoments are configured.
                 See below listing for more detailed desctiption of this file.
-    --key1:val - any number of arguments that add new settings or overwrite settings from yaml_file.
-                It works this way: let say that in yaml_file we have:
+                If there is '=' before conf_file then default configuration file is not used.
+                If conf_file is equal to 'def' than only default configuration file is used.
+    --key1:val - any number of arguments that add new settings or overwrite settings from conf_file.
+                It works this way: let say that in conf_file we have:
                 Writer:
-                    Module: writers.dcxml
+                    Module: datconv.writers.dcxml
                     CArg: 
                         pretty:   true
                 by invoking option --Writer:CArg:pretty:false we overwrite 'pretty' option of Writer.
-                Note that in YAML file we have to have space after : at end of the key, while in command line there are no spaces.
+                Note that in YAML file we must have space after : at end of the key, while in command line there are no spaces.
     arg1 - any number of arguments (that do not begin with --).
-        Those arguments will replace $1, $2, ... markers in yaml_file according to their position in command line:
+        Those arguments will replace $1, $2, ... markers in conf_file according to their position in command line:
         i.e. $1 will be replaced by first argument that do not begin with --, etc.
+    or
+    datconv --default
+    which prints path to and contents of default configuration file.
+    
     or
     datconv --version
     which prints version number to standard output and exit.
+    
     or
     datconv --help
     which prints short usage information
@@ -40,20 +49,28 @@ Sample main YAML configuration file layout:
 
 See also:
 
-- :ref:`readers_conf_template`
-- :ref:`filters_conf_template`
-- :ref:`writers_conf_template`
+- :ref:`Readers configuration keys <readers_conf_template>`
+- :ref:`Filters configuration keys <filters_conf_template>`
+- :ref:`Writers configuration keys <writers_conf_template>`
+- :ref:`Output connectors configuration keys <outconn_conf_template>`
 
-The datconv package reference
+datconv package
 ---------------------------------
 .. automodule:: datconv
    :members:
  
-The datconv sub-packages
+datconv sub-packages
 ---------------------------------
 .. toctree::
-   :maxdepth: 2
 
    api_readers
    api_filters
    api_writers
+   api_outconn
+   api_outconn_sqlite
+   api_outconn_postgresql
+   api_outconn_crate
+
+   
+..    :maxdepth: 3
+   

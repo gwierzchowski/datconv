@@ -50,7 +50,7 @@ class DCReader:
         """
         self._flt = flt
 
-    def Process(self, inpath, outpath, rfrom = 1, rto = 0):
+    def Process(self, inpath, outpath = None, rfrom = 1, rto = 0):
         """Main method that drive all data conversion process.
         Parameters are usually passed from YAML file as subkeys of Reader:PArg key.
         Parameters given in this method are typical ones, however thay may be customized.
@@ -64,13 +64,13 @@ class DCReader:
         # Here we only pay attantion to obligatory calls (API) that must be called here
         
         # Fake declaration to make below code compile
-        fout = header = footer = None
+        header = footer = None
         
-        # This method should open input stream,
-        # open output stream, and then make following call
-        # using writer class previously passed using setWriter().
-        # fout is opened output stream.
-        self._wri.setOutput(fout)
+        ## This method should open input stream,
+        ## open output stream, and then make following call
+        ## using writer class previously passed using setWriter().
+        ## fout is opened output stream.
+        #self._wri.setOutput(fout)
         
         # Then it should inform filter about contents of data header and make following call.
         # Passed header must be a Python list object,
@@ -128,7 +128,7 @@ class DCReader:
         self._wri.writeFooter(footer)
         
         # Then it should probably close input and output streams and make some other cleanup
-        Log.info('Output saved to %s' % outpath)
+        #Log.info('Output saved to %s' % outpath)
         
     # Fake declaration to make this sample skeleton compile.
     # This method name and existance is completly facultative.

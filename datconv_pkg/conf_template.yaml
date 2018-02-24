@@ -32,7 +32,8 @@ Reader:
         # Concrete keys depands on choosen Reader.
         # See particular readers documentation.
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.xml
-        outpath: out/AddnDrawNbrs_c5019_s38.xml
+        # optional - if not defined OutConnector is used
+        #outpath: out/AddnDrawNbrs_c5019_s38.xml
         # ...
 
 # Obligatory key that specify Writer module
@@ -62,6 +63,15 @@ Filter:
         retval: 0
         # ...
 
+# Optional key that specify Filter module
+# If it is missing or null datconv.outconn.dcfile(Reader:PArg:outpath) is used
+# default: null
+OutConnector:
+    Module: datconv.outconn.dcfile
+    CArg:
+        # relative or absolute path to output file; obligatory
+        path: "out/AcctAgentAdjustment_c5019_s38.xml"
+
 # Optional key that specify Logger class configuration
 # If it is missing or null following configuration is used:
 #   all log messages are being sent to standard error stream
@@ -77,4 +87,10 @@ Logger:
     Conf: Logger.yaml
     
     # As an alternative, all keys contained in Logger.yaml file may be explicitly placed here (as subkeys of Logger key)
+    
+# Optional key that specify log level of default console logger used when Logger: key is not present.
+# Possible values: CRITICAL, ERROR, WARNING, INFO, DEBUG
+# default: INFO
+DefLogLevel: WARNING
+    
     

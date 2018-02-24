@@ -191,7 +191,7 @@ class DCReader:
         :param headtags: list of tag names that will be treated as header tags (see above).
         :param rectags: list of tag names that will be treated as record tags (see above).
         :param foottags: list of tag names that will be treated as footer tags (see above).
-        :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0.
+        :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0 or logging level is set to value higher than INFO.
         
         For more detailed descriptions see :ref:`readers_conf_template`.
         """
@@ -212,20 +212,20 @@ class DCReader:
     def setFilter(self, filter):
         self._flt = filter
     
-    def Process(self, inpath, outpath, rfrom = 1, rto = 0):
+    def Process(self, inpath, outpath = None, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
         
         :param inpath: Path to input file.
-        :param outpath: Path to output file passed to Writer.
+        :param outpath: Path to output file passed to Writer (fall-back if output connector is not defined).
         :param rfrom-rto: specifies scope of records to be processed.
         
         For more detailed descriptions see :ref:`readers_conf_template`.
         """
 
-        fout = open(outpath, "w")
+        #fout = open(outpath, "w")
         
         # OBLIGATORY
-        self._wri.setOutput(fout)
+        #self._wri.setOutput(fout)
         
         parser = sax.make_parser()
         parser.setContentHandler( \
@@ -247,6 +247,6 @@ class DCReader:
             pass
         except ToLimitBreak:
             pass
-        finally:
-            fout.close()
-            Log.info('Output saved to %s' % outpath)
+        #finally:
+            #fout.close()
+            #Log.info('Output saved to %s' % outpath)

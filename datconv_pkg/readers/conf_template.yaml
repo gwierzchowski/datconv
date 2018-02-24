@@ -30,8 +30,8 @@ Reader:
         # Obligatory parameter
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.xml
         
-        # Path to output file passed to Writer
-        # Obligatory parameter
+        # Path to output file passed to Writer (fall-back if output connector is not defined)
+        # default: none (use defined output connector)
         outpath: out/AddnDrawNbrs_c5019_s38.xml
         
         # Start passing records to Filter and Writer from this record
@@ -70,8 +70,8 @@ Reader:
         # Obligatory parameter
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
         
-        # Path to output file passed to Writer
-        # Obligatory parameter
+        # Path to output file passed to Writer (fall-back if output connector is not defined)
+        # default: none (use defined output connector)
         outpath: out/AddnDrawNbrs_c5019_s38.json
         
         # Start passing records to Filter and Writer from this record
@@ -111,8 +111,8 @@ Reader:
         # Obligatory parameter
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
         
-        # Path to output file passed to Writer
-        # Obligatory parameter
+        # Path to output file passed to Writer (fall-back if output connector is not defined)
+        # default: none (use defined output connector)
         outpath: out/AddnDrawNbrs_c5019_s38.json
         
         # Start passing records to Filter and Writer from this record
@@ -144,8 +144,8 @@ Reader:
         # Obligatory parameter
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.json
         
-        # Path to output file passed to Writer
-        # Obligatory parameter
+        # Path to output file passed to Writer (fall-back if output connector is not defined)
+        # default: none (use defined output connector)
         outpath: out/AddnDrawNbrs_c5019_s38.json
         
         # Start passing records to Filter and Writer from this record
@@ -183,8 +183,8 @@ Reader:
         # Obligatory parameter
         inpath:  ../GET-Data/cdc_5019/AddnDrawNbrs_c5019_s38.csv
         
-        # Path to output file passed to Writer
-        # Obligatory parameter
+        # Path to output file passed to Writer (fall-back if output connector is not defined)
+        # default: none (use defined output connector)
         outpath: out/AddnDrawNbrs_c5019_s38.json
         
         # Start passing records to Filter and Writer from this record

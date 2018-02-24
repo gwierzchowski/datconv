@@ -1,0 +1,27 @@
+OutConnector:
+    Module: datconv.outconn.dcnull
+
+OutConnector:
+    Module: datconv.outconn.dcstdout
+
+OutConnector:
+    Module: datconv.outconn.dcfile
+    CArg:
+        # relative or absolute path to output file; obligatory
+        path: "out/AcctAgentAdjustment_c5019_s38.xml"
+            
+OutConnector:
+    Module: datconv.outconn.dcmultiplicator
+    CArg:
+        # list of sub-connectiors that will get output records;
+        # every sub-connection may support different interface.
+        clist:
+            - Module: datconv.outconn.dcfile
+              CArg:
+                path: "out/AddnDrawNbrs_c5019_s38_1.json"
+            - Module: datconv.outconn.crate.json
+              CArg:
+                path: "out/AddnDrawNbrs_c5019_s38_2.json"
+                cast:
+                    - [['rec', 'value'], str]
+                lowercase: True

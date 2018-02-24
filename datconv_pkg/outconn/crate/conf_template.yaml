@@ -1,0 +1,125 @@
+OutConnector:
+    Module: datconv.outconn.crate.ddl
+    CArg:
+      # relative or absolute path to output file; obligatory
+      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
+      
+      # name of the table; obligatory
+      table: product
+      
+      # if true, prevents conflicts with SQL keywords;
+      # data field names that are in conflict will be suffixed with undderscore.
+      # default: true
+      check_keywords: true
+      
+      # if >1, all JSON keys will be converted to lower-case; 
+      # if =1, only first level keys; 
+      # if =0, no conversion happen.
+      # default: 1
+      lowercase: 1
+      
+      # if >1, leading ``_`` will be removed from all JSON keys; 
+      # if =1, only from first level of keys; 
+      # if =0, option is disabled.
+      # default: 1
+      no_underscore: 1
+      
+      # list of first level keys that will be declared as primary keys.
+      # default: []
+      primary_key: ['cdc', 'recno']
+      
+      # list of fields that be declared as not having index; place ['*'] to declare all fields.
+      # default: []
+      no_index: ['description']
+      
+      # list of fields that be declared as not nullable; place ['*'] to declare all fields.
+      # default: []
+      not_null: []
+
+OutConnector:
+    Module: datconv.outconn.crate.json
+    CArg:
+      # relative or absolute path to output file; obligatory
+      path: "out/AddnDrawNbrs_c5019_s38_2.json"
+      
+      # if true, prevents conflicts with SQL keywords;
+      # data field names that are in conflict will be suffixed with undderscore.
+      # default: true
+      check_keywords: true
+      
+      # if >1, all JSON keys will be converted to lower-case;
+      # if =1, only first level keys; 
+      # if =0, no conversion happen.
+      # default: 1
+      lowercase: 1
+      
+      # if >1, leading ``_`` will be removed from all JSON keys; 
+      # if =1, only from first level of keys; 
+      # if =0, optionj is disabled.
+      # default: 1
+      no_underscore: 1
+      
+      # list of first level keys that will be placed at begin of record. 
+      # This option requires ``dcjson`` Writer option ``preserve_order`` to be set.
+      # default: []
+      move_to_front: ['cdc', 'recno']
+      
+      # array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} 
+      # will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. 
+      # First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. 
+      # Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords)
+      # default: none
+      cast:
+          - [['rec', 'value'], str]
+
+OutConnector:
+    Module: datconv.outconn.crate.insert
+    CArg:
+      # name of the table; obligatory
+      table: product
+      
+      # connection string to database; obligatory
+      connstring: http://192.168.1.15:4200
+      
+      # user name for databse connection
+      # default: none
+      user: crate
+      
+      # connection string to database; obligatory
+      # default: none
+      password: none
+      
+      # if true, prevents conflicts with SQL keywords;
+      # data field names that are in conflict will be suffixed with undderscore.
+      # default: true
+      check_keywords: true
+      
+      # if >1, all JSON keys will be converted to lower-case;
+      # if =1, only first level keys; 
+      # if =0, no conversion happen.
+      # default: 1
+      lowercase: 1
+      
+      # if >1, leading ``_`` will be removed from all JSON keys; 
+      # if =1, only from first level of keys; 
+      # if =0, optionj is disabled.
+      # default: 1
+      no_underscore: 1
+      
+      # if true, insert statements are being saved to file specified as connstring.
+      # default: false
+      dump_sql: true
+      
+      # if consequtive records have similar structure (i.e. have the same fields) 
+      # they are groupped into one pack (up to the size specified as this parameter) and inserted in one command. 
+      # If set value is 0 than every insert is done individaually - warning: it is slow operation.
+      # default: 10000
+      bulk_size: 5000
+      
+      # array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} 
+      # will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. 
+      # First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. 
+      # Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords)
+      # default: none
+      cast:
+          - [['rec', 'value'], str]

@@ -7,20 +7,23 @@
 Datconv's documentation
 #######################
    
+.. include:: ../../README.rst
+
+Installation
+==========================================
+
 .. toctree::
-   :hidden:
+   :titlesonly:
+   
+   INSTALL
 
-   README
-
-.. include:: ../../DESCR.rst
-
-Datconv data flow schema (without filter):
+Datconv data flow schema (without filter)
 ==========================================
 | 
 
 .. image:: schema1.*
 
-Datconv data flow schema (with filter):
+Datconv data flow schema (with filter)
 ==========================================
 | 
 
@@ -30,14 +33,15 @@ Contents
 ========
    
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    tutorial
+   default
    api
-   
+
 .. toctree::
    :titlesonly:
-
+   
    Upgrade
    Changelog
 

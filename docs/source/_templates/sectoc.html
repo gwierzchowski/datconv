@@ -1,0 +1,11 @@
+{#
+    sectoc.html
+    ~~~~~~~~~~~~~~~~~~~
+
+    Based on basic/localtoc.html from Sphinx.
+
+#}
+{%- if display_toc %}
+  <h3><a href="{{ pathto(master_doc) }}">{{ _('Sections') }}</a></h3>
+  {{ toc }}
+{%- endif %}

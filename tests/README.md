@@ -17,6 +17,7 @@ Note: While working with Python3 on some Linux systems `pip` command should be r
 This program requires package datconv and all packages required by it.  
 **datconv** can be installed from Python Package Index: 
 `sudo pip install datconv`  
+Note: This version of `datconv_test` package requires `datconv` version 0.6.0 or higher.
 
 ### Installation Method 1
 Recommended method for installation of this package is from Python Package Index:  

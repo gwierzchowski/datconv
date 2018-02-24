@@ -1,114 +1,113 @@
 .. Keep this file pure reST code (no Sphinx estensions)
 
+Important links
+==================================
+
+If you are reading this from github, package official documentation is avaialble on `<http://datconv.readthedocs.io>`_.
+
+If you are reading documentation, source code is hosted on `<https://github.com/gwierzchowski/datconv>`_. In order to communicate with author, report bug etc. - please use Issues tab on github.
+
+
 Datconv - Universal Data Converter
 ==================================
-For package description see DESCR.rst file
 
-INSTALLATION (System wide - for all users):
--------------------------------------------
-.. note::
-   In case of using Python 3 on linux system replace ``pip`` with ``pip3`` and ``python`` with ``python3`` 
-   in below commands.
+**Datconv** is a program designed to perform configurable comversion of file
+with data in one format to file with data in another format.
 
-Prerequisites
-^^^^^^^^^^^^^
-This program requires following 3-rd party packages: ``PyYAML``, ``lxml``. 
-They must be installed in order to run Datconv.
-In addition JSON readers require ``ijson`` package to be installed.
+Program should be run using Python 2.7 or Python 3.x interpretter. It also requires
+installation of external packages: ``lxml``, ``PyYAML``. For more information see
+:doc:`INSTALL.rst <INSTALL>` file distributed in source ball.
 
-| **PyYAML** and **ijson** can be installed from Python Package Index:
-| Linux: ``sudo pip install PyYAML ijson``
-| Windows: ``pip install PyYAML ijson``
+Both input and output files can be text or binary files. However it is
+assumed that those files have following structure:
 
-| **lxml** is little bit more involved as it is extension package and installation from pip may fail. This package should be installed from system specific installer.  
-| Linux (Debian based): `sudo apt-get install python-lxml` or `sudo apt-get install python3-lxml`  
-| Windows: Download from `PyPI <https://pypi.python.org/pypi/>`_ appropriate lxml binary windows installer and install from it.
+|    -----
+|    Header 
+|    -----
+|    Record 1 
+|    Record 2 
+|    .....
+|    Record N 
+|    -----
+|    Footer
+|    -----
 
-Installation Method 1
-^^^^^^^^^^^^^^^^^^^^^
-| Recommended method for installation of this package is from Python Package Index:  
-| Linux: ``sudo pip install datconv``
-| Windows: ``pip install datconv``
+There may be different types of records (i.e. every record has attribute
+called record type). Each record may contain different number and kind of 
+data (has different internal structure) even among records of the same type.
 
-Installation Method 2
-^^^^^^^^^^^^^^^^^^^^^
-| If you want to install particular version, download source-ball and issue:  
-| Linux: ``sudo pip install datconv-<ver>.tar.gz``
-| Windows: ``pip install datconv-<ver>.tar.gz``
+Program has modular architecture with following swichable compoments:
 
-Installation Method 3
-^^^^^^^^^^^^^^^^^^^^^
-| Alternatively unpack source-ball and from unpacked folder run command:  
-| Linux: ``sudo python setup.py install``
-| Windows: ``python setup.py install``
+*Reader*
+    Major obligatory component responsible for:
+    
+    * reading input data (i.e. every reader class assumes certain input file format) 
+    * driving entire data conversion process (i.e. main processing loop in implemented in this class) 
+    * determine internal representation of header, records and footer (this strongly depands on reader and kind of input format).
+    
+    For API of this component see: :ref:`readers_skeleton`
 
-.. note::
-   More installation options are possible - see documentation of Python ``distutils`` package.
+*Filter*
+    Optional compoment that is able to: 
+    
+    * filter data (i.e. do not pass certain records further - i.e. to Writer)
+    * change data (i.e. change on the fly contents of certain records) 
+    * produce data (i.e. cause that certain records, maybe slightly modified, are being sent multiply times to writer) 
+    * break conversion process (i.e. cause that conversion stop on certain record). 
 
-Installation from Source
-^^^^^^^^^^^^^^^^^^^^^^^^
-If you have downloaded archive snapshot, first unpack it and from root folder run command: 
-``python setup.py sdist`` 
-which will create ``dist`` subfolder and create source-ball in it. Then apply method 2 or 3 above.
+    For API of this component see: :ref:`filters_skeleton`
 
-Files deployed by installation script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-- Main command line utility: |br|
-  Linux: ``<BINDATA>/datconv``, where ``<BINDATA>`` is by default ``/usr/local/bin`` |br|
-  Windows: ``<BINDATA>\Scripts\datconv-run.py``, where ``<BINDATA>`` is by default ``C:\Program Files\PythonXX`` where XX is Python version  
-- ``datconv`` package and its sub-packages 
-- Documentation: |br|
-  Linux: ``<PREFIX>/share/doc/datconv/*``, where ``<PREFIX>`` is by default ``/usr/local`` |br|
-  Windows: ``<PREFIX>\doc\datconv\*``, where ``<PREFIX>`` is by default ``C:\Program Files\PythonXX``
+*Writer*
+    Obligatory component responsible for: 
+    
+    * re-packing data from element-tree internal format to strings or objects. 
 
-RE-INSTALLATION/UPGRADE
-------------------------
-| To upgrade packages from PyPi use -U option: ``[sudo] pip install -U PyYAML datconv``.
-| Other installation methods specified above remain valid when upgrading package.  
+    For API of this component see: :ref:`writers_skeleton`
 
-.. note::
-   if you upgrade from previous pandata/datconv version check ``Upgrade.rst`` file deployed in documentation folder.
+*Output Connector*
+    Obligatory component responsible for: 
+    
+    * writing data to destination storage. 
 
-USAGE:
-------
-Please refer to on-line or deployed documentation and Pydoc accesible information contained in this package. 
-Consider also installing ``datconv_tests`` package which contain test scripts for this package. 
-It can also be used as source of samples of how this package may be used.
+    For API of this component see: :ref:`outconn_skeleton`
+    
+*Logger*
+    All messages intended to be presented to user are being send 
+    (except few very initial error messages) to Logger classes from Python standard
+    package ``logging``. Datconv can use all logging comfiguration power available in this package.
 
-Official on-line documentation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Official program documentation is avaialble 
-`here <http://datconv.readthedocs.io>`_.
+In this version of package following compoments are included: 
 
-Additional configuration for Pydoc
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-There are some pydoc descriptions in several script files
-that are installed into folders not in python module search path,
-therefore standard pydoc browser would not get those descriptions. It is
-however possible to hack that:  
-Linux: edit `/usr/bin/pydoc` file:
+* Readers: XML (sax), CSV (sax), JSON (sax). 
+* Filters: Few basic/sample filters.
+* Writers: XML, CSV, XPath (helper module), JSON.
+* Output Connectors: File, Databases (SQLite, PostgreSQL, Crate).
 
-- at begin add: ``import sys``
-- before ``pydoc.gui()`` call, add ``sys.path.append('/usr/local/bin')``
-- create symlink: |br|
-  ``sudo ln -s /usr/local/bin/datconv /usr/local/bin/datconv-run.py``.
-  
-Windows: edit ``C:\Program Files\PythonXX\Tools\Scripts\pydocgui.pyw`` file:
+So Datconv program can be used to convert files between XML, CVS and JSON formats and saving data in those formats to database. 
+Sax means that used parsers are of event type - i.e. entire data are not being stored in memory (typically only just one record), what means that program is able to process large files without allocating a lot of memory.
+It may be also usefull in case you have some files in custom program/company specific data format that you want to look up or convert. Then it is enough to write the reader component for your cutom data format compatible with Datconv API and let Datconv do the rest. 
+Actually this is how I'm currently using this program in my work.
 
-- at begin add: ``import sys``
-- before ``pydoc.gui()`` call, add ``sys.path.append('C:\\Program Files\\PythonXX\\Scripts')``
+Package repository and home page: `Datconv Project <https://github.com/gwierzchowski/datconv>`_.
 
-Obtaining Pydoc information
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-| Perform above 'hacks', and run conmand: 
-| Linux (Python2): ``pydoc -g``  
-| Linux (Python3): ``pydoc3 -b``  
-| Windows: Start Menu/Python/Module Docs  
-| and then press 'Open Browser' or manually navigate to given URL.
+If you'd prefer to work in JavaScript environment please look at `Pandat Project <https://github.com/pandat-team/pandat/>`_ which has similar design and purpose.
 
-.. note::
-   This URL does not work with Windows IE browser.
+This program was inspired by design of `Pandoc Project <http://pandoc.org/>`_.
 
-| Then go to below sections (near bottom of page): 
-| Linux: ``/usr/local/lib/pythonX.X/dist-packages/``, ``/usr/local/bin``
-| Windows: ``C:\Program Files\PythonXX\Lib\site-packages``, ``C:\Program Files\PythonXX\Scripts`` and go into ``datconv(package)`` or ``datconv-run`` link.
+Performance
+=============
+
+Main design principle of this tool was generality and flexibility rather than performance and 
+use scenarios with very big data. This version of program runs in one thread (on one CPU core) and does not consume a lot of modern computer resources.                                                                                                                                  
+So in case of processing of very big data consider dividing data into smaller chunks and run few instances of this program in parallell or use rfrom-rto parameters avaialble in readers. Or if you have to process big files in short time and do not need that much flexibility (espacially filtering possibilities) probaly special dedicated program (which will not translate data to internal XML-like format) would process your data faster.
+
+Measured performance:
+
+- Hardware: Powerfull Laptop (2017 year), CPU Frequency 2.9 GHz, SSD Drive
+- Input: XML File: 942MB (400.000 records)
+- Output: JSON File: 639MB
+- Conversioon time without filter: 4 min 41 s
+- With filter (``datconv.filters.delfield``, 2 tags to remove): 4 min 41 s (the same; probably smaller record to write to JSON file compensated effort for Filter invocation).
+- Opposite direction (JSON output converted back to XML): 5 min 51 s.
+
+

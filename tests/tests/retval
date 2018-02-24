@@ -29,7 +29,7 @@ t_python $t_datconv xxx.yaml 2>/dev/null
 #### 3: Invalid Yaml config file (no Writer defined) - should return 2 (invalid command line parameters)
 Nrun=$(($Nrun+1)); failed=0
 
-t_python $t_datconv invalid.yaml 2>/dev/null
+t_python $t_datconv =invalid.yaml 2>/dev/null
 [ $? -ne 2 ] && failed=1
 
 [ $failed -ne 0 ] && Nfailed=$(($Nfailed+1))
@@ -39,7 +39,7 @@ t_python $t_datconv invalid.yaml 2>/dev/null
 #### 4: Invalid command line parameter - should return 2 (invalid command line parameters)
 Nrun=$(($Nrun+1)); failed=0
 
-t_python $t_datconv xml2xml.yaml --ReaderNodule=xxx $t_outdir 2>/dev/null
+t_python $t_datconv =xml2xml.yaml --ReaderNodule=xxx $t_outdir 2>/dev/null
 [ $? -ne 2 ] && failed=1
 
 [ $failed -ne 0 ] && Nfailed=$(($Nfailed+1))
@@ -49,7 +49,7 @@ t_python $t_datconv xml2xml.yaml --ReaderNodule=xxx $t_outdir 2>/dev/null
 #### 5: Error in Yaml config file (not existing input file) - should return 1 (general exception)
 Nrun=$(($Nrun+1)); failed=0
 
-t_python $t_datconv noinpath.yaml  $t_outdir 2>/dev/null
+t_python $t_datconv =noinpath.yaml  $t_outdir 2>/dev/null
 [ $? -ne 1 ] && failed=1
 
 [ $failed -ne 0 ] && Nfailed=$(($Nfailed+1))

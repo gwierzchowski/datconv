@@ -10,6 +10,9 @@ import sys
 # Libs installed using pip
 from lxml import etree
 
+# Datconv generic modules
+from datconv.outconn import STRING, OBJECT
+
 Log = None
 """Log varaible is automatically set by main datconv script using logging.getLogger method.
 Use it for logging messages in need.
@@ -40,7 +43,9 @@ class DCWriter:
             self._enc = 'utf8'
         self._cnt_tag = cnt_tag
         self._cnt_attr = cnt_attr
-        self._out = sys.stdout
+        #self._out = sys.stdout
+        self._out = None
+        self._out_flags = 0;
         self._cnt = 0
         self._bratags = []
         self._add_header = add_header
@@ -48,74 +53,80 @@ class DCWriter:
 
     def setOutput(self, out):
         self._out = out
+        self._out_flags = out.supportedInterfases();
+        # currently this writer strictly require string output connector
+        # we wre currntly not checkeing this bit further.
+        # TODO: Rewrite Header/Footer to create tree-element and use compatible OBJECT connector.
+        assert self._out_flags & STRING
         self._cnt = 0
         self._bratags = []
         
     def writeHeader(self, header):
         if self._enc == 'unicode':
-            self._out.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            self._out.pushString('<?xml version="1.0" encoding="UTF-8"?>\n')
         else:
-            self._out.write('<?xml version="1.0" encoding="%s"?>\n' % self._enc)
+            self._out.pushString('<?xml version="1.0" encoding="%s"?>\n' % self._enc)
         for h in header:
             if isinstance(h, dict):
                 if '_tag_' in h and '_bra_' in h and h['_bra_']:
                     self._bratags.append(h['_tag_'])
-                    self._out.write('<' + h['_tag_'])
+                    self._out.pushString('<' + h['_tag_'])
                     for (aname, avalue) in h.items():
                         if aname != '_tag_'and aname != '_bra_':
-                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
-                    self._out.write('>\n')
+                            self._out.pushString(' ' + str(aname) + '="' + str(avalue) + '"')
+                    self._out.pushString('>\n')
                     del header[header.index(h)]
                     break
         if len(self._bratags) == 0:
             self._bratags.append('Datconv')
-            self._out.write('<Datconv>\n')
+            self._out.pushString('<Datconv>\n')
         if self._add_header:
             for h in header:
                 if isinstance(h, dict):
                     if '_tag_' in h:
-                        self._out.write('<' + h['_tag_'])
+                        self._out.pushString('<' + h['_tag_'])
                         for (aname, avalue) in h.items():
                             if aname != '_tag_'and aname != '_bra_':
-                                self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
+                                self._out.pushString(' ' + str(aname) + '="' + str(avalue) + '"')
                         if '_bra_' in h and h['_bra_']:
-                            self._out.write('>\n')
+                            self._out.pushString('>\n')
                             self._bratags.append(h['_tag_'])
                         else:
-                            self._out.write('/>\n')
+                            self._out.pushString('/>\n')
                     else:
-                        self._out.write('<Header')
+                        self._out.pushString('<Header')
                         for (aname, avalue) in h.items():
-                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
-                        self._out.write('/>\n')
+                            self._out.pushString(' ' + str(aname) + '="' + str(avalue) + '"')
+                        self._out.pushString('/>\n')
                 else:
-                    self._out.write('<Header>%s</Header>\n' % str(h))
+                    self._out.pushString('<Header>%s</Header>\n' % str(h))
 
     def writeFooter(self, footer):
         if self._cnt_tag:
             if self._cnt_attr:
-                self._out.write('<%s %s="%d"/>\n' % (self._cnt_tag, self._cnt_attr, self._cnt))
+                self._out.pushString('<%s %s="%d"/>\n' % (self._cnt_tag, self._cnt_attr, self._cnt))
             else:
-                self._out.write('<%s>%d</%s>\n' % (self._cnt_tag, self._cnt, self._cnt_tag))
+                self._out.pushString('<%s>%d</%s>\n' % (self._cnt_tag, self._cnt, self._cnt_tag))
         if self._add_footer:
             for f in footer:
                 if isinstance(f, dict):
                     if '_tag_' in f:
-                        self._out.write('<' + f['_tag_'])
+                        self._out.pushString('<' + f['_tag_'])
                         for (aname, avalue) in f.items():
                             if aname != '_tag_':
-                                self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
-                        self._out.write('/>\n')
+                                self._out.pushString(' ' + str(aname) + '="' + str(avalue) + '"')
+                        self._out.pushString('/>\n')
                     else:
-                        self._out.write('<Footer')
+                        self._out.pushString('<Footer')
                         for (aname, avalue) in f.items():
-                            self._out.write(' ' + str(aname) + '="' + str(avalue) + '"')
-                        self._out.write('/>\n')
+                            self._out.pushString(' ' + str(aname) + '="' + str(avalue) + '"')
+                        self._out.pushString('/>\n')
                 else:
-                    self._out.write('<Footer>%s</Footer>\n' % str(f))
+                    self._out.pushString('<Footer>%s</Footer>\n' % str(f))
         for i in range(len(self._bratags) - 1, -1, -1):
-            self._out.write('</' + self._bratags[i] + '>\n')
+            self._out.pushString('</' + self._bratags[i] + '>\n')
 
     def writeRecord(self, record):
-        print(etree.tostring(record, pretty_print = self._pretty, encoding = self._enc), file = self._out)
+        for stream in self._out.getStreams():
+            print(etree.tostring(record, pretty_print = self._pretty, encoding = self._enc), file = stream)
         self._cnt = self._cnt + 1

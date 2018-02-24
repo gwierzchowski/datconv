@@ -21,7 +21,7 @@ if os.name == 'nt':
 else:
     scripts = ['datconv']
 
-with open('DESCR.rst') as f:
+with open('README.rst') as f:
     long_description = f.read()
 
 dist = distutils.core.setup(name = 'datconv',
@@ -31,14 +31,19 @@ dist = distutils.core.setup(name = 'datconv',
     author = 'Grzegorz Wierzchowski',
     author_email = 'gwierzchowski@wp.pl',
     url = 'https://github.com/gwierzchowski/datconv',
-    packages = ['datconv','datconv.filters','datconv.readers','datconv.writers'],
+    packages = ['datconv','datconv.filters','datconv.readers','datconv.writers',
+                'datconv.outconn','datconv.outconn.crate','datconv.outconn.postgresql','datconv.outconn.sqlite'],
     package_dir = {'datconv': 'datconv_pkg'},
     package_data = {'datconv': ['conf_template.yaml', 'Logger.yaml'],
                     'datconv.filters': ['conf_template.yaml'],
                     'datconv.readers': ['conf_template.yaml'],
-                    'datconv.writers': ['conf_template.yaml']},
+                    'datconv.writers': ['conf_template.yaml'],
+                    'datconv.outconn': ['conf_template.yaml'],
+                    'datconv.outconn.crate': ['conf_template.yaml'],
+                    'datconv.outconn.postgresql': ['conf_template.yaml'],
+                    'datconv.outconn.sqlite': ['conf_template.yaml']},
     scripts = scripts,
-    data_files = [(doclocation, ['README.rst', 'LICENSE.txt', 'DESCR.rst', 'docs/Changelog.rst', 'docs/Upgrade.rst'])],
+    data_files = [(doclocation, ['README.rst', 'LICENSE.txt', 'INSTALL.rst', 'docs/Changelog.rst', 'docs/Upgrade.rst'])],
     requires = ['PyYAML', 'lxml'],
     license = 'PSF',
     platforms = 'any',

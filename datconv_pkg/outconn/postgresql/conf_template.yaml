@@ -1,0 +1,65 @@
+OutConnector:
+    Module: datconv.outconn.postgresql.ddl
+    CArg:
+      # relative or absolute path to output file; obligatory
+      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
+      
+      # name of the table; obligatory
+      table: product
+      
+      # if true, prevents conflicts with SQL keywords;
+      # data field names that are in conflict will be suffixed with undderscore.
+      # default: true
+      check_keywords: true
+      
+      # if >1, all JSON keys will be converted to lower-case;
+      # if =1, only first level keys; 
+      # if =0, no conversion happen.
+      # default: 0
+      lowercase: 1
+      
+      # list of first level keys that will be declared as primary keys.
+      # default: []
+      primary_key: ['cdc', 'recno']
+      
+      # list of fields that be declared as not nullable; place ['*'] to declare all fields.
+      # default: []
+      not_null: []
+
+OutConnector:
+    Module: datconv.outconn.postgresql.jinsert
+    CArg:
+      # name of the table; obligatory
+      table: product
+      
+      # connection string to database; obligatory
+      connstring: host='192.168.1.15' dbname='postgres' user='postgres' password='postgres'
+      
+      # if true, prevents conflicts with SQL keywords;
+      # data field names that are in conflict will be suffixed with undderscore.
+      # default: true
+      check_keywords: true
+      
+      # if >1, all JSON keys will be converted to lower-case; 
+      # if =1, only first level keys; 
+      # if =0, no conversion happen.
+      # default: 0
+      lowercase: 1
+      
+      # if true, insert statements are being saved to file specified as connstring.
+      # default: false
+      dump_sql: true
+      
+      # parameter passed to connection, if true every insert is automatically commited (slows down insert operations radically), 
+      # if false, chenges are commited at the end - i.e. if any insert fail 
+      # everything is rolled back and no records are added.
+      # default: false
+      autocommit: true
+      
+      # array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} 
+      # will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. 
+      # First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. 
+      # Field names shold be given after all other configured transformations (lowercase,  check_keywords)
+      # default: none
+      cast:
+          - [['rec', 'value'], str]

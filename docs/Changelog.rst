@@ -5,12 +5,17 @@ Development plans for future
 ----------------------------------
 Points are specified in priority (and probably implementation) order:
 
-- Readers/Writers: Database, Python pickle.
-- XPath Writer: Improve generated column names (possibly use _ instead of . and make column names unique).
-  This is in preparation for SQL Writers (col names as database fields).
-- Introduce connectors' layers (reading/writing from/to streams, databases etc. - not only files).
+- Add cinsert (working with csv writer) Output connectiors to sqlite and postgresql modules.
+- Introduce option to run connectors as separate process with queue between writer and connector for better performance 
+  (espacially with database connectors).
+- Output connectors: Couchbase, MongoDB, MySQL, zip-file.
+- Introduce Filter dispatchers to split data flow to few streams (e.g. to optimize database inserts), 
+  option to run them in separate processes.
+- Add input comnnectors layer. Imput connectors for databases (query as source of data).
+- Readers/Writers: Python pickle.
+- Output connector: Postgresql binary file (for COPY clause).
 - Better support for running Datconv as paralell proceses
-  e.g. convering big files in paralell processes (using rfrom/rto settings).
+  e.g. convering big files in paralell processes (using rfrom/rto settings). Support for skipping headers footers etc.
 - Create Windows binary form of program (with cx_Freeze package) that does not require Python installation 
   and upload to github.
 
@@ -19,11 +24,23 @@ Notes about versioning schema
 - First, major number will be changed when changes breaks backward compatibility, 
   i.e. users may have to slightly change their own modules or configuration in order to work with new release. 
   However if this number is zero, API is considerated unstable and may change with any feature release.
-  This is labeled as Major Release, and in this case midle and minor numbers are reset to zero.
+  This is called Major Release, and in this case midle and minor numbers are reset to zero.
 - Second, midle number will be changed when new features or options will be introduced but without API break.
-  This is labeled as Feature Release, and in this case minor number is reset to zero.
+  This is called Feature Release, and in this case minor number is reset to zero.
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
-  This is labeled as Fix Release.
+  This is called Fix Release.
+
+0.6.0 (2018.02.17)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added output connectors layer - see :ref:`outconn_skeleton`.
+- Added parameters ``rectyp_separator`` and ``add_type`` to XPath Writer to better support database ddl connectors.
+- Introduced :doc:`default`.
+
+Fixes
+^^^^^^^^^^^^
+- Fix program crash with json readers when status reporting was enabled.
 
 0.5.1 (2018.01.20)
 ----------------------------------
@@ -53,7 +70,7 @@ Fixes
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
-- XML Reader: added parameter foottags.
+- XML Reader: added parameter ``foottags``.
 - XML Reader: parameter ``rectags`` can be empty (see documentation).
 - XML Writer: added parameters ``add_header``, ``add_footer``.
 - Added JSON Writer.

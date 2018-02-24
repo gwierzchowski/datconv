@@ -1,4 +1,4 @@
-Datconv usage examples
+Tutorial, Samples
 ======================
 .. note::
     Below examples are suited for Linux system. In Windows System:
@@ -112,6 +112,7 @@ or with yet another option:
     }
     ]
 
+.. _json2xml_sample:
 
 JSON to XML conversion example
 ------------------------------
@@ -293,6 +294,108 @@ E.g. following configuration will use above filter and standard filter that will
                 - Module: datconv.filters.delfield
                   CArg:
                       field: [name]
+
+Populating database 
+--------------------
+
+Let say we have output file from: :ref:`json2xml_sample` (file ``cb.json.xml``) that we would like to import to SQLite database. At first we have to create table with respective
+fields to store data. Connector :ref:`outconn_sqlite_ddl` can be helpfull here. Let's run datconv with following configuration:
+
+.. code-block:: yaml
+
+    Reader: 
+        Module: datconv.readers.dcxml
+        CArg:
+            rectags: [results]
+        PArg:
+            inpath: ./sampl.xml
+
+    Writer:
+        Module: datconv.writers.dcxpaths
+        CArg:
+            add_header: false
+            add_type: true
+            ignore_rectyp: true
+
+    OutConnector:
+        Module: datconv.outconn.sqlite.ddl
+        CArg:
+            path: ./sampl.sql
+            table: sample
+
+This will produce file ``sampl.sql`` with proposed table definition:
+
+.. code-block:: sql
+
+    CREATE TABLE sample (
+      name TEXT,
+      phone TEXT
+    );
+
+Edit this definition (possibly define primary key etc.) and run with your database to create table. 
+This step may look somewhat like art-for-art in this simple sample, but with bigger number of
+fields or tables may save you some typing or copy/pasting.
+
+Next, change Writer and Connector in your configuration file in following way
+(place path to your SQLite database file as ``connstring:`` parameter):
+
+.. code-block:: yaml
+
+    Reader: 
+        Module: datconv.readers.dcxml
+        CArg:
+            rectags: [results]
+        PArg:
+            inpath: ./sampl.xml
+
+    Writer:
+        Module: datconv.writers.dcjson
+        CArg:
+            ignore_rectyp: true
+
+    OutConnector:
+        Module: datconv.outconn.sqlite.jinsert
+        CArg:
+            connstring: ./sampl.sqlite
+            table: sample
+
+and run datconv again to insert records into the table.
+Note use of ``ignore_rectyp`` option to get rid of outer ``<results>`` tag which otherwise 
+would be interpretted as the only one column in the table. In case of problems with inserts 
+one can add ``dump_sql`` option to Connector in order to dump generated INSERT statements to 
+file or change OutConnector to plain file to check generated JSON.
+
+Default Configuration
+---------------------
+
+It may happen that we have some typical files or typical conversion scenario that we frequently use. In such case it is reasonable to use :doc:`default` file.
+Let say we frequently do conversion described in section :ref:`json2xml_sample`.
+To simplify program usage we may save configuration file for this case as the file ``.datconv_def.yml`` located in root of our home folder making one change in the file:
+replacing file names with positional arguments, like below:
+
+.. code-block:: yaml
+    :emphasize-lines: 8-9
+
+    Reader: 
+        Module:  datconv.readers.dcijson_keys
+        CArg:
+            headkeys: [requestID, signature]
+            reckeys: [results]
+            footkeys: [status, metrics]
+        PArg:
+            inpath:  $1
+            outpath: $2
+
+    Writer:
+        Module: datconv.writers.dcxml
+        CArg: 
+            pretty: true
+
+After that one may call datconv in following way::
+
+    datconv def <imput file> <output file>
+    
+to perform conversion according to saved schema.
 
 More examples 
 -------------

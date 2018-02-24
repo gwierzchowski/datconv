@@ -3,6 +3,35 @@
 Upgrade instructions
 ====================
 
+From versions 0.5.x to Datconv 0.6.x
+--------------------------------------------------
+- The type of ``datconv.writers.dcjson`` parameter ``convert_values`` was changed from boolean to int.
+  If you had false change to 0, true - change to 1 or 2.
+  Also default value changed to make conversion by default.
+- Name of of ``datconv.writers.dcjson`` parameter ``ign_rectyp`` was changed to ``ignore_rectyp`` to unify names with xpath writer.
+- Old fashion parameter ``Reader:PArg:outpath`` is still supported as fall-back, however it is recommended to explicitly specify output connectior for better clarity.
+  I.e. replace:
+  
+  .. code-block:: yaml
+      :emphasize-lines: 5
+
+       Reader: 
+           Module: datconv.readers.dcxml
+           # ...
+           PArg:
+               outpath: "out/AcctAgentAdjustment_c5019_s38.xml"
+
+  with::
+    
+    OutConnector:
+        Module: datconv.outconn.dcfile
+        CArg:
+            path: "out/AcctAgentAdjustment_c5019_s38.xml"
+
+- Default debugging level is now INFO (was WARNING) so some information messages are printer to console when program is run 
+  without any special logger configuration. To restore previous (silent) behaviour add ``DefLogLevel: WARNING`` root key in
+  your configuration file.
+  
 From earlier versions to Datconv 0.5.1
 --------------------------------------------------
 New Filter optional functions ``setHeader()`` and ``setFooter()``:

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""This module implements Datconv Writer which saves data in form of CSV file."""
+"""This module implements Datconv Writer which saves data in form of CSV file.
+Supports connectors of type: STRING, LIST, ITERABLE.
+"""
 
 # In Python 2.7 only
 from __future__ import print_function
@@ -12,8 +14,9 @@ import logging
 # Libs installed using pip
 from lxml import etree
 
-#Datconv writer classes
+#Datconv classes
 from . import dcxpaths
+from datconv.outconn import STRING, LIST, ITERABLE
 
 
 Log = None
@@ -40,7 +43,9 @@ class DCWriter:
         assert Log is not None
         dcxpaths.Log = Log
 
-        self._wri = None
+        self._out = None
+        self._out_flags = 0;
+        self._writers = []
         self._auto_xpw = None
         self._auto_cno = 0
         self._col = []
@@ -48,7 +53,7 @@ class DCWriter:
             if isinstance(columns, str):
                 rea = csv.reader(open(columns), lineterminator='\n')
                 for col in rea:
-                    if col and len(col) == 4 and col[0][0] != '#':
+                    if col and len(col) >= 4 and col[0][0] != '#':
                         self._col.append(col)
             if isinstance(columns, dict):
                 self._auto_xpw = dcxpaths.DCWriter(simple_xpath = simple_xpath, **columns)
@@ -56,7 +61,7 @@ class DCWriter:
                     self._auto_cno = columns.get('colno')
             if isinstance(columns, list):
                 for col in columns:
-                    if col and len(col) == 4 and col[0][0] != '#':
+                    if col and len(col) >= 4 and col[0][0] != '#':
                         self._col.append(col)
         else:
             self._auto_xpw = dcxpaths.DCWriter(simple_xpath = simple_xpath)
@@ -66,31 +71,39 @@ class DCWriter:
         self._csv = csv_opt
 
     def setOutput(self, out):
-        if self._csv:
-            self._wri = csv.writer(out, **self._csv)
-        else:
-            self._wri = csv.writer(out)
+        self._writers = []
+        self._out = None
+        self._out_flags = out.supportedInterfases();
+        if self._out_flags & STRING:
+            for stream in out.getStreams():
+                if self._csv:
+                    self._writers.append(csv.writer(stream, **self._csv))
+                else:
+                    self._writers.append(csv.writer(stream))
+        if self._out_flags & (LIST | ITERABLE):
+            if not out.tryObject(list()):
+                raise Exception('Incompatible OutConnector used, dccsv Writer requires that connector supports list objects')
+            self._out = out
         if self._auto_xpw:
             self._auto_xpw.resetXPaths()
             self._col = []
        
     def writeHeader(self, header):
         if self._add_header:
-            self._wri.writerow([str(header)] + [None]*(len(self._col) - 1))
+            self._writeRow([str(header)] + [None]*(len(self._col) - 1))
         if self._col_names and self._auto_xpw is None:
-            self._wri.writerow([c[0] for c in self._col])
+            self._writeRow([c[0] for c in self._col])
 
     def writeFooter(self, header):
         if self._col_names and self._auto_xpw is not None:
             cn = [c[0] for c in self._col]
             if self._auto_cno > 0 and len(cn) < self._auto_cno:
                 cn = cn + ['Spare']*(self._auto_cno - len(cn))
-            self._wri.writerow(cn)
+            self._writeRow(cn)
         
     def writeRecord(self, record):
         try:
             line = []
-
             if self._auto_xpw:
                 new_col = self._auto_xpw.checkXPath(record, ret_new = True)
                 if new_col:
@@ -122,8 +135,15 @@ class DCWriter:
             if self._auto_cno > 0 and len(line) < self._auto_cno:
                 line = line + [None]*(self._auto_cno - len(line))
 
-            self._wri.writerow(line)
+            self._writeRow(line)
         except:
             Log.debug('record=%s' % etree.tostring(record, pretty_print = False))
             Log.debug('col=%s' % str(col))
             raise
+    
+    def _writeRow(self, line):
+        if self._out_flags & STRING:
+            for wri in self._writers:
+                wri.writerow(line)
+        if self._out_flags & (LIST | ITERABLE):
+            self._out.pushObject(line)

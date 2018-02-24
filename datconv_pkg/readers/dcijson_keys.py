@@ -75,7 +75,7 @@ class DCReader:
         :param headkeys: list of key names that will be passed to Writer as header.
         :param reckeys: list of key names that will be treated as records. If empty all highest level keys that are not heders or footers are passed to Writer as records.
         :param footkeys: list of  key names that will be passed to Writer as footer.
-        :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0.
+        :param log_prog_step: log info message after this number of records or does not log progress messages if this key is 0 or logging level is set to value higher than INFO.
         :param backend: backend used by ijson package to parse json file, possible values:\n
             ``yajl2_cffi`` - requires ``yajl2`` C library and ``cffi`` Python package to be installed in the system;\n
             ``yajl2`` - requires ``yajl2`` C library to be installed in the system;\n
@@ -100,11 +100,11 @@ class DCReader:
     def setFilter(self, flt):
         self._flt = flt
     
-    def Process(self, inpath, outpath, rfrom = 1, rto = 0):
+    def Process(self, inpath, outpath = None, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
         
         :param inpath: Path to input file.
-        :param outpath: Path to output file passed to Writer.
+        :param outpath: Path to output file passed to Writer (fall-back if output connector is not defined).
         :param rfrom-rto: specifies scope of records to be processed.
         
         For more detailed descriptions see :ref:`readers_conf_template`.
@@ -146,10 +146,10 @@ class DCReader:
         # Used for skipped records
         self._s_nestlev = 0
 
-        fout = open(outpath, "w")
+        #fout = open(outpath, "w")
         
-        # OBLIGATORY
-        self._wri.setOutput(fout)
+        ## OBLIGATORY
+        #self._wri.setOutput(fout)
         
         try:
             with open(inpath, 'rb') as fd: #binary mode required by C-based backends
@@ -198,8 +198,8 @@ class DCReader:
                 if hasattr(self._flt, 'setFooter'):
                     self._flt.setFooter(self._header)
             self._wri.writeFooter(self._header)
-            fout.close()
-            Log.info('Output saved to %s' % outpath)
+            #fout.close()
+            #Log.info('Output saved to %s' % outpath)
     
     def _OnObjStart(self, key):
         if self._mode == 0:
@@ -277,7 +277,7 @@ class DCReader:
                         if res & REPEAT:
                             continue
                         if res & BREAK:
-                            Log.info('Filter caused Process to stop on record %d' % self._recno - 1)
+                            Log.info('Filter caused Process to stop on record %d' % (self._recno - 1))
                             raise FilterBreak
                         break
                 else:
@@ -286,8 +286,8 @@ class DCReader:
 
                 if self._rto > 0 and self._recno > self._rto:
                     raise ToLimitBreak
-                if self._recno == self._lp_rec:
-                    Log.info('Processed %d records' % self._recno - 1)
+                if self._recno - 1 == self._lp_rec:
+                    Log.info('Processed %d records' % (self._recno - 1))
                     self._lp_rec = self._lp_rec + self._lp_step
         elif self._mode == 1:
             self._curh[key] = value
@@ -325,7 +325,7 @@ class DCReader:
                         if res & REPEAT:
                             continue
                         if res & BREAK:
-                            Log.info('Filter caused Process to stop on record %d' % self._recno - 1)
+                            Log.info('Filter caused Process to stop on record %d' % (self._recno - 1))
                             raise FilterBreak
                         break
                 else:
@@ -334,8 +334,8 @@ class DCReader:
 
                 if self._rto > 0 and self._recno > self._rto:
                     raise ToLimitBreak
-                if self._recno == self._lp_rec:
-                    Log.info('Processed %d records' % self._recno - 1)
+                if self._recno - 1 == self._lp_rec:
+                    Log.info('Processed %d records' % (self._recno - 1))
                     self._lp_rec = self._lp_rec + self._lp_step
                 self._mode = 0
             else:

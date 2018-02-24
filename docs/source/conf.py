@@ -61,7 +61,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Datconv'
-copyright = '2017, Grzegorz Wierzchowski'
+copyright = '2017-2018, Grzegorz Wierzchowski'
 author = 'Grzegorz Wierzchowski'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -121,6 +121,15 @@ html_show_sourcelink = False
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+#html_sidebars = {
+   #'**': ['globaltoc.html', 'searchbox.html'],
+   #'api_*': ['globaltoc.html', 'sectoc.html', 'searchbox.html'],
+#}
+html_sidebars = {
+   '**': ['globaltoc.html', 'sectoc.html', 'searchbox.html'],
+}
+
 
 
 # -- Options for HTMLHelp output ------------------------------------------

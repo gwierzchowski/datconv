@@ -42,7 +42,7 @@ class DCFilter:
             flt_mod = import_module(flt_path)
             flt_mod.Log = Log
             flt_class = getattr(flt_mod, 'DCFilter')
-            Log.debug('Adding filter: %s(%s)', flt_class, str(flt_carg))
+            Log.debug('Adding filter: %s(%s)', flt_path, str(flt_carg))
             flt_inst = flt_class(**flt_carg) if flt_carg else flt_class()
             self._flist.append(flt_inst)
 

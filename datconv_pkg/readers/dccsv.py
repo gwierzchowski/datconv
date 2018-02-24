@@ -57,20 +57,20 @@ class DCReader:
     def setFilter(self, flt):
         self._flt = flt
 
-    def Process(self, inpath, outpath, rfrom = 1, rto = 0):
+    def Process(self, inpath, outpath = None, rfrom = 1, rto = 0):
         """Parameters are usually passed from YAML file as subkeys of ``Reader:PArg`` key.
         
         :param inpath: Path to input file.
-        :param outpath: Path to output file passed to Writer.
+        :param outpath: Path to output file passed to Writer (fall-back if output connector is not defined).
         :param rfrom-rto: specifies scope of records to be processed.
         
         For more detailed descriptions see :ref:`readers_conf_template`.
         """
         
-        fout = open(outpath, "w")
+        #fout = open(outpath, "w")
         
-        # OBLIGATORY
-        self._wri.setOutput(fout)
+        ## OBLIGATORY
+        #self._wri.setOutput(fout)
         
         # OBLIGATORY
         header = []
@@ -140,9 +140,6 @@ class DCReader:
             if hasattr(self._flt, 'setFooter'):
                 self._flt.setFooter(footer)
         self._wri.writeFooter(footer)
-        
-        fout.close()
-        Log.info('Output saved to %s' % outpath)
         
 def _NormalizeTag(tagname):
     return tagname.strip().translate(str.maketrans('', '', '<> /\\?:;[]{}~`!@#$%^&*()+=|"\''))

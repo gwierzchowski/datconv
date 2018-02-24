@@ -8,6 +8,9 @@ import logging
 # Libs installed using pip
 from lxml import etree
 
+# Datconv generic modules
+from datconv.outconn import STRING, OBJECT, ITERABLE
+
 
 ####################################################################
 Log = None
@@ -25,20 +28,23 @@ class DCWriter:
         Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
         """
         assert Log is not None
+        self._out_flags = 0;
         self._out = None
         # ...
 
     def setOutput(self, out):
         """Obligatory method that must be defined in Writer class.
-        It is called by Reader after it open output stream.
+        It is called by main Datconv.Run() function before conversion begin and before any write* function is being called.
         
-        :param out: is instance of output stream opened for writing (e.g. returned by open() built-in function).
+        :param out: is instance of datconv Output Connector class according to configuration file. In case Output Connector is not defined in configuration file there are two fallbacks checked: a) if Reader:PArg:outpath is defined, the file connector with specified path is used, b) standard output stream is used as output.
         
         This method in some rare cases may be called multiply times (e.g. when convering set of files).
         Initialization of some variables related to output file (like output records counter etc.) 
         should be done here.
         """
         self._out = out
+        self._out_flags = out.supportedInterfases();
+        # write* functions should chek bits in this flag and call appropriate connector functions.
 
     def writeHeader(self, header):
         """Obligatory method that must be defined in Writer class.
