@@ -24,24 +24,27 @@ _CrateType = { \
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, path, table, check_keywords = True, lowercase = 1, no_underscore = 1, primary_key = [], no_index = [], not_null = []):
+    def __init__(self, table, path, mode = 'w', \
+            check_keywords = True, lowercase = 1, no_underscore = 1, \
+            column_constraints = {}, common_column_constraints = None, table_constraints = None):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
-        :param path: relative or absolute path to output file.
         :param table: name of the table.
+        :param path: relative or absolute path to output file.
+        :param mode: output file opening mode.
         :param check_keywords: if true, prevents conflicts with SQL keywords. Data field names that are in conflict will be suffixed with undderscore.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param no_underscore: if >1, leading ``_`` will be removed from all JSON keys; if =1, only from first level of keys; if =0, option is disabled.
-        :param primary_key: those first level keys will be declared as primary keys.
-        :param no_index: those fields will be declared as not having index; place ['*'] to declare all fields.
-        :param not_null: those fields will be declared as not nullable; place ['*'] to declare all fields.
+        :param column_constraints: dictionary: key=column name, value=column constraint.
+        :param common_column_constraints: column constatins to be added after column definitions. Should be declared as string.
+        :param table_constraints: table constatins and creation options. Should be declared as string.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_crate_conf_template>` file in this module folder.
         """
         assert Log is not None
 
         self._path = path
-        self._out = open(path, "w")
+        self._out = open(path, mode)
         self._tablename = table
         self._chkkwd = check_keywords
         if check_keywords:
@@ -52,16 +55,12 @@ class DCConnector:
         if self._lowercase > 0:
             self._tablename = self._tablename.lower()
         self._no_underscore = no_underscore
-        self._pkeys = primary_key
-        self._noidx = no_index
-        self._all_noidx = '*' in no_index
-        self._notnull = not_null
-        self._all_notnull = '*' in not_null
+        self._cconst = column_constraints
+        self._ccconst = common_column_constraints
+        self._tconst = table_constraints
         
         self._fields = []
         self._fields_names = set()
-        #self._curr_field = None
-        #self._curr_level = 1
         
     def supportedInterfases(self):
         return LIST
@@ -111,29 +110,26 @@ class DCConnector:
         if fname in self._fields_names:
             return
         self._fields_names.add(fname)
-
-        if fname in self._pkeys:
-            self._fields.insert(0, fname + ' ' + ftype + ' PRIMARY KEY')
+        
+        if is_array:
+            ftype = 'array(%s)' % ftype
+  
+        if fname in self._cconst:
+            self._fields.append(fname + ' ' + ftype  + ' ' + self._cconst[fname])
         else:
-            fconstr = ''
-            if not is_array and ftype != 'object':
-                if self._all_noidx or fname in self._noidx:
-                    fconstr += ' INDEX OFF'
-                if self._all_notnull or fname in self._notnull:
-                    fconstr += ' NOT NULL'
-            elif is_array:
-                ftype = 'array(%s)' % ftype
-            self._fields.append(fname + ' ' + ftype + fconstr)
-    
+            self._fields.append(fname + ' ' + ftype)
+  
     def onFinish(self, bSuccess):
         if bSuccess:
-            self._out.write('CREATE TABLE %s (\n' % self._tablename)
-            for i in range(0, len(self._fields)):
-                if i < len(self._fields) - 1:
-                    self._out.write('  %s,\n' % self._fields[i])
-                else:
-                    self._out.write('  %s\n' % self._fields[i])
-            self._out.write(');\n')
+            sql = '''
+CREATE TABLE %s (
+  %s
+)
+%s;
+''' % (         self._tablename, \
+                ',\n  '.join(self._fields + self._ccconst) , \
+                '\n'.join(self._tconst))
+            self._out.write(sql)
             if Log:
                 Log.info('Output saved to %s' % self._path)
         self._out.close()

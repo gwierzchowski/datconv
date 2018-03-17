@@ -8,11 +8,11 @@ Points are specified in priority (and probably implementation) order:
 - Add cinsert (working with csv writer) Output connectiors to sqlite and postgresql modules.
 - Introduce option to run connectors as separate process with queue between writer and connector for better performance 
   (espacially with database connectors).
-- Output connectors: Couchbase, MongoDB, MySQL, zip-file.
+- Output connectors: Couchbase, MongoDB, MySQL, zip-file, snappy-file, Avro, Kafka.
 - Introduce Filter dispatchers to split data flow to few streams (e.g. to optimize database inserts), 
   option to run them in separate processes.
 - Add input comnnectors layer. Imput connectors for databases (query as source of data).
-- Readers/Writers: Python pickle.
+- Readers/Writers: Python pickle, Pandas.
 - Output connector: Postgresql binary file (for COPY clause).
 - Better support for running Datconv as paralell proceses
   e.g. convering big files in paralell processes (using rfrom/rto settings). Support for skipping headers footers etc.
@@ -29,6 +29,21 @@ Notes about versioning schema
   This is called Feature Release, and in this case minor number is reset to zero.
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is called Fix Release.
+
+0.6.1 (???2018.02.17)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Improved command line option ``--default``.
+- Support for prefixes in default configuration.
+- ``datconv.outconn.postgresql.jddl``: new connector
+- ``datconv.outconn.postgresql.jinsert``: added support for JSON types.
+- ``datconv.outconn.postgresql.jinsert``: added support for casting to ARRAY.
+- More flexible configuration of ddl connectors (not backword compatible changes - see :doc:`Upgrade`)
+
+Fixes
+^^^^^^^^^^^^
+- ``datconv.outconn.postgresql.jinsert``: when ``autocommit: false`` no records are saved in case of error.
 
 0.6.0 (2018.02.17)
 ----------------------------------

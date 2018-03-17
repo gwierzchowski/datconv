@@ -13,17 +13,18 @@ Use it for logging messages in need.
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, path):
+    def __init__(self, path, mode = 'w'):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
         :param path: relative or absolute path to output file.
+        :param mode: output file opening mode.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_conf_template>` file in this module folder.
         """
         assert Log is not None
 
         self._path = path
-        self._out = open(path, "w")
+        self._out = open(path, mode)
         
     def supportedInterfases(self):
         return STRING

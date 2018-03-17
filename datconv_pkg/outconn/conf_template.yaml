@@ -9,6 +9,10 @@ OutConnector:
     CArg:
         # relative or absolute path to output file; obligatory
         path: "out/AcctAgentAdjustment_c5019_s38.xml"
+        
+        # output file opening mode (w or a); optional
+        # default: w
+        mode: a
             
 OutConnector:
     Module: datconv.outconn.dcmultiplicator

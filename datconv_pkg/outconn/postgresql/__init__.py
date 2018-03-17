@@ -4,6 +4,7 @@ Module supporting storing data to `PostreSQL <https://www.postgresql.org>`_ data
 
 General interface description: :ref:`outconn_skeleton`.
 """
+import json
 
 # https://www.postgresql.org/docs/10/static/sql-keywords-appendix.html
 # Allowed words marked as non-reserved in PostgreSQL column.
@@ -442,27 +443,56 @@ Keywords = set(_Keywords.split())
 
 ####################################################################
 
-def obj2str(obj):
+def obj2db(obj):
+    """Converts Python object to object acceptable as parameter replacement in execute() function"""
     if obj is None:
-        return 'NULL'
-    if  isinstance(obj, list):
-        return _list2str(obj)
-    if  isinstance(obj, str):
-        return "'" + obj + "'"
-    if  isinstance(obj, int):
-        return str(obj)
-    if  isinstance(obj, float):
-        return str(obj)
+        return None
+    if isinstance(obj, str):
+        return obj
+    if isinstance(obj, int):
+        return obj
+    if isinstance(obj, float):
+        return obj
+    if isinstance(obj, list):
+        return obj
+    if isinstance(obj, dict):
+        try:
+            return psycopg2.extras.Json(obj)
+        except NameError:
+            import psycopg2.extras
+            return psycopg2.extras.Json(obj)
     return "'" + str(obj) + "'"
 
+def obj2str(obj, quota = "'"):
+    """Converts Python object to string to be used in INSERT clause"""
+    if obj is None:
+        return 'NULL'
+    if isinstance(obj, str):
+        return quota + obj + quota
+    if isinstance(obj, int):
+        return str(obj)
+    if isinstance(obj, float):
+        return str(obj)
+    if isinstance(obj, list):
+        return quota + _list2str(obj) + quota
+    if isinstance(obj, dict):
+        return quota + json.dumps(obj) + quota
+    return quota + str(obj) + quota
+
 def _list2str(ll):
-    ret = '['
+    ret = '{'
     first = True
     for l in ll:
         if not first:
             ret += ','
-        ret += obj2str(l)
-    return ret + ']'
+        if isinstance(l, list):
+            ret += obj2str(l, quota = "")
+        if isinstance(l, dict):
+            ret += obj2str(l, quota = "")
+        else:
+            ret += obj2str(l, quota = '"')
+        first = False
+    return ret + '}'
 
 ####################################################################
 
@@ -505,6 +535,9 @@ def castValues(obj, castlist):
                 except ValueError:
                     # TODO: log warning
                     pv[c] = None
+            elif cast[1] == 'array':
+                if not isinstance(v, list):
+                    pv[c] = [v]
 
 def lowerKeys(obj, recurse):
     k_to_del = []

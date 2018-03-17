@@ -106,11 +106,12 @@ if __name__ == "__main__":
         ## Command line arguments
         script_name = basename(sys.argv[0])
         if len(sys.argv) < 2 or sys.argv[1] == '--help':
+            if len(sys.argv) < 2:
+                sys.stderr.writelines("ERROR: Wrong command arguments - too few parameters:\n")
             sys.stderr.writelines(
-"""ERROR: Wrong command arguments - too few parameters:
-Usage1: {0} [=]conf_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
+"""Usage1: {0} [=]conf_file [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
 Usage2: {0} def [--key1:val [--key2:val ...]] [arg1 [arg2 ...]]
-Usage3: {0} --default
+Usage3: {0} --default[-raw]
 Usage4: {0} --version
 Usage5: {0} --help
 Complete documentation: http://datconv.readthedocs.io/en/latest/api.html#the-datconv-program-reference
@@ -139,9 +140,20 @@ Complete documentation: http://datconv.readthedocs.io/en/latest/api.html#the-dat
                 def_text = open(def_name).read()
             except IOError:
                 pass
-        if sys.argv[1] == '--default':
-            sys.stdout.write('Default configuration file: %s\n\n' % def_name)
-            sys.stdout.write(def_text + '\n')
+        if sys.argv[1].startswith('--default'):
+            sys.stdout.write('Default configuration file: %s\n' % def_name)
+            if def_text == '':
+                sys.stdout.write('Does not exist.\n')
+            else:
+                if sys.argv[1] == '--default-raw':
+                    sys.stdout.write('\n' + def_text + '\n')
+                else:
+                    try:
+                        def_conf = yaml.load(def_text)
+                        sys.stdout.write('\n' + yaml.dump(def_conf) + '\n')
+                    except yaml.scanner.ScannerError:
+                        sys.stdout.write('Is not correct:\n')
+                        sys.stdout.write('\n' + def_text + '\n')
             sys.exit(0)
         
         if sys.argv[1] != 'def':

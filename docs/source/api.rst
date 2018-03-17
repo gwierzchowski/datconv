@@ -25,8 +25,9 @@ The :command:`datconv` script has following call syntax::
         Those arguments will replace $1, $2, ... markers in conf_file according to their position in command line:
         i.e. $1 will be replaced by first argument that do not begin with --, etc.
     or
-    datconv --default
-    which prints path to and contents of default configuration file.
+    datconv --default[-raw]
+    which prints path to and contents of default configuration file;
+    if post-fix -raw is used configuration file is printed as it is (without parsing).
     
     or
     datconv --version
@@ -71,6 +72,4 @@ datconv sub-packages
    api_outconn_postgresql
    api_outconn_crate
 
-   
-..    :maxdepth: 3
    

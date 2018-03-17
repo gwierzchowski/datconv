@@ -1,11 +1,15 @@
 OutConnector:
     Module: datconv.outconn.sqlite.ddl
     CArg:
-      # relative or absolute path to output file; obligatory
-      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
-      
       # name of the table; obligatory
       table: product
+      
+      # relative or absolute path to output file; obligatory
+      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
+        
+      # output file opening mode (w or a); optional
+      # default: w
+      mode: a
       
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.
@@ -18,13 +22,19 @@ OutConnector:
       # default: 0
       lowercase: 1
       
-      # list of first level keys that will be declared as primary keys.
-      # default: []
-      primary_key: ['cdc', 'recno']
+      # dictionary: key=column name, value=column constraint; optional.
+      # default: {}
+      column_constraints:
+        cdc: NOT NULL
       
-      # list of fields that be declared as not nullable; place ['*'] to declare all fields.
-      # default: []
-      not_null: []
+      # column constatins to be added after column definitions. Should be declared as string
+      # default: None
+      common_column_constraints: |
+        PRIMARY KEY(cdc, isn)
+      
+      # table constatins and creation options. Should be declared as string
+      # default: None
+      table_constraints: None
 
 OutConnector:
     Module: datconv.outconn.sqlite.jinsert

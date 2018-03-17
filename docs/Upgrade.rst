@@ -3,6 +3,12 @@
 Upgrade instructions
 ====================
 
+From versions 0.6.0 to Datconv 0.6.1
+--------------------------------------------------
+- Output connectors ``datconv.outconn.*.ddl`` were changed in non-compatible way:
+  parameters ``primary_key`` and ``not_null`` were replaced by ``column_constraints``,
+  ``common_column_constraints`` and ``table_constraints``.
+
 From versions 0.5.x to Datconv 0.6.x
 --------------------------------------------------
 - The type of ``datconv.writers.dcjson`` parameter ``convert_values`` was changed from boolean to int.

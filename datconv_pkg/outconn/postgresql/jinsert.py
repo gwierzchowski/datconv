@@ -5,16 +5,12 @@ It requires Python package ``psycopg2`` to be installed.
 """
 
 # Standard Python Libs
-import sys
-import json
-import collections
 
 # Libs installed using pip
-#import yaml
-from psycopg2 import connect
+import psycopg2
 
 # Datconv packages
-from .. import STRING, OBJECT
+from .. import OBJECT
 from . import *
 
 
@@ -38,7 +34,7 @@ class DCConnector:
         :param autocommit: parameter passed to connection, if true every insert is automatically commited (slows down insert operations radically), if false chenges are commited at the end - i.e. if any insert fail everything is rolled back and no records are added.
         :param check_keywords: if true, prevents conflicts with SQL keywords.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
-        :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
+        :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long, float or array. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_postgresql_conf_template>` file in this module folder.
         """
@@ -46,11 +42,12 @@ class DCConnector:
 
         self._tablename = table
         self._connstring = connstring
+        self._autocommit = autocommit
         self._dump = dump_sql
         if dump_sql:
             self._conn = open(connstring, "w")
         else:
-            self._conn = connect(connstring)
+            self._conn = psycopg2.connect(connstring)
             if autocommit:
                 self._conn.autocommit = True
             self._cur = self._conn.cursor()
@@ -92,12 +89,17 @@ class DCConnector:
                 else:
                     Log.error('Program did not finished properly: output saved to %s may be inconsistent' % self._connstring)
         else:
-            self._conn.commit()
-            if Log:
-                if bSuccess:
+            if bSuccess:
+                self._conn.commit()
+                if Log:
                     Log.info('%d out of %d records inserted to table %s' % (self._inserted_no, self._total_no, self._tablename))
-                else:
-                    Log.error('Program did not finished properly: only %d out of %d records were saved' % (self._inserted_no, self._total_no))
+            else:
+                self._conn.rollback()
+                if Log:
+                    if self._autocommit:
+                        Log.error('Program did not finished properly: only %d out of %d records were saved' % (self._inserted_no, self._total_no))
+                    else:
+                        Log.error('Program did not finished properly: no records were saved')
         self._conn.close()
 
     def _pushRecord(self, obj):
@@ -110,7 +112,7 @@ class DCConnector:
                 params += obj2str(v) + ','
             else:
                 params += '%s,'
-                values.append(v)
+                values.append(obj2db(v))
         if self._dump:
             sql = self._PREFIX + fields[:-1] + ') VALUES (' + params[:-1] + ');\n'
             self._conn.write(sql)

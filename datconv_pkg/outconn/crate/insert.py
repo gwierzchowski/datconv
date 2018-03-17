@@ -6,16 +6,13 @@ TODO: Add suport for ON CONFLICT
 """
 
 # Standard Python Libs
-import sys
-import json
-import collections
 
 # Libs installed using pip
 from crate import client
 from crate.client.exceptions import *
 
 # Datconv packages
-from .. import STRING, OBJECT
+from .. import OBJECT
 from . import *
 
 

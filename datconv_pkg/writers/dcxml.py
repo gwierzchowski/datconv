@@ -62,7 +62,7 @@ class DCWriter:
         self._bratags = []
         
     def writeHeader(self, header):
-        if self._enc == 'unicode':
+        if self._enc in ['unicode', 'utf8']:
             self._out.pushString('<?xml version="1.0" encoding="UTF-8"?>\n')
         else:
             self._out.pushString('<?xml version="1.0" encoding="%s"?>\n' % self._enc)

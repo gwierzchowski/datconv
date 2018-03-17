@@ -1,11 +1,15 @@
 OutConnector:
     Module: datconv.outconn.postgresql.ddl
     CArg:
-      # relative or absolute path to output file; obligatory
-      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
-      
       # name of the table; obligatory
       table: product
+      
+      # relative or absolute path to output file; obligatory
+      path: "out/AddnDrawNbrs_c5019_s38_2.sql"
+        
+      # output file opening mode (w or a); optional
+      # default: w
+      mode: a
       
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.
@@ -18,13 +22,34 @@ OutConnector:
       # default: 0
       lowercase: 1
       
-      # list of first level keys that will be declared as primary keys.
-      # default: []
-      primary_key: ['cdc', 'recno']
+      # array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} 
+      # will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. 
+      # First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. 
+      # Field names shold be given after all other configured transformations (lowercase,  check_keywords)
+      # default: none
+      cast:
+        - [['rec', 'value'], str]
       
-      # list of fields that be declared as not nullable; place ['*'] to declare all fields.
-      # default: []
-      not_null: []
+      # dictionary: key=column name, value=column constraint; optional.
+      # default: {}
+      column_constraints:
+        cdc: NOT NULL
+      
+      # column constatins to be added after column definitions. Should be declared as string
+      # default: None
+      common_column_constraints: |
+        PRIMARY KEY("cdc", "isn")
+        UNIQUE("id")
+      
+      # table constatins and creation options. Should be declared as string
+      # default: None
+      table_constraints: |
+        PARTITION BY RANGE ("cdc")
+        TABLESPACE diskvol1
+
+OutConnector:
+    Module: datconv.outconn.postgresql.jddl
+    # This module has the same parameters than ddl (see above).
 
 OutConnector:
     Module: datconv.outconn.postgresql.jinsert
@@ -62,4 +87,4 @@ OutConnector:
       # Field names shold be given after all other configured transformations (lowercase,  check_keywords)
       # default: none
       cast:
-          - [['rec', 'value'], str]
+        - [['rec', 'value'], str]

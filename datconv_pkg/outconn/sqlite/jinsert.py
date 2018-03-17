@@ -4,16 +4,13 @@ This connector should be used with Writer: :ref:`writers_dcjson`.
 """
 
 # Standard Python Libs
-import sys
-import json
-import collections
 
 # Libs installed using pip
 #import yaml
 from sqlite3 import connect, OperationalError
 
 # Datconv packages
-from .. import STRING, OBJECT
+from .. import OBJECT
 from . import *
 
 

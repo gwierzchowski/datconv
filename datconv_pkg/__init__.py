@@ -3,7 +3,7 @@
 This module provides Datconv class which encapsulate all datconv program features
 and can be created and called from other Python script as e.g.::
 
-    import datconv 
+    from datconv import Datconv 
     pd = Datconv()
     conf = {...}
     pd.Run(conf)
@@ -204,7 +204,7 @@ class Datconv:
 
 def _RemoveCArg(MasterD, MergedD):
     """
-    Remove ``CArg:`` key from MergedD when respective ``Module:`` keys are different.
+    Remove ``CArg:`` key from MergedD when respective ``Module:`` keys does not match.
     """
     assert isinstance(MasterD, dict)
     assert isinstance(MergedD, dict)
@@ -230,8 +230,6 @@ def _MergeDict(MasterD, MergedD):
         else:
             if isinstance(MergedD[key], dict) and isinstance(MasterD[key], dict):
                 _MergeDict(MasterD[key], MergedD[key])
-            #if isinstance(MergedD[key], dict) and MasterD[key] is None:
-                #MasterD[key] = MergedD[key]
 
 def _DatconvMergeConf(MasterD, MergedD):
     _RemoveCArg(MasterD, MergedD)

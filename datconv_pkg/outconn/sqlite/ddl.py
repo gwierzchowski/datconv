@@ -17,7 +17,7 @@ Use it for logging messages in need.
 """
 
 # TODO: make it configurable.
-_PostgresType = { \
+_SQLiteType = { \
     'int': 'INTEGER', \
     'float': 'REAL', \
     'str': 'TEXT', \
@@ -25,22 +25,26 @@ _PostgresType = { \
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, path, table, check_keywords = True, lowercase = 0, primary_key = [], not_null = []):
+    def __init__(self, table, path, mode = 'w', \
+            check_keywords = True, lowercase = 0, \
+            column_constraints = {}, common_column_constraints = None, table_constraints = None):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
-        :param path: relative or absolute path to output file.
         :param table: name of the table.
+        :param path: relative or absolute path to output file.
+        :param mode: output file opening mode.
         :param check_keywords: if true, prevents conflicts with SQL keywords. Data field names that are in conflict will be suffixed with undderscore.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
-        :param primary_key: those first level keys will be declared as primary keys.
-        :param not_null: those fields will be declared as not nullable; place ['*'] to mark all fields.
+        :param column_constraints: dictionary: key=column name, value=column constraint.
+        :param common_column_constraints: column constatins to be added after column definitions. Should be declared as string.
+        :param table_constraints: table constatins and creation options. Should be declared as string.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_sqlite_conf_template>` file in this module folder.
         """
         assert Log is not None
 
         self._path = path
-        self._out = open(path, "w")
+        self._out = open(path, mode)
         self._tablename = table
         self._chkkwd = check_keywords
         if check_keywords:
@@ -50,6 +54,10 @@ class DCConnector:
         self._lowercase = lowercase
         if self._lowercase > 0:
             self._tablename = self._tablename.lower()
+        self._cconst = column_constraints
+        self._ccconst = common_column_constraints
+        self._tconst = table_constraints
+        
         self._pkeys = primary_key
         self._notnull = not_null
         self._all_notnull = '*' in not_null
@@ -73,7 +81,7 @@ class DCConnector:
         xpathroot = xpatha[2]
         fname = obj[0]
         is_array = ( '[' in xpathroot)
-        ftype = _PostgresType[obj[4]]
+        ftype = _SQLiteType[obj[4]]
             
         if self._lowercase > 0:
             fname = fname.lower()
@@ -87,27 +95,25 @@ class DCConnector:
             return
         self._fields_names.add(fname)
 
-        fconstr = ''
-        if self._all_notnull or fname in self._notnull:
-            fconstr += ' NOT NULL'
         if is_array:
-            ftype = '%s[]' % ftype
-        if fname in self._pkeys:
-            self._fields.insert(0, fname + ' ' + ftype  + fconstr)
+            ftype += '[]'
+        
+        if fname in self._cconst:
+            self._fields.append(fname + ' ' + ftype  + ' ' + self._cconst[fname])
         else:
-            self._fields.append(fname + ' ' + ftype + fconstr)
+            self._fields.append(fname + ' ' + ftype)
     
     def onFinish(self, bSuccess):
         if bSuccess:
-            self._out.write('CREATE TABLE %s (' % self._tablename)
-            for i in range(0, len(self._fields)):
-                if i < len(self._fields) - 1:
-                    self._out.write('\n  %s,' % self._fields[i])
-                else:
-                    self._out.write('\n  %s' % self._fields[i])
-            if len(self._pkeys) > 0:
-                self._out.write(',\n  PRIMARY KEY (%s)' % ','.join(self._pkeys))
-            self._out.write('\n);\n')
+            sql = '''
+CREATE TABLE %s (
+  %s
+)
+%s;
+''' % (         self._tablename, \
+                ',\n  '.join(self._fields + self._ccconst) , \
+                '\n'.join(self._tconst))
+            self._out.write(sql)
             if Log:
                 Log.info('Output saved to %s' % self._path)
         self._out.close()

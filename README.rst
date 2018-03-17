@@ -12,7 +12,7 @@ Datconv - Universal Data Converter
 ==================================
 
 **Datconv** is a program designed to perform configurable comversion of file
-with data in one format to file with data in another format.
+with data in one format to file with data in another format or database.
 
 Program should be run using Python 2.7 or Python 3.x interpretter. It also requires
 installation of external packages: ``lxml``, ``PyYAML``. For more information see
@@ -45,7 +45,7 @@ Program has modular architecture with following swichable compoments:
     * driving entire data conversion process (i.e. main processing loop in implemented in this class) 
     * determine internal representation of header, records and footer (this strongly depands on reader and kind of input format).
     
-    For API of this component see: :ref:`readers_skeleton`
+    API of this component: :ref:`readers_skeleton`
 
 *Filter*
     Optional compoment that is able to: 
@@ -55,21 +55,21 @@ Program has modular architecture with following swichable compoments:
     * produce data (i.e. cause that certain records, maybe slightly modified, are being sent multiply times to writer) 
     * break conversion process (i.e. cause that conversion stop on certain record). 
 
-    For API of this component see: :ref:`filters_skeleton`
+    API of this component: :ref:`filters_skeleton`
 
 *Writer*
     Obligatory component responsible for: 
     
     * re-packing data from element-tree internal format to strings or objects. 
 
-    For API of this component see: :ref:`writers_skeleton`
+    API of this component: :ref:`writers_skeleton`
 
 *Output Connector*
     Obligatory component responsible for: 
     
     * writing data to destination storage. 
 
-    For API of this component see: :ref:`outconn_skeleton`
+    API of this component: :ref:`outconn_skeleton`
     
 *Logger*
     All messages intended to be presented to user are being send 
@@ -88,8 +88,6 @@ Sax means that used parsers are of event type - i.e. entire data are not being s
 It may be also usefull in case you have some files in custom program/company specific data format that you want to look up or convert. Then it is enough to write the reader component for your cutom data format compatible with Datconv API and let Datconv do the rest. 
 Actually this is how I'm currently using this program in my work.
 
-Package repository and home page: `Datconv Project <https://github.com/gwierzchowski/datconv>`_.
-
 If you'd prefer to work in JavaScript environment please look at `Pandat Project <https://github.com/pandat-team/pandat/>`_ which has similar design and purpose.
 
 This program was inspired by design of `Pandoc Project <http://pandoc.org/>`_.
@@ -101,7 +99,7 @@ Main design principle of this tool was generality and flexibility rather than pe
 use scenarios with very big data. This version of program runs in one thread (on one CPU core) and does not consume a lot of modern computer resources.                                                                                                                                  
 So in case of processing of very big data consider dividing data into smaller chunks and run few instances of this program in parallell or use rfrom-rto parameters avaialble in readers. Or if you have to process big files in short time and do not need that much flexibility (espacially filtering possibilities) probaly special dedicated program (which will not translate data to internal XML-like format) would process your data faster.
 
-Measured performance:
+Measured performance (version 0.6.0):
 
 - Hardware: Powerfull Laptop (2017 year), CPU Frequency 2.9 GHz, SSD Drive
 - Input: XML File: 942MB (400.000 records)
