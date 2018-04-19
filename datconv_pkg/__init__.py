@@ -26,8 +26,6 @@ import logging, logging.config
 if __package__ != 'datconv_pkg':
     import yaml
 
-import datconv.writers.dcxpaths
-
 ############################################################################
 sys.path.append('.')
 Logger = None
@@ -291,6 +289,7 @@ class Datconv:
         return reader_parg
 
     def _use_iterator_api(self):
+        import datconv.writers.dcxpaths
         return hasattr(self._reader_inst, 'Iterate') and not \
             isinstance(self._writer_inst, datconv.writers.dcxpaths.DCWriter)
         
