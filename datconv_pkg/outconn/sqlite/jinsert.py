@@ -26,7 +26,7 @@ class DCConnector:
         dump_sql = False, \
         autocommit = False, \
         bulk_size = 10000, \
-        check_keywords = True, lowercase = 0, cast = None):
+        check_keywords = True, lowercase = 0, cast = None, on_conflict = None):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
         :param table: table name where to insert records.
@@ -37,6 +37,7 @@ class DCConnector:
         :param check_keywords: if true prevents conflicts with SQL keywords.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be treated as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. Field names shold be given after all other configured transformations (lowercase, check_keywords).
+        :param on_conflict: specify what to do when record with given primary key exist in the table; one of strings 'ignore', 'update' (or 'replace' with the same effect), 'rollback', 'abort', fail' or None (raise error in such situation).
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_sqlite_conf_template>` file in this module folder.
         """
@@ -61,7 +62,21 @@ class DCConnector:
         self._lowercase = lowercase
         if self._lowercase > 0:
             self._tablename = self._tablename.lower()
-        self._PREFIX = 'INSERT INTO "%s" (' % self._tablename
+        conflict_str = ''
+        if on_conflict is not None:
+            if on_conflict.lower() == 'ignore':
+                conflict_str = ' OR IGNORE'
+            elif on_conflict.lower() == 'update':
+                conflict_str = ' OR REPLACE'
+            elif on_conflict.lower() == 'replace':
+                conflict_str = ' OR REPLACE'
+            elif on_conflict.lower() == 'rollback':
+                conflict_str = ' OR ROLLBACK'
+            elif on_conflict.lower() == 'abort':
+                conflict_str = ' OR ABORT'
+            elif on_conflict.lower() == 'fail':
+                conflict_str = ' OR FAIL'
+        self._PREFIX = 'INSERT %s INTO "%s" (' % (conflict_str, self._tablename)
         self._cast = cast
         self.tryObject(None) # initialize state variables
         

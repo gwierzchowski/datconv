@@ -5,6 +5,7 @@ This connector should be used with Writer: :ref:`writers_dcjson` with options ``
 """
 
 # Standard Python Libs
+import sys
 
 # Datconv packages
 from .. import OBJECT
@@ -30,13 +31,15 @@ class DCConnector:
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
         :param column_constraints: dictionary: key=column name, value=column constraint.
-        :param common_column_constraints: column constatins to be added after column definitions. Should be declared as string.
-        :param table_constraints: table constatins and creation options. Should be declared as string.
+        :param common_column_constraints: column constatins to be added after column definitions. Should be a list.
+        :param table_constraints: table constatins and creation options. Should be a list.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_postgresql_conf_template>` file in this module folder.
         """
         assert Log is not None
 
+        import datconv.outconn.postgresql
+        datconv.outconn.postgresql.PckLog = Log
         self._path = path
         self._out = open(path, mode)
         self._tablename = table
@@ -79,14 +82,28 @@ class DCConnector:
             ftype = 'TEXT'
             is_array = False
             if isinstance(v, int):
-                ftype = 'INTEGER'
+                if (MIN_INT <= v and v <= MAX_INT):
+                    ftype = 'INTEGER'
+                elif (MIN_BIGINT <= v and v <= MAX_BIGINT):
+                    ftype = 'INTEGER'
+                else:
+                    ftype = 'NUMERIC'
+            elif sys.version_info.major == 2 and isinstance(v, long):
+                ftype = 'BIGINT'
             elif isinstance(v, float):
                 ftype = 'REAL'
             elif isinstance(v, list):
                 is_array = True
                 if len(v) > 0:
                     if isinstance(v[0], int):
-                        ftype = 'INTEGER'
+                        if (MIN_INT <= v[0] and v[0] <= MAX_INT):
+                            ftype = 'INTEGER'
+                        elif (MIN_BIGINT <= v[0] and v[0] <= MAX_BIGINT):
+                            ftype = 'INTEGER'
+                        else:
+                            ftype = 'NUMERIC'
+                    elif sys.version_info.major == 2 and isinstance(v[0], long):
+                        ftype = 'BIGINT'
                     elif isinstance(v[0], float):
                         ftype = 'REAL'
                     elif isinstance(v[0], dict):

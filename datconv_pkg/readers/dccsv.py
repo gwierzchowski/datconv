@@ -66,12 +66,6 @@ class DCReader:
         
         For more detailed descriptions see :ref:`readers_conf_template`.
         """
-        
-        #fout = open(outpath, "w")
-        
-        ## OBLIGATORY
-        #self._wri.setOutput(fout)
-        
         # OBLIGATORY
         header = []
         if self._flt is not None:
@@ -133,6 +127,76 @@ class DCReader:
                         break
                 else:
                     self._wri.writeRecord(rec)
+
+        # OBLIGATORY
+        footer = []
+        if self._flt is not None:
+            if hasattr(self._flt, 'setFooter'):
+                self._flt.setFooter(footer)
+        self._wri.writeFooter(footer)
+
+    def Iterate(self, inpath, outpath = None, rfrom = 1, rto = 0):
+        # OBLIGATORY
+        header = []
+        if self._flt is not None:
+            if hasattr(self._flt, 'setHeader'):
+                self._flt.setHeader(header)
+        
+        # OBLIGATORY
+        self._wri.writeHeader(header)
+
+        with open(inpath, newline='') as csvfile:
+            if self._csv:
+                _rea = csv.reader(csvfile, **self._csv)
+            else:
+                dialect = csv.Sniffer().sniff(csvfile.read(1024))
+                csvfile.seek(0)
+                _rea = csv.reader(csvfile, dialect)
+            rowno = 0
+            recno = 0
+            for line in _rea:
+                rowno = rowno + 1
+                if rowno < self._colrow:
+                    continue
+                colno = 1
+                if rowno == self._colrow:
+                    for item in line:
+                        self._column[colno] = _NormalizeTag(item)
+                        colno = colno + 1
+                    continue
+                recno = recno + 1
+                if recno < rfrom:
+                    continue
+                if rto > 0 and recno > rto:
+                    break
+                rec = etree.Element('rec')
+                for item in line:
+                    if colno in self._column:
+                        key = self._column[colno]
+                    else:
+                        key = self._colpref + str(colno)
+                        self._column[colno] = key
+                    if self._strip:
+                        etree.SubElement(rec, key).text = item.strip()
+                    else:
+                        etree.SubElement(rec, key).text = item
+                    colno = colno + 1
+                if self._flt is not None:
+                    filter_break = False
+                    while True:
+                        res = self._flt.filterRecord(rec)
+                        if res & WRITE:
+                            yield self._wri.writeRecord(rec)
+                        if res & REPEAT:
+                            continue
+                        if res & BREAK:
+                            filter_break = True
+                        break
+                    if filter_break:
+                        Log.info('Filter caused Process to stop on record %d' % recno)
+                        break
+                else:
+                    yield self._wri.writeRecord(rec)
 
         # OBLIGATORY
         footer = []

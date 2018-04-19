@@ -441,6 +441,15 @@ OID TABLEOID XMIN CMIN XMAX CMAX CTID
 
 Keywords = set(_Keywords.split())
 
+PckLog = None
+
+MIN_INT = -2**31
+MAX_INT =  2**31 - 1
+MIN_BIGINT = -2**63
+MAX_BIGINT =  2**63 - 1
+
+_RemamedFields = set()
+
 ####################################################################
 
 def obj2db(obj):
@@ -513,27 +522,31 @@ def castValues(obj, castlist):
             elif cast[1] == 'int':
                 try:
                     pv[c] = int(v)
+                    if (pv[c] < MIN_INT or MAX_INT < pv[c]):
+                        raise ValueError
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to int, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'boolean':
                 try:
                     v = int(v)
                     pv[c] = (v != 0)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to boolean, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'long':
                 try:
-                    pv[c] = long(v)
+                    pv[c] = int(v)
+                    if (pv[c] < MIN_BIGINT or MAX_BIGINT < pv[c]):
+                        raise ValueError
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to long, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'float':
                 try:
                     pv[c] = float(v)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to float, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'array':
                 if not isinstance(v, list):
@@ -555,9 +568,10 @@ def checkKeywords(obj):
     k_to_del = []
     for k, v in obj.items():
         if isinstance(k, str) and k.upper() in Keywords:
-            #Log.warning('Conflict with PostreSQL key-word. %s remaned to %s' % (fname, fname + '_'))
-            # TODO: log warning
             k_to_del.append(k)
+            if k not in _RemamedFields:
+                PckLog.warning('Conflict with PostgreSQL key-word; %s remaned to %s' % (k, k + '_'))
+                _RemamedFields.add(k)
         if isinstance(v, dict):
             checkKeywords(v)
     for k in k_to_del:

@@ -79,15 +79,22 @@ class DCWriter:
         
     def writeHeader(self, header):
         if self._add_header:
-            self._writeRow(['#ColumnName', 'RecordType', 'XPath', 'Default', 'DataType'])
+            self._writeRow(self.getHeader())
 
     def writeFooter(self, footer):
         for rtype in sorted(self._xpaths.keys()):
             for xpath, name in sorted(self._xpaths[rtype].items()):
                 self._writeRow([name[0], rtype, xpath, None, name[1]])
+    
+    def getHeader(self):
+        return ['#ColumnName', 'RecordType', 'XPath', 'Default', 'DataType']
+    
+    def getFooter(self):
+        return None
         
     def writeRecord(self, record):
         self.checkXPath(record)
+        return None
         
     # Helper Functions
     def checkXPath(self, record, ret_new = False):

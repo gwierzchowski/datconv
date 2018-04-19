@@ -3,6 +3,17 @@
 Upgrade instructions
 ====================
 
+From versions 0.6.x to Datconv 0.7.x
+--------------------------------------------------
+- To support iterators Reader and Writer interfaces were extended.
+  Following changes should be done in Reader classes:
+  * If possible, write ``Iterate`` method which will work in similar way than ``Process`` but should call yield on object returned by 
+  writer's ``writeRecord`` method. Typically ``Iter`` method is a clone of ``Process`` with ``writeRecord(...)`` call replaced with ``yield writeRecord(...)``.
+  Following changes should be done in Writer classes:
+  * Remember header and footer passed in funtions: ``writeHeader`` / ``writeFooter``, and return them in new functions: ``getHeader`` / ``getFooter``.
+  * ``writeRecord`` class method should now return an object which it pass to OBJECT type output connector (prevoiusly this method did not
+  returned any value.
+
 From versions 0.6.0 to Datconv 0.6.1
 --------------------------------------------------
 - Output connectors ``datconv.outconn.*.ddl`` were changed in non-compatible way:

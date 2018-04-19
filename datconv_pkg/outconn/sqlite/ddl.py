@@ -27,7 +27,7 @@ class DCConnector:
     """Please see constructor description for more details."""
     def __init__(self, table, path, mode = 'w', \
             check_keywords = True, lowercase = 0, \
-            column_constraints = {}, common_column_constraints = None, table_constraints = None):
+            column_constraints = {}, common_column_constraints = [], table_constraints = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
         :param table: name of the table.
@@ -36,8 +36,8 @@ class DCConnector:
         :param check_keywords: if true, prevents conflicts with SQL keywords. Data field names that are in conflict will be suffixed with undderscore.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param column_constraints: dictionary: key=column name, value=column constraint.
-        :param common_column_constraints: column constatins to be added after column definitions. Should be declared as string.
-        :param table_constraints: table constatins and creation options. Should be declared as string.
+        :param common_column_constraints: column constatins to be added after column definitions. Should be a list.
+        :param table_constraints: table constatins and creation options. Should be a list.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_sqlite_conf_template>` file in this module folder.
         """

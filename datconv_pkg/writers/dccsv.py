@@ -69,6 +69,8 @@ class DCWriter:
         self._add_header = add_header
         self._col_names = col_names
         self._csv = csv_opt
+        self._header = None
+        self._footer = None
 
     def setOutput(self, out):
         self._writers = []
@@ -89,17 +91,25 @@ class DCWriter:
             self._col = []
        
     def writeHeader(self, header):
+        self._header = header
         if self._add_header:
             self._writeRow([str(header)] + [None]*(len(self._col) - 1))
         if self._col_names and self._auto_xpw is None:
             self._writeRow([c[0] for c in self._col])
 
-    def writeFooter(self, header):
+    def writeFooter(self, footer):
+        self._footer = footer
         if self._col_names and self._auto_xpw is not None:
             cn = [c[0] for c in self._col]
             if self._auto_cno > 0 and len(cn) < self._auto_cno:
                 cn = cn + ['Spare']*(self._auto_cno - len(cn))
             self._writeRow(cn)
+    
+    def getHeader(self):
+        return self._header
+    
+    def getFooter(self):
+        return self._footer
         
     def writeRecord(self, record):
         try:
@@ -136,6 +146,7 @@ class DCWriter:
                 line = line + [None]*(self._auto_cno - len(line))
 
             self._writeRow(line)
+            return line
         except:
             Log.debug('record=%s' % etree.tostring(record, pretty_print = False))
             Log.debug('col=%s' % str(col))

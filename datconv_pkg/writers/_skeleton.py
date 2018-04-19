@@ -30,6 +30,8 @@ class DCWriter:
         assert Log is not None
         self._out_flags = 0;
         self._out = None
+        self._header = None
+        self._footer = None
         # ...
 
     def setOutput(self, out):
@@ -52,7 +54,8 @@ class DCWriter:
         
         :param header: is instance of header as passed by Reader (always a list, but type of elements is up to Reader).
         """
-        pass
+        self._header = header
+        # ...
 
     def writeFooter(self, footer):
         """Obligatory method that must be defined in Writer class.
@@ -60,13 +63,23 @@ class DCWriter:
         
         :param footer: is instance of footer as passed by Reader (always a list, but type of elements is up to Reader).
         """
-        pass
+        self._footer = header
+        # ...
+    
+    def getHeader(self):
+        """Obligatory method that returnes header passed to ``writeHeader``."""
+        return self._header
+    
+    def getFooter(self):
+        """Obligatory method that returnes footer passed to ``writeFooter``."""
+        return self._footer
   
     def writeRecord(self, record):
         """Obligatory method that must be defined in Writer class.
-        Write record to output file.
+        Transform passed record to its specific formet and pass to output connecte=or either as object or string.
         
         :param record: is instance of lxml.etree.ElementTree class as passed by Reader.
+        :returns: Transformed record that this writer passed to object type connector.
         
         See :ref:`filters_skeleton` and package ``lxml`` documentation for information how to obtain structure and data from record.
         """

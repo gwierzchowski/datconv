@@ -16,7 +16,7 @@ with data in one format to file with data in another format or database.
 
 Program should be run using Python 2.7 or Python 3.x interpretter. It also requires
 installation of external packages: ``lxml``, ``PyYAML``. For more information see
-:doc:`INSTALL.rst <INSTALL>` file distributed in source ball.
+:doc:`INSTALL.rst <INSTALL>` file distributed in source pack.
 
 Both input and output files can be text or binary files. However it is
 assumed that those files have following structure:

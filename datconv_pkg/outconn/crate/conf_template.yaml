@@ -33,15 +33,15 @@ OutConnector:
       column_constraints:
         cdc: NOT NULL
       
-      # column constatins to be added after column definitions. Should be declared as string
-      # default: None
-      common_column_constraints: |
-        PRIMARY KEY(cdc, isn)
+      # column constatins to be added after column definitions.  Should be a list
+      # default: []
+      common_column_constraints:
+        - PRIMARY KEY(cdc, isn)
       
-      # table constatins and creation options. Should be declared as string
-      # default: None
-      table_constraints: |
-        PARTITION BY (cdc)
+      # table constatins and creation options.  Should be a list
+      # default: []
+      table_constraints:
+        - PARTITION BY (cdc)
 
 OutConnector:
     Module: datconv.outconn.crate.json
@@ -130,3 +130,13 @@ OutConnector:
       # default: none
       cast:
           - [['rec', 'value'], str]
+
+      # specify what to do when record with given primary key exist in the table; 
+      # one of strings 'update' or None (raise error in such situation).
+      # default: none
+      on_conflict: update
+      
+      # array or additional options added to INSERT caluse (see Crate documentation), 
+      # it may be also ON DUPLICATE KEY phrase with non default settings.
+      # default: []
+      options: []

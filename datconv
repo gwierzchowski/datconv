@@ -195,8 +195,10 @@ Where key is collon-separated compoud key: e.g. Writer:CArg:pretty
 
         ####################################################################
         ## Run process
-        pd = Datconv()
-        sys.exit(pd.Run(conf))
+        if 'DefLogLevel' not in conf:
+            conf['DefLogLevel'] = 'INFO'
+        dc = Datconv()
+        sys.exit(dc.Run(conf))
     
     except Exception:
         sys.stderr.write('Exception was thrown during %s execusion\n' % script_name)

@@ -30,12 +30,24 @@ Notes about versioning schema
 - Third, minor number will be changed when fixes or very small, non-risky features are introduced.
   This is called Fix Release.
 
-0.6.1 (???2018.02.17)
+0.7.0 (2018.04.19)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added possibity to run Datconv as iterator (i.e. obtain output records directly in Python code).
+
+Fixes
+^^^^^^^^^^^^
+- Default log level is set to INFO when run from command line and ERROR when run from Python.
+- Added additional range checks when cast option is used in ``datconv.outconn.postgresql.jinsert``
+  to prevent INSERT errors.
+- Fixed bug in ``datconv.writers.dcjson`` which produced invalid output ``key: NaN`` while converting "Nan" string.
+
+0.6.1 (2018.03.17)
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
 - Improved command line option ``--default``.
-- Support for prefixes in default configuration.
 - ``datconv.outconn.postgresql.jddl``: new connector
 - ``datconv.outconn.postgresql.jinsert``: added support for JSON types.
 - ``datconv.outconn.postgresql.jinsert``: added support for casting to ARRAY.

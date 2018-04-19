@@ -15,11 +15,14 @@ Use it for logging messages in need.
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, clist):
+    def __init__(self, clist = [], ilist = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
-        :param clist:  list of filters to be run in chain with their parameters.
+        :param clist: list of sub-connectiors that will get output records. Every item should be a dictionary with ``Module:`` key and optional ``CArg:`` key.
+        :param ilist: list of sub-connectiors instances that will get output records. Every item should be a created instance of other output connector - option to use only in code.
         
+        Items passed in clist parameter will be instantiated by constructor, items passed in 
+        ilist parameter are already live instancies that will be added to sub-connectors list.
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_conf_template>` file in this module folder.
         """
         assert Log is not None
@@ -33,6 +36,8 @@ class DCConnector:
             conn_class = getattr(conn_mod, 'DCConnector')
             Log.debug('Adding connector: %s(%s)', conn_path, str(conn_carg))
             conn_inst = conn_class(**conn_carg) if conn_carg else conn_class()
+            self._clist.append(conn_inst)
+        for conn_inst in ilist:
             self._clist.append(conn_inst)
         
     def supportedInterfases(self):

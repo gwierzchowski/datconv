@@ -119,11 +119,6 @@ class DCReader:
         if self._lp_step > 0 and Log.isEnabledFor(logging.INFO):
             _lp_rec = self._lp_step
 
-        #fout = open(outpath, "w")
-        
-        ## OBLIGATORY
-        #self._wri.setOutput(fout)
-        
         try:
             header = [{'_tag_':'ijson_events', '_bra_':True}]
             if self._flt is not None:
@@ -195,5 +190,96 @@ class DCReader:
                 if hasattr(self._flt, 'setFooter'):
                     self._flt.setFooter(footer)
             self._wri.writeFooter(footer)
-            #fout.close()
-            #Log.info('Output saved to %s' % outpath)
+    
+    def Iterate(self, inpath, outpath = None, rfrom = 1, rto = 0):
+        if self._backend == 'yajl2_cffi':
+            import ijson.backends.yajl2_cffi as ijson
+        elif self._backend == 'yajl2':
+            import ijson.backends.yajl2 as ijson
+        else:
+            import ijson
+
+        _recno = 1
+        _lp_rec = 0
+        if self._mode in [1, 2]:
+            _unique = set()
+        elif self._mode == 3:
+            _unique = None
+        else:
+            Log.error('Invalid value of key mode (=%d); allowed values [1,2,3]' % self._mode)
+            return
+        if self._lp_step > 0 and Log.isEnabledFor(logging.INFO):
+            _lp_rec = self._lp_step
+
+        try:
+            header = [{'_tag_':'ijson_events', '_bra_':True}]
+            if self._flt is not None:
+                if hasattr(self._flt, 'setHeader'):
+                    self._flt.setHeader(header)
+            self._wri.writeHeader(header)
+            
+            with open(inpath, 'r') as fd:
+                parser = ijson.parse(fd)
+                for prefix, event, value in parser:
+                    if rto > 0 and _recno > rto:
+                        raise ToLimitBreak
+                    if prefix in ['item', ''] and not event in ['start_array', 'start_map', 'map_key']:
+                        _recno = _recno + 1
+                        if _recno == _lp_rec:
+                            Log.info('Processed %d records' % _recno)
+                            _lp_rec = _lp_rec + self._lp_step
+                    if _recno < rfrom:
+                        return
+
+                    if self._mode == 1:
+                        if prefix in _unique:
+                            continue
+                        _unique.add(prefix)
+                        rec = etree.Element(self._rec_tag)
+                        p_xml = etree.SubElement(rec, 'prefix')
+                        p_xml.text = str(prefix)
+                    elif self._mode == 2:
+                        if (prefix, event) in _unique:
+                            continue
+                        _unique.add((prefix, event))
+                        rec = etree.Element(self._rec_tag)
+                        p_xml = etree.SubElement(rec, 'prefix')
+                        p_xml.text = str(prefix)
+                        e_xml = etree.SubElement(rec, 'event')
+                        e_xml.text = str(event)
+                    elif self._mode == 3:
+                        rec = etree.Element(self._rec_tag)
+                        p_xml = etree.SubElement(rec, 'prefix')
+                        p_xml.text = str(prefix)
+                        e_xml = etree.SubElement(rec, 'event')
+                        e_xml.text = str(event)
+                        v_xml = etree.SubElement(rec, 'value')
+                        v_xml.text = str(value)
+                                        
+                    if self._flt is not None:
+                        while True:
+                            # OBLIGATORY
+                            res = self._flt.filterRecord(rec)
+                            if res & WRITE:
+                                yield self._wri.writeRecord(rec)
+                            if res & REPEAT:
+                                continue
+                            if res & BREAK:
+                                Log.info('Filter caused Process to stop on record %d' % _recno)
+                                raise FilterBreak
+                            break
+                    else:
+                        # OBLIGATORY
+                        yield self._wri.writeRecord(rec)
+        except FilterBreak:
+            pass
+        except ToLimitBreak:
+            pass
+        finally:
+            # OBLIGATORY
+            footer = []
+            if self._flt is not None:
+                if hasattr(self._flt, 'setFooter'):
+                    self._flt.setFooter(footer)
+            self._wri.writeFooter(footer)
+    

@@ -27,7 +27,8 @@ class DCConnector:
     def __init__(self, table, connstring, user = None, password = None, \
         dump_sql = False, \
         bulk_size = 10000, \
-        check_keywords = True, lowercase = 1, no_underscore = 1, cast = None):
+        check_keywords = True, lowercase = 1, no_underscore = 1, cast = None, \
+        on_conflict = None, options = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
         :param table: table name where to insert records.
@@ -40,11 +41,15 @@ class DCConnector:
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param no_underscore: if >1, leading ``_`` will be removed from all JSON keys; if =1, only from first level of keys; if =0, option is disabled.
         :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
+        :param on_conflict: specify what to do when record with given primary key exist in the table; one of strings 'update' or None (raise error in such situation).
+        :param options: array or additional options added to INSERT caluse (see Crate documentation), it may be also ON DUPLICATE KEY phrase with non default settings.
         
         For more detailed descriptions see :ref:`conf_template.yaml <outconn_crate_conf_template>` file in this module folder.
         """
         assert Log is not None
 
+        import datconv.outconn.crate
+        datconv.outconn.crate.PckLog = Log
         self._tablename = table
         self._connstring = connstring
         self._dump = dump_sql
@@ -66,6 +71,18 @@ class DCConnector:
         self._PREFIX = 'INSERT INTO "%s" (' % self._tablename
         self._cast = cast
         self._no_underscore = no_underscore
+        self._conflict_opt = 0
+        self._conflict_str = ''
+        self._conflict_keys = None
+        if on_conflict is not None:
+            if on_conflict.lower() == 'ignore':
+                self._conflict_opt = 1
+                raise Exception('Unsupported option on_conflict: "ignore"')
+            elif on_conflict.lower() == 'update':
+                self._conflict_opt = 2
+                self._conflict_str = '\nON DUPLICATE KEY UPDATE'
+        self._options = '\n'.join(options)
+        
         self.tryObject(None) # initialize state variables
         
     def supportedInterfases(self):
@@ -125,6 +142,7 @@ class DCConnector:
         fields = ''
         params = ''
         values = []
+        conflict_str = self._conflict_str
         for k, v in obj.items():
             fields += '"' + str(k) + '",'
             if self._dump:
@@ -132,6 +150,10 @@ class DCConnector:
             else:
                 params += '?,'
                 values.append(v)
+            if self._conflict_opt == 2:
+                conflict_str += ' %s=VALUES(%s),' % (str(k), str(k))
+        if self._conflict_opt == 2:
+            conflict_str = conflict_str[:-1]
         if self._bulk_size > 0:
             if self._prev_fields == fields[:-1]:
                 if self._dump:
@@ -142,11 +164,13 @@ class DCConnector:
                     self._curr_size += 1
                 else:
                     if self._dump:
-                        sql = self._PREFIX + self._prev_fields + ') VALUES ' + self._prev_params[:-1] + ';\n'
+                        sql = self._PREFIX + self._prev_fields + ') VALUES ' + \
+                            self._prev_params[:-1] + conflict_str + self._options + ';\n'
                         self._conn.write(sql)
                         self._inserted_no += 1
                     else:
-                        sql = self._PREFIX + self._prev_fields + ') VALUES (' + params[:-1] + ')'
+                        sql = self._PREFIX + self._prev_fields + ') VALUES (' + \
+                            params[:-1] + ')' + conflict_str + self._options
                         try:
                             self._cur.executemany(sql, self._curr_values)
                             if self._cur.rowcount > 0:
@@ -162,11 +186,13 @@ class DCConnector:
             else:
                 if self._curr_size > 0:
                     if self._dump:
-                        sql = self._PREFIX + self._prev_fields + ') VALUES ' + self._prev_params[:-1] + ';\n'
+                        sql = self._PREFIX + self._prev_fields + ') VALUES ' + \
+                            self._prev_params[:-1] + conflict_str + self._options + ';\n'
                         self._conn.write(sql)
                         self._inserted_no += 1
                     else:
-                        sql = self._PREFIX + self._prev_fields + ') VALUES (' + self._prev_params + ')'
+                        sql = self._PREFIX + self._prev_fields + ') VALUES (' + \
+                            self._prev_params + ')' + conflict_str + self._options
                         try:
                             self._cur.executemany(sql, self._curr_values)
                             if self._cur.rowcount > 0:
@@ -184,11 +210,13 @@ class DCConnector:
                     self._curr_values = [tuple(values)]
         else:
             if self._dump:
-                sql = self._PREFIX + fields[:-1] + ') VALUES (' + params[:-1] + ');\n'
+                sql = self._PREFIX + fields[:-1] + ') VALUES (' + \
+                    params[:-1] + conflict_str + self._options + ');\n'
                 self._conn.write(sql)
                 self._inserted_no += 1
             else:
-                sql = self._PREFIX + fields[:-1] + ') VALUES (' + params[:-1] + ')'
+                sql = self._PREFIX + fields[:-1] + ') VALUES (' + \
+                    params[:-1] + ')' + conflict_str + self._options
                 try:
                     self._cur.execute(sql, tuple(values))
                     self._inserted_no += self._cur.rowcount

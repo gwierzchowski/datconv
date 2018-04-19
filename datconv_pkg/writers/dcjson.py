@@ -30,11 +30,11 @@ class DCWriter:
         text_key = 'text', text_eliminate = True, with_prop = False, ignore_rectyp = False, json_opt = None):
         """Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
         
-        :param add_header: if True, generic header (as initialized by Reader) is added as first object of output file.
-        :param add_footer: if True, generic footer (as initialized by Reader) is added as last object of output file.
+        :param add_header: if True, generic header (as initialized by Reader) is added as first object of output file or stream - only in non-iteration mode.
+        :param add_footer: if True, generic footer (as initialized by Reader) is added as last object of output file or stream - only in non-iteration mode.
         :param add_newline: if True, adds newline character after each record.
         :param convert_values: 0 - does not convert (all values are text); 1 - tries to convert values to int, bool or float (do not quote in json file) - little slower; 2 - like 1 but in addition checks if int values can be stored in 64 bits, if not place them as string value.
-        :param null_text: text that is converted to JSON null value (apply if convert_values is True).
+        :param null_text: text that is converted to JSON null value (apply if convert_values is > 0).
         :param preserve_order: if True, order of keys in json output match order in source.
         :param text_key: name of key to store XML text.
         :param text_eliminate: if True, XML text key will be eliminated if there are no other tag components.
@@ -61,6 +61,8 @@ class DCWriter:
         self._with_prop = with_prop
         self._ign_rectyp = ignore_rectyp
         self._json_opt = json_opt
+        self._header = []
+        self._footer = []
 
     def setOutput(self, out):
         self._first = True
@@ -75,6 +77,7 @@ class DCWriter:
                     raise Exception('Incompatible OutConnector used, dcjson Writer requires that connector supports dict objects or OutConnector requires dcjson preserve_order option')
        
     def writeHeader(self, header):
+        self._header = header
         if self._out_flags & STRING:
             self._out.pushString('[')
         if self._add_header:
@@ -112,6 +115,7 @@ class DCWriter:
                     self._out.pushObject(collections.OrderedDict(obj))
 
     def writeFooter(self, footer):
+        self._footer = footer
         if self._add_footer:
             for f in footer:
                 if self._first:
@@ -147,6 +151,12 @@ class DCWriter:
             if self._add_newline:
                 self._out.pushString('\n')
             self._out.pushString(']')
+    
+    def getHeader(self):
+        return self._header
+    
+    def getFooter(self):
+        return self._footer
         
     def writeRecord(self, record):
         try:
@@ -173,6 +183,7 @@ class DCWriter:
                         json.dump(obj, stream)
             if self._out_flags & (OBJECT | ITERABLE):
                 self._out.pushObject(obj)
+            return obj
         except:
             Log.debug('record=%s' % etree.tostring(record, pretty_print = False))
             raise
@@ -257,7 +268,13 @@ class DCWriter:
                 return int(val) #Note: True=>1; False=>0
         except ValueError:
             try:
-                return float(val)
+                f = float(val)
+                if f in (float('-Inf'), float('Inf')):
+                    return val
+                if isinstance(val, str) and val.lower() == 'nan':
+                    # Note that float("nan") == float("nan") -> False
+                    return val
+                return f
             except ValueError:
                 return val
         except TypeError:

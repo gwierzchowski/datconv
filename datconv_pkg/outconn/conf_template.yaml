@@ -19,6 +19,7 @@ OutConnector:
     CArg:
         # list of sub-connectiors that will get output records;
         # every sub-connection may support different interface.
+        # default: []
         clist:
             - Module: datconv.outconn.dcfile
               CArg:

@@ -138,6 +138,8 @@ _Keywords = """
 """
 
 Keywords = set(_Keywords.split())
+PckLog = None
+_RemamedFields = set()
 
 ####################################################################
 
@@ -170,26 +172,26 @@ def castValues(obj, castlist):
                 try:
                     pv[c] = int(v)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to int, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'boolean':
                 try:
                     v = int(v)
                     pv[c] = (v != 0)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to boolean, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'long':
                 try:
-                    pv[c] = long(v)
+                    pv[c] = int(v)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to long, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'float':
                 try:
                     pv[c] = float(v)
                 except ValueError:
-                    # TODO: log warning
+                    PckLog.warning('Value %s: %s could not be casted to float, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
 
 def lowerKeys(obj, recurse):
@@ -208,9 +210,10 @@ def checkKeywords(obj):
     k_to_del = []
     for k, v in obj.items():
         if isinstance(k, str) and k.upper() in Keywords:
-            #Log.warning('Conflict with SQLite key-word. %s remaned to %s' % (fname, fname + '_'))
-            # TODO: log warning
             k_to_del.append(k)
+            if k not in _RemamedFields:
+                PckLog.warning('Conflict with PostreSQL key-word. %s remaned to %s' % (k, k + '_'))
+                _RemamedFields.add(k)
         if isinstance(v, dict):
             checkKeywords(v)
     for k in k_to_del:

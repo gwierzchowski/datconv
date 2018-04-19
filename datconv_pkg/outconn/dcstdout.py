@@ -14,9 +14,6 @@ Use it for logging messages in need.
 """
 
 class DCConnector:
-    def __init__(self):
-        assert Log is not None
-        
     def supportedInterfases(self):
         return STRING
     

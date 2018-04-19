@@ -50,6 +50,8 @@ class DCWriter:
         self._bratags = []
         self._add_header = add_header
         self._add_footer = add_footer
+        self._header = None
+        self._footer = None
 
     def setOutput(self, out):
         self._out = out
@@ -62,6 +64,7 @@ class DCWriter:
         self._bratags = []
         
     def writeHeader(self, header):
+        self._header = header
         if self._enc in ['unicode', 'utf8']:
             self._out.pushString('<?xml version="1.0" encoding="UTF-8"?>\n')
         else:
@@ -102,6 +105,7 @@ class DCWriter:
                     self._out.pushString('<Header>%s</Header>\n' % str(h))
 
     def writeFooter(self, footer):
+        self._footer = footer
         if self._cnt_tag:
             if self._cnt_attr:
                 self._out.pushString('<%s %s="%d"/>\n' % (self._cnt_tag, self._cnt_attr, self._cnt))
@@ -125,8 +129,15 @@ class DCWriter:
                     self._out.pushString('<Footer>%s</Footer>\n' % str(f))
         for i in range(len(self._bratags) - 1, -1, -1):
             self._out.pushString('</' + self._bratags[i] + '>\n')
+   
+    def getHeader(self):
+        return self._header
+    
+    def getFooter(self):
+        return self._footer
 
     def writeRecord(self, record):
         for stream in self._out.getStreams():
             print(etree.tostring(record, pretty_print = self._pretty, encoding = self._enc), file = stream)
         self._cnt = self._cnt + 1
+        return record

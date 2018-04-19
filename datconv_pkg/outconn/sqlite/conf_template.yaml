@@ -27,14 +27,14 @@ OutConnector:
       column_constraints:
         cdc: NOT NULL
       
-      # column constatins to be added after column definitions. Should be declared as string
-      # default: None
-      common_column_constraints: |
-        PRIMARY KEY(cdc, isn)
+      # column constatins to be added after column definitions. Should be a list
+      # default: []
+      common_column_constraints:
+        - PRIMARY KEY(cdc, isn)
       
-      # table constatins and creation options. Should be declared as string
-      # default: None
-      table_constraints: None
+      # table constatins and creation options. Should be a list
+      # default: []
+      table_constraints: []
 
 OutConnector:
     Module: datconv.outconn.sqlite.jinsert
@@ -81,3 +81,8 @@ OutConnector:
       # default: none
       cast:
           - [['rec', 'value'], str]
+
+      # specify what to do when record with given primary key exist in the table; 
+      # one of strings 'ignore', 'update' (or 'replace' with the same effect), 'rollback', 'abort', fail' or None (raise error in such situation).
+      # default: none
+      on_conflict: update

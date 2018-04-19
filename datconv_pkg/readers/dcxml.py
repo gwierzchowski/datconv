@@ -221,12 +221,6 @@ class DCReader:
         
         For more detailed descriptions see :ref:`readers_conf_template`.
         """
-
-        #fout = open(outpath, "w")
-        
-        # OBLIGATORY
-        #self._wri.setOutput(fout)
-        
         parser = sax.make_parser()
         parser.setContentHandler( \
             ContentGenerator( \
@@ -247,6 +241,3 @@ class DCReader:
             pass
         except ToLimitBreak:
             pass
-        #finally:
-            #fout.close()
-            #Log.info('Output saved to %s' % outpath)

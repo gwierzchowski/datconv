@@ -34,7 +34,7 @@ At first we have to write simple configuration file ``conv.yaml``:
     Writer:
         Module: datconv.writers.dcjson
 
-Next, run Datconv tool against this file::
+then, run Datconv tool against this file::
 
     datconv ./conv.yaml
 
@@ -333,10 +333,10 @@ This will produce file ``sampl.sql`` with proposed table definition:
     );
 
 Edit this definition (possibly define primary key etc.) and run with your database to create table. 
-This step may look somewhat like art-for-art in this simple sample, but with bigger number of
+This step may look somewhat like art-for-art in this simple sample, but with large number of
 fields or tables may save you some typing or copy/pasting.
 
-Next, change Writer and Connector in your configuration file in following way
+Then, change Writer and Connector in your configuration file in following way
 (place path to your SQLite database file as ``connstring:`` parameter):
 
 .. code-block:: yaml

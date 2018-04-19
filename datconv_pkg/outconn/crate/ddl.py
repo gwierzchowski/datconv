@@ -26,7 +26,7 @@ class DCConnector:
     """Please see constructor description for more details."""
     def __init__(self, table, path, mode = 'w', \
             check_keywords = True, lowercase = 1, no_underscore = 1, \
-            column_constraints = {}, common_column_constraints = None, table_constraints = None):
+            column_constraints = {}, common_column_constraints = [], table_constraints = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
         :param table: name of the table.
@@ -43,6 +43,8 @@ class DCConnector:
         """
         assert Log is not None
 
+        import datconv.outconn.crate
+        datconv.outconn.crate.PckLog = Log
         self._path = path
         self._out = open(path, mode)
         self._tablename = table
