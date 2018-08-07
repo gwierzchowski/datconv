@@ -22,15 +22,16 @@ Use it for logging messages in need.
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, table, connstring, \
+    def __init__(self, connstring, table, schema = 'main', \
         dump_sql = False, \
         autocommit = False, \
         bulk_size = 10000, \
         check_keywords = True, lowercase = 0, cast = None, on_conflict = None):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
-        :param table: table name where to insert records.
         :param connstring: connection string to database (path to file in this case). 
+        :param table: table name where to insert records.
+        :param schema: table schema name where to insert records.
         :param dump_sql: if true, insert statements are being saved to file specified as ``connstring`` with added '.sql' extension and not applied to database (option to be used for debugging).
         :param bulk_size: if consequtive records have similar structure (i.e. have the same fields) - they are groupped into one pack (up to the size specified as this parameter) and inserted in one command. If set value is 0 than every insert is done individaually - warning: it is quite slow operation.
         :param autocommit: if true, every insert is automatically commited (slows down insert operations radically); if false, chenges are commited at the end - i.e. if any insert fail everything is rolled back and no records are added.
@@ -43,8 +44,9 @@ class DCConnector:
         """
         assert Log is not None
 
-        self._tablename = table
         self._connstring = connstring
+        self._tablename = table
+        self._tableschema = schema
         self._dump = dump_sql
         if dump_sql:
             self._conn = open(connstring + '.sql', "w")
@@ -76,7 +78,7 @@ class DCConnector:
                 conflict_str = ' OR ABORT'
             elif on_conflict.lower() == 'fail':
                 conflict_str = ' OR FAIL'
-        self._PREFIX = 'INSERT %s INTO "%s" (' % (conflict_str, self._tablename)
+        self._PREFIX = 'INSERT %s INTO "%s"."%s" (' % (conflict_str, self._tableschema, self._tablename)
         self._cast = cast
         self.tryObject(None) # initialize state variables
         

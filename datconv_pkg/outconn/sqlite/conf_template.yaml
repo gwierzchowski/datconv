@@ -11,6 +11,10 @@ OutConnector:
       # default: w
       mode: a
       
+      # schema of the table
+      # default: main
+      schema: main
+      
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.
       # default: true
@@ -39,11 +43,15 @@ OutConnector:
 OutConnector:
     Module: datconv.outconn.sqlite.jinsert
     CArg:
-      # name of the table; obligatory
-      table: product
-      
       # connection string to database (path to file in this case); obligatory
       connstring: "out/AddnDrawNbrs_c5019_s38_2.sqlite"
+      
+      # name of the table; obligatory
+      table: product
+            
+      # schema of the table
+      # default: main
+      schema: main
       
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.

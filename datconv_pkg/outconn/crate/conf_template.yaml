@@ -11,6 +11,10 @@ OutConnector:
       # default: w
       mode: a
       
+      # schema of the table
+      # default: doc
+      schema: doc
+      
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.
       # default: true
@@ -95,6 +99,10 @@ OutConnector:
       # connection string to database; obligatory
       # default: none
       password: none
+      
+      # schema of the table
+      # default: doc
+      schema: doc
       
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.

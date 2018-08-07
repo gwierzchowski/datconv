@@ -43,7 +43,7 @@ Program has modular architecture with following swichable compoments:
     
     * reading input data (i.e. every reader class assumes certain input file format) 
     * driving entire data conversion process (i.e. main processing loop in implemented in this class) 
-    * determine internal representation of header, records and footer (this strongly depands on reader and kind of input format).
+    * determine internal representation of header, records and footer (this heavily depands on reader and kind of input format).
     
     API of this component: :ref:`readers_skeleton`
 

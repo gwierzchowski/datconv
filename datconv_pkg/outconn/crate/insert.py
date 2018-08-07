@@ -24,7 +24,7 @@ Use it for logging messages in need.
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, table, connstring, user = None, password = None, \
+    def __init__(self, table, connstring, user = None, password = None, schema = 'doc', \
         dump_sql = False, \
         bulk_size = 10000, \
         check_keywords = True, lowercase = 1, no_underscore = 1, cast = None, \
@@ -35,6 +35,7 @@ class DCConnector:
         :param connstring: connection string to database.
         :param user: user name for databse connection.
         :param password: password for databse connection.
+        :param schema: table schema name where to insert records.
         :param dump_sql: if true, insert statements are being saved to file specified as ``connstring`` and not inserted to database (option to be used for debugging).
         :param bulk_size: if consequtive records have similar structure (i.e. have the same fields) - they are groupped into one pack (up to the size specified as this parameter) and inserted in one command. If set value is 0 than every insert is done individaually - warning: it is slow operation.
         :param check_keywords: if true prevents conflicts with SQL keywords.
@@ -51,6 +52,7 @@ class DCConnector:
         import datconv.outconn.crate
         datconv.outconn.crate.PckLog = Log
         self._tablename = table
+        self._tableschema = schema
         self._connstring = connstring
         self._dump = dump_sql
         if dump_sql:
@@ -68,7 +70,7 @@ class DCConnector:
         self._lowercase = lowercase
         if self._lowercase > 0:
             self._tablename = self._tablename.lower()
-        self._PREFIX = 'INSERT INTO "%s" (' % self._tablename
+        self._PREFIX = 'INSERT INTO "%s"."%s" (' % (self._tableschema, self._tablename)
         self._cast = cast
         self._no_underscore = no_underscore
         self._conflict_opt = 0

@@ -21,20 +21,26 @@ Points are specified in priority (and probably implementation) order:
 
 Notes about versioning schema
 ----------------------------------
-- First, major number will be changed when changes breaks backward compatibility, 
+- Major number will be changed when changes breaks backward compatibility, 
   i.e. users may have to slightly change their own modules or configuration in order to work with new release. 
   However if this number is zero, API is considerated unstable and may change with any feature release.
   This is called Major Release, and in this case midle and minor numbers are reset to zero.
-- Second, midle number will be changed when new features or options will be introduced but without API break.
+- Midle number will be changed when new features or options will be introduced but without API break.
   This is called Feature Release, and in this case minor number is reset to zero.
-- Third, minor number will be changed when fixes or very small, non-risky features are introduced.
+- Minor number will be changed when fixes or very small, non-risky features are introduced.
   This is called Fix Release.
 
-0.7.0 (2018.04.19)
+0.7.3 (2018.08.07)
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
-- Added possibity to run Datconv as iterator (i.e. obtain output records directly in Python code).
+- Added support for schema names to database output connectors.
+
+0.7.0-2 (2018.04.19)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added possibility to run Datconv as iterator (i.e. obtain output records directly in Python code).
 
 Fixes
 ^^^^^^^^^^^^

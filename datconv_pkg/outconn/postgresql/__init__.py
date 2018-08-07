@@ -443,6 +443,8 @@ Keywords = set(_Keywords.split())
 
 PckLog = None
 
+MIN_SMALLINT = -2**16
+MAX_SMALLINT =  2**16 - 1
 MIN_INT = -2**31
 MAX_INT =  2**31 - 1
 MIN_BIGINT = -2**63
@@ -527,12 +529,13 @@ def castValues(obj, castlist):
                 except ValueError:
                     PckLog.warning('Value %s: %s could not be casted to int, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
-            elif cast[1] == 'boolean':
+            elif cast[1] == 'short':
                 try:
-                    v = int(v)
-                    pv[c] = (v != 0)
+                    pv[c] = int(v)
+                    if (pv[c] < MIN_SMALLINT or MAX_SMALLINT < pv[c]):
+                        raise ValueError
                 except ValueError:
-                    PckLog.warning('Value %s: %s could not be casted to boolean, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
+                    PckLog.warning('Value %s: %s could not be casted to short, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'long':
                 try:
@@ -541,6 +544,15 @@ def castValues(obj, castlist):
                         raise ValueError
                 except ValueError:
                     PckLog.warning('Value %s: %s could not be casted to long, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
+                    pv[c] = None
+            elif cast[1] == 'boolean':
+                try:
+                    v = int(v)
+                    pv[c] = (v != 0)
+                    if (v != 0 and v != 1):
+                        PckLog.warning('Value %s: %s was casted to boolean, as %s in object: %s' % (cast[0][-1], str(v), str(pv[c]), str(obj)))
+                except ValueError:
+                    PckLog.warning('Value %s: %s could not be casted to boolean, setting NULL in object: %s' % (cast[0][-1], str(v), str(obj)))
                     pv[c] = None
             elif cast[1] == 'float':
                 try:

@@ -19,7 +19,7 @@ Use it for logging messages in need.
 
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, table, path, mode = 'w', \
+    def __init__(self, table, path, mode = 'w', schema = 'public', \
         check_keywords = True, lowercase = 0, cast = None, \
         column_constraints = {}, common_column_constraints = [], table_constraints = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
@@ -27,6 +27,7 @@ class DCConnector:
         :param table: name of the table.
         :param path: relative or absolute path to output file.
         :param mode: output file opening mode.
+        :param schema: schema of the table.
         :param check_keywords: if true, prevents conflicts with SQL keywords. Data field names that are in conflict will be suffixed with undderscore.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
         :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
@@ -43,6 +44,7 @@ class DCConnector:
         self._path = path
         self._out = open(path, mode)
         self._tablename = table
+        self._tableschema = schema
         self._chkkwd = check_keywords
         if check_keywords:
             if self._tablename.upper() in Keywords:
@@ -121,11 +123,11 @@ class DCConnector:
     def onFinish(self, bSuccess):
         if bSuccess:
             sql = '''
-CREATE TABLE "%s" (
+CREATE TABLE "%s"."%s" (
   %s
 )
 %s;
-''' % (         self._tablename, \
+''' % (         self._tableschema, self._tablename, \
                 ',\n  '.join(self._fields + self._ccconst) , \
                 '\n'.join(self._tconst))
             self._out.write(sql)

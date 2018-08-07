@@ -11,6 +11,10 @@ OutConnector:
       # default: w
       mode: a
       
+      # schema of the table
+      # default: public
+      schema: public
+      
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.
       # default: true
@@ -24,7 +28,8 @@ OutConnector:
       
       # array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} 
       # will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. 
-      # First position determines address of data to be converted, last position specifies the type: str, bool, int, long or float. 
+      # First position determines address of data to be converted, last position specifies the type: str, bool, short, int, long or float. 
+      # Where short stands for 16 bit integer, int - 32 bit integer and long - 64 bit integer. 
       # Field names shold be given after all other configured transformations (lowercase,  check_keywords)
       # default: none
       cast:
@@ -54,11 +59,15 @@ OutConnector:
 OutConnector:
     Module: datconv.outconn.postgresql.jinsert
     CArg:
-      # name of the table; obligatory
-      table: product
-      
       # connection string to database; obligatory
       connstring: host='192.168.1.15' dbname='postgres' user='postgres' password='postgres'
+      
+      # name of the table; obligatory
+      table: product
+            
+      # schema of the table
+      # default: public
+      schema: public
       
       # if true, prevents conflicts with SQL keywords;
       # data field names that are in conflict will be suffixed with undderscore.

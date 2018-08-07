@@ -20,20 +20,21 @@ Use it for logging messages in need.
 """
 class DCConnector:
     """Please see constructor description for more details."""
-    def __init__(self, table, connstring, \
+    def __init__(self, connstring, table, schema = 'public', \
         dump_sql = False, \
         autocommit = False, \
         check_keywords = True, lowercase = 0, cast = None, \
         on_conflict = None, options = []):
         """Parameters are usually passed from YAML file as subkeys of OutConnector:CArg key.
         
-        :param table: table name where to insert records.
         :param connstring: connection string to database.
+        :param table: table name name where to insert records.
+        :param schema: table schema name where to insert records.
         :param dump_sql: if true, insert statements are being saved to file specified as ``connstring`` and not inserted to database (option to be used for debugging).
         :param autocommit: parameter passed to connection, if true every insert is automatically commited (slows down insert operations radically), if false chenges are commited at the end - i.e. if any insert fail everything is rolled back and no records are added.
         :param check_keywords: if true, prevents conflicts with SQL keywords.
         :param lowercase: if >1, all JSON keys will be converted to lower-case; if =1, only first level keys; if =0, no conversion happen.
-        :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, int, long, float or array. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
+        :param cast: array of arrays of the form: [['rec', 'value'], str], what means that record: {"rec": {"value": 5025}} will be writen as {"rec": {"value": "5025"}} - i.e. it is ensured that "value" will allways be string. First position determines address of data to be converted, last position specifies the type: str, bool, short, int, long, float or array. Where short stands for 16 bit integer, int - 32 bit integer and long - 64 bit integer. Field names shold be given after all other configured transformations (lowercase, no_underscore, check_keywords).
         :param on_conflict: specify what to do when record with given primary key exist in the table; one of strings 'ignore', 'update' or None (raise error in such situation).
         :param options: array or additional options added to INSERT caluse (see Posgresql documentation).
         
@@ -43,8 +44,9 @@ class DCConnector:
 
         import datconv.outconn.postgresql
         datconv.outconn.postgresql.PckLog = Log
-        self._tablename = table
         self._connstring = connstring
+        self._tablename = table
+        self._tableschema = schema
         self._autocommit = autocommit
         self._dump = dump_sql
         if dump_sql:
@@ -61,7 +63,7 @@ class DCConnector:
         self._lowercase = lowercase
         if self._lowercase > 0:
             self._tablename = self._tablename.lower()
-        self._PREFIX = 'INSERT INTO "%s"(' % self._tablename
+        self._PREFIX = 'INSERT INTO "%s"."%s"(' % (self._tableschema, self._tablename)
         self._cast = cast
         self._conflict_opt = 0
         self._conflict_str = ''
