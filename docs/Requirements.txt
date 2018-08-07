@@ -1,3 +1,5 @@
 PyYAML
 lxml
 datconv
+psycopg2
+crate
