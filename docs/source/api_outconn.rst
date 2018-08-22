@@ -27,6 +27,11 @@ datconv.outconn.dcfile module
 .. automodule:: datconv.outconn.dcfile
    :members:
 
+datconv.outconn.dcexcel module 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. automodule:: datconv.outconn.dcexcel
+   :members:
+
 datconv.outconn.dcmultiplicator module 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. automodule:: datconv.outconn.dcmultiplicator

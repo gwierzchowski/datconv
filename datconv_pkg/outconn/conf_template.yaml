@@ -13,7 +13,13 @@ OutConnector:
         # output file opening mode (w or a); optional
         # default: w
         mode: a
-            
+
+OutConnector:
+    Module: datconv.outconn.dcexcel
+    CArg:
+        # relative or absolute path to output file; obligatory
+        path: "out/AcctAgentAdjustment_c5019_s38.xlsx"
+             
 OutConnector:
     Module: datconv.outconn.dcmultiplicator
     CArg:

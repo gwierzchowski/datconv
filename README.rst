@@ -81,7 +81,7 @@ In this version of package following compoments are included:
 * Readers: XML (sax), CSV (sax), JSON (sax). 
 * Filters: Few basic/sample filters.
 * Writers: XML, CSV, XPath (helper module), JSON.
-* Output Connectors: File, Databases (SQLite, PostgreSQL, Crate).
+* Output Connectors: File (Text, MS Excel), Databases (SQLite, PostgreSQL, Crate).
 
 So Datconv program can be used to convert files between XML, CVS and JSON formats and saving data in those formats to database. 
 Sax means that used parsers are of event type - i.e. entire data are not being stored in memory (typically only just one record), what means that program is able to process large files without allocating a lot of memory.

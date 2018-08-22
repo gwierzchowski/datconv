@@ -29,10 +29,11 @@ class DCWriter:
     def __init__(self, columns = None, simple_xpath = False, add_header = False, col_names = True, csv_opt = None):
         """Parameters are usually passed from YAML file as subkeys of Writer:CArg key.
         
-        :param columns: this parameter may be one of 3 possible types or None:
+        :param columns: this parameter may be one of 4 possible types or None:
             if it is a string, it should be the path to file that contain specification of columns in output file. \n
             if it is a list, it directly specifies columns in output file. \n
-            if it is None or distionary, columns in output CSV file are being generated automatically based on contentents of input file. When this option is used number of columns in different records in CSV file may very because new columns are being added when discovered.
+            if it is a integer, add columns based on first record. \n
+            if it is None or dictionary, columns in output CSV file are being generated automatically based on contentents of input file. When this option is used number of columns in different records in CSV file may very because new columns are being added when discovered.
         :param simple_xpath: determines weather simple xpaths are used in column specification. See pdxpath Writer for more descripption.
         :param add_header: if True, generic header (as initialized by Reader) is added as first line of output file.
         :param col_names: if True, line with column names (fields) is added before data or after data (in case of auto option).
@@ -48,6 +49,7 @@ class DCWriter:
         self._writers = []
         self._auto_xpw = None
         self._auto_cno = 0
+        self._auto_from_first = False
         self._col = []
         if columns is not None:
             if isinstance(columns, str):
@@ -63,6 +65,9 @@ class DCWriter:
                 for col in columns:
                     if col and len(col) >= 4 and col[0][0] != '#':
                         self._col.append(col)
+            if isinstance(columns, int):
+                self._auto_xpw = dcxpaths.DCWriter(simple_xpath = simple_xpath, ignore_rectyp = True)
+                self._auto_from_first = True
         else:
             self._auto_xpw = dcxpaths.DCWriter(simple_xpath = simple_xpath)
         self._simple_xpath = simple_xpath
@@ -99,7 +104,7 @@ class DCWriter:
 
     def writeFooter(self, footer):
         self._footer = footer
-        if self._col_names and self._auto_xpw is not None:
+        if self._col_names and self._auto_xpw is not None and not self._auto_from_first:
             cn = [c[0] for c in self._col]
             if self._auto_cno > 0 and len(cn) < self._auto_cno:
                 cn = cn + ['Spare']*(self._auto_cno - len(cn))
@@ -117,8 +122,11 @@ class DCWriter:
             if self._auto_xpw:
                 new_col = self._auto_xpw.checkXPath(record, ret_new = True)
                 if new_col:
+                    first_rec = (len(self._col) == 0)
                     for col in new_col:
                         self._col.append(col)
+                    if first_rec and self._auto_from_first:
+                        self._writeRow([c[0] for c in self._col])
 
             for col in self._col:
                 val = col[3]

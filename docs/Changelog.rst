@@ -5,6 +5,7 @@ Development plans for future
 ----------------------------------
 Points are specified in priority (and probably implementation) order:
 
+- Add more options to Excel Output connector
 - Add cinsert (working with csv writer) Output connectiors to sqlite and postgresql modules.
 - Introduce option to run connectors as separate process with queue between writer and connector for better performance 
   (espacially with database connectors).
@@ -18,6 +19,7 @@ Points are specified in priority (and probably implementation) order:
   e.g. convering big files in paralell processes (using rfrom/rto settings). Support for skipping headers footers etc.
 - Create Windows binary form of program (with cx_Freeze package) that does not require Python installation 
   and upload to github.
+- I'm considerating rewriting program in Julia language.
 
 Notes about versioning schema
 ----------------------------------
@@ -29,6 +31,13 @@ Notes about versioning schema
   This is called Feature Release, and in this case minor number is reset to zero.
 - Minor number will be changed when fixes or very small, non-risky features are introduced.
   This is called Fix Release.
+
+0.8.0 (2018.08.21)
+----------------------------------
+Improvements
+^^^^^^^^^^^^
+- Added ``columns: 1`` parameter to ``datconv.writers.dccsv``. It allows to place headers in first line of output when all records have the same structure.
+- Added new output connector: ``datconv.outconn.dcexcel`` to be used with CSV writer for writing MS Excel (.xlsx) files.
 
 0.7.3 (2018.08.07)
 ----------------------------------
