@@ -168,7 +168,7 @@ class Datconv:
         logger_conf = conf.get('Logger')
         if isinstance(logger_conf, dict):
             if logger_conf.get('Conf'):
-                logger_conf = yaml.load(open(logger_conf.get('Conf')).read())
+                logger_conf = yaml.safe_load(open(logger_conf.get('Conf')).read())
             logging.config.dictConfig(logger_conf)
             Logger = logging.getLogger(logger_name)
         elif isinstance(logger_conf, str):

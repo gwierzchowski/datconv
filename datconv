@@ -180,12 +180,12 @@ Where key is collon-separated compoud key: e.g. Writer:CArg:pretty
         
         conf = dict()
         if len(conf_text) > 0:
-            conf = yaml.load(conf_text)
+            conf = yaml.safe_load(conf_text)
         if len(def_text) > 0:
             _DatconvMergeConf(conf, yaml.load(def_text))
             
         for kv in arg_keys:
-            arg_key = yaml.load('key: ' + kv[-1])
+            arg_key = yaml.safe_load('key: ' + kv[-1])
             ac = conf
             for key in kv[:-2]:
                 if key not in ac:

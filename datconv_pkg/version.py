@@ -2,9 +2,9 @@
 
 # Set version number here
 datconv_author  = "Grzegorz Wierzchowski <gwierzchowski@wp.pl>"
-datconv_status  = '4 - Beta'
-datconv_version = '0.8.0'
-datconv_date    = '2018 August'
+datconv_status  = '5 - Production/Stable'
+datconv_version = '0.8.1'
+datconv_date    = '2019 December'
 
 #Development Status :: 1 - Planning
 #Development Status :: 2 - Pre-Alpha

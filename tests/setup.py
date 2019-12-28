@@ -40,7 +40,7 @@ with open('README.md') as f:
             in_desc = True
 
 dist = distutils.core.setup(name = 'datconv_test',
-    version = '0.2.0',
+    version = '0.2.1',
     description = 'Testing scripts for datconv package',
     long_description = long_descr,
     author = 'Grzegorz Wierzchowski',
@@ -67,6 +67,7 @@ dist = distutils.core.setup(name = 'datconv_test',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]
     )
