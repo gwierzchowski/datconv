@@ -61,7 +61,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Datconv'
-copyright = '2017-2018, Grzegorz Wierzchowski'
+copyright = '2017-2019, Grzegorz Wierzchowski'
 author = 'Grzegorz Wierzchowski'
 
 # The version info for the project you're documenting, acts as replacement for

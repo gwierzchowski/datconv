@@ -32,11 +32,12 @@ Notes about versioning schema
 - Minor number will be changed when fixes or very small, non-risky features are introduced.
   This is called Fix Release.
 
-0.8.1 (2019.12.28)
+0.8.1-2 (2019.12.28)
 ----------------------------------
 Improvements
 ^^^^^^^^^^^^
 - Verified package against Python 3.7
+- Fixes in package long description (separate file for sphinx)
 
 0.8.0 (2018.08.21)
 ----------------------------------

@@ -7,7 +7,7 @@
 Datconv's documentation
 #######################
    
-.. include:: ../../README.rst
+.. include:: ../../README_sphinx.rst
 
 Installation
 ==========================================

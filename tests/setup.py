@@ -40,8 +40,9 @@ with open('README.md') as f:
             in_desc = True
 
 dist = distutils.core.setup(name = 'datconv_test',
-    version = '0.2.1',
+    version = '0.2.2',
     description = 'Testing scripts for datconv package',
+    long_description_content_type = 'text/markdown',
     long_description = long_descr,
     author = 'Grzegorz Wierzchowski',
     author_email = 'gwierzchowski@wp.pl',

@@ -16,7 +16,7 @@ with data in one format to file with data in another format or database.
 
 Program should be run using Python 2.7 or Python 3.x interpretter. It also requires
 installation of external packages: ``lxml``, ``PyYAML``. For more information see
-``INSTALL.rst`` file distributed in source pack.
+:doc:`INSTALL.rst <INSTALL>` file distributed in source pack.
 
 Both input and output files can be text or binary files. However it is
 assumed that those files have following structure:
@@ -45,6 +45,8 @@ Program has modular architecture with following swichable compoments:
     * driving entire data conversion process (i.e. main processing loop in implemented in this class) 
     * determine internal representation of header, records and footer (this heavily depands on reader and kind of input format).
     
+    API of this component: :ref:`readers_skeleton`
+
 *Filter*
     Optional compoment that is able to: 
     
@@ -53,16 +55,22 @@ Program has modular architecture with following swichable compoments:
     * produce data (i.e. cause that certain records, maybe slightly modified, are being sent multiply times to writer) 
     * break conversion process (i.e. cause that conversion stop on certain record). 
 
+    API of this component: :ref:`filters_skeleton`
+
 *Writer*
     Obligatory component responsible for: 
     
     * re-packing data from element-tree internal format to strings or objects. 
+
+    API of this component: :ref:`writers_skeleton`
 
 *Output Connector*
     Obligatory component responsible for: 
     
     * writing data to destination storage. 
 
+    API of this component: :ref:`outconn_skeleton`
+    
 *Logger*
     All messages intended to be presented to user are being send 
     (except few very initial error messages) to Logger classes from Python standard
